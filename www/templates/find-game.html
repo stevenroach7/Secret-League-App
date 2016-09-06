@@ -1,0 +1,67 @@
+<ion-view view-title="Find Game">
+  <ion-nav-buttons side="right">
+    <a ng-href="#/tab/find-game/{{getCurrentDateString()}}" nav-transition="none" class="button button-royal button-clear">Today</a>
+  </ion-nav-buttons>
+
+
+  <ion-content class="find-game">
+
+    <div class="button-bar date-nav">
+      <a ng-href="#/tab/find-game/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
+      <a class="date-display button button-block item-unselectable">
+        <h4 class="date-title title-shadow">
+          {{date | date:'MMMM dd'}}
+        </h4>
+      </a>
+      <a ng-href="#/tab/find-game/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
+    </div>
+
+
+
+    <!-- Display if no games are scheduled so screen isn't blank. -->
+    <ion-item class="no-games item item-unselectable" ng-show="isGamesNull(games)">
+      No Games Scheduled
+    </ion-item>
+
+    <div class="game-display" ng-repeat="game in games">
+
+      <div class="row game-banner">
+        <div class="col col-60">
+          <h3 class="time-title">{{game.time | secondsToTime}}</h3>
+        </div>
+        <div class="col col-10 sport-label">
+            <i class="ion-ios-basketball sport-icon"></i>
+        </div>
+        <div class="col col-30">
+          <h4 class="sport-title">{{game.sport}}</h4>
+        </div>
+
+      </div>
+
+      <div class="game-content">
+
+        <ion-list>
+
+          <ion-item class="item item-unselectable location-display">
+            <label class="location-title"><b>Place: </b>{{game.place}}</label>
+          </ion-item>
+
+          <ion-item class="item item-unselectable skill-display">
+            <label class="skill-title"><b>Skill Level: </b>{{game.skillLevel}}</label>
+          </ion-item>
+
+          <ion-item class="game-lower">
+
+          </ion-item>
+        </ion-list>
+
+      </div>
+
+
+
+    </div>
+
+
+
+  </ion-content>
+</ion-view>

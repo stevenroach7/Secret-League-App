@@ -1,0 +1,70 @@
+/* Empty. Add your own CSS if you like */
+
+/* General CSS */
+
+ .title-shadow {
+  text-shadow: 2px 2px 2px #CCCCCC;
+}
+
+.item-unselectable.activated { /* The item-unselectable class is for items that are unselectable. */
+  background: #fff; /* Set color when selected to be white. It already is white so it ends up having no effect. */
+  border-color: #fff;
+}
+
+
+.find-game {
+  background-color: #D3D3D3;
+}
+
+.date-display {
+  background-color: #ffffff;
+}
+
+.date-nav {
+  margin-top: -0.8%;
+  margin-bottom: -2.8%;
+}
+
+.date-title {
+  font-size: 15px;
+}
+
+.no-games {
+  margin-top: 2%;
+}
+
+.game-display {
+  padding-top: 2%;
+}
+
+.game-banner {
+  background-color: #424242;
+  display: flex;
+  align-items: center;
+  border-color: #424242;
+}
+
+.sport-label {
+  display: inline;
+  justify-content: center;
+}
+
+.sport-icon, .time-title, .sport-title {
+  color: #fff;
+}
+
+.sport-icon {
+  font-size: 38px;
+}
+
+.game-content {
+  border-left: solid 35px;
+  border-right: solid 35px;
+  border-color: #886aea;
+}
+
+
+.game-lower {
+  background-color: #424242;
+  border-color: #424242;
+}
