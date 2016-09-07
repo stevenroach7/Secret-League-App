@@ -45,10 +45,21 @@
     };
   });
 
-  servMod.factory('TestGamesData', function() {
+  servMod.factory('TestGamesData', function($firebaseArray) {
 
     var d = new Date(), e = new Date(d);
     var secondsSinceMidnight = (e - d.setHours(0,0,0,0)) / 1000;
+
+    // var ref = firebase.database().ref().child("09072016");
+    //
+    // var games = $firebaseArray(ref);
+    //
+    // for (var i = 0; i < games.length; i++) {
+    //   var now = new Date();
+    //   now.setTime(games[i].seconds);
+    //   games[i].date = d;
+    // }
+
 
     var games =
     [
@@ -70,27 +81,28 @@
       }
     ];
 
+
+    var sortGamesByDate = function(gamesArray) {
+      gamesArray.sort(function(game1, game2) {
+      return game1.time - game2.time;
+      });
+    };
+
     return {
       getGames: function() {
         return games;
       },
-      getGamesByDate: function(date) {
-        var gamesByDate = [];
-        var isDateEqual = function(date1, date2) { // TODO: Test this.
-          /* Returns boolean for if the two dates have the same day, month, and year. */
-          return (date1.getDate() == date2.getDate() && date1.getMonth() == date2.getMonth() && date1.getFullYear() == date2.getFullYear());
-        };
-        for (var i = 0; i < games.length; i++) {
-          if (isDateEqual(games[i].date, date)) { // If game.date has same month, day and year as input date
-            gamesByDate.push(games[i]);
-          }
-        }
-        return gamesByDate;
-      },
-      sortGamesByDate: function(gamesArray) {
-        gamesArray.sort(function(game1, game2) {
-        return game1.date - game2.date;
-        });
+      getGamesByDate: function(dateString) {
+
+        // Get array of games on the date specified by the input dateString.
+        var gamesRef = firebase.database().ref().child("games").child(dateString);
+        games = $firebaseArray(gamesRef);
+
+        // Sort the games array in order of time.
+        var sortByTimeQuery = gamesRef.orderByChild("time");
+        sortedGames = $firebaseArray(sortByTimeQuery);
+
+        return sortedGames;
       },
       getGame: function(gameID) { // TODO: Rewrite to be more efficient.
         for (var i = 0; i < games.length; i++) {

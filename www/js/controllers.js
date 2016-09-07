@@ -1,7 +1,7 @@
 (function() {
 
 
-  angular.module('starter.controllers', [])
+  angular.module('starter.controllers', ['firebase'])
 
 
   .controller('TabsCtrl', function($scope, DateService) {
@@ -18,12 +18,36 @@
 
 
 
-  .controller('FindGameCtrl', function($scope, TestGamesData, DateService, $stateParams) {
+  .controller('FindGameCtrl', function($scope, TestGamesData, DateService, $stateParams, $firebaseObject, $firebaseArray) {
+
+
 
     $scope.date = DateService.dateStringToDate($stateParams.dateString);
 
-    $scope.games = TestGamesData.getGamesByDate($scope.date);
-    TestGamesData.sortGamesByDate($scope.games);
+    $scope.games = TestGamesData.getGamesByDate($stateParams.dateString);
+
+
+    $scope.addGame = function() {
+
+      var d = new Date(), e = new Date(d);
+      var secondsSinceMidnight = (e - d.setHours(0,0,0,0)) / 1000;
+
+      $scope.games.$add(
+        {
+          dateString: "09072016",
+          time: secondsSinceMidnight, // Current time in seconds
+          sport: "Basketball",
+          place: "Leonard Center Alumni Gym",
+          skillLevel: "Casual"
+        }
+
+      ).then(function(ref) {
+        var id = ref.key;
+        console.log("added record with id " + id);
+        $scope.games.$indexFor(id); // returns location in the array
+      });
+
+    };
 
     $scope.getNextDateString = function() {
       /* Returns the date string for the next date. */
