@@ -45,54 +45,13 @@
     };
   });
 
-  servMod.factory('TestGamesData', function($firebaseArray) {
+  servMod.factory('GamesData', function($firebaseArray) {
 
-    var d = new Date(), e = new Date(d);
-    var secondsSinceMidnight = (e - d.setHours(0,0,0,0)) / 1000;
-
-    // var ref = firebase.database().ref().child("09072016");
-    //
-    // var games = $firebaseArray(ref);
-    //
-    // for (var i = 0; i < games.length; i++) {
-    //   var now = new Date();
-    //   now.setTime(games[i].seconds);
-    //   games[i].date = d;
-    // }
-
-
-    var games =
-    [
-      {
-        id: 0,
-        date: d,
-        time: secondsSinceMidnight, // Current time in seconds
-        sport: "Basketball",
-        place: "Leonard Center Field House",
-        skillLevel: "Competitive"
-      },
-      {
-        id: 1,
-        date: d,
-        time: secondsSinceMidnight + 3600, // Current time in seconds
-        sport: "Basketball",
-        place: "Leonard Center Alumni Gym",
-        skillLevel: "Casual"
-      }
-    ];
-
-
-    var sortGamesByDate = function(gamesArray) {
-      gamesArray.sort(function(game1, game2) {
-      return game1.time - game2.time;
-      });
-    };
 
     return {
-      getGames: function() {
-        return games;
-      },
       getGamesByDate: function(dateString) {
+        /* Takes a dateString and queries the firebase db to obtain a synchronized array of game objects on the date
+        specified by the dateString. Then this functions sorts these games by their time variable and returns the array. */
 
         // Get array of games on the date specified by the input dateString.
         var gamesRef = firebase.database().ref().child("games").child(dateString);
@@ -101,16 +60,7 @@
         // Sort the games array in order of time.
         var sortByTimeQuery = gamesRef.orderByChild("time");
         sortedGames = $firebaseArray(sortByTimeQuery);
-
         return sortedGames;
-      },
-      getGame: function(gameID) { // TODO: Rewrite to be more efficient.
-        for (var i = 0; i < games.length; i++) {
-          if (games[i].id === gameID) {
-            return games[i];
-          }
-        }
-        return null;
       }
     };
 
