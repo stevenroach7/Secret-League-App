@@ -9,9 +9,9 @@
     <div class="button-bar date-nav">
       <a ng-href="#/tab/find-game/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
       <a class="date-display button button-block item-unselectable">
-        <h4 class="date-title title-shadow">
+        <label class="date-title title-shadow">
           {{date | date:'MMMM dd'}}
-        </h4>
+        </label>
       </a>
       <a ng-href="#/tab/find-game/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
     </div>
