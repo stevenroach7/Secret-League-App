@@ -50,6 +50,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   // Each tab has its own nav history stack:
 
+
+  .state('tab.schedule', {
+    url: '/schedule',
+    views: {
+      'schedule': {
+        templateUrl: 'templates/schedule.html',
+        controller: 'ScheduleCtrl'
+      }
+    }
+  })
+
+
   .state('tab.find-game', {
     url: '/find-game/:dateString',
     views: {

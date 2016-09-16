@@ -8,14 +8,16 @@
 
   .controller('TabsCtrl', function($scope, DateService) {
 
-    // Modals
+    // Used so current date will show by default when find game tab is chosen.
     var currentDate = new Date();
     $scope.currentDateString = DateService.dateToDateString(currentDate);
 
   })
 
 
+  .controller('ScheduleCtrl', function($scope) {
 
+  })
 
 
   .controller('FindGameCtrl', function($scope, GamesService, DateService, $stateParams, $firebaseObject, $firebaseArray) {
@@ -23,8 +25,6 @@
 
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
     $scope.games = GamesService.getGamesByDate($stateParams.dateString); // Get games on the date specfied by the dateString in the state parameters.
-
-
 
 
     $scope.addGame = function() { // Used for creating fake games.
