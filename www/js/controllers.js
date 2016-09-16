@@ -18,11 +18,11 @@
 
 
 
-  .controller('FindGameCtrl', function($scope, GamesData, DateService, $stateParams, $firebaseObject, $firebaseArray) {
+  .controller('FindGameCtrl', function($scope, GamesService, DateService, $stateParams, $firebaseObject, $firebaseArray) {
 
 
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
-    $scope.games = GamesData.getGamesByDate($stateParams.dateString); // Get games on the date specfied by the dateString in the state parameters.
+    $scope.games = GamesService.getGamesByDate($stateParams.dateString); // Get games on the date specfied by the dateString in the state parameters.
 
 
 

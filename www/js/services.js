@@ -45,7 +45,7 @@
     };
   });
 
-  servMod.factory('GamesData', function($firebaseArray) {
+  servMod.factory('GamesService', function($firebaseArray) {
 
 
     return {
