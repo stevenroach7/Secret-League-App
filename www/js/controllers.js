@@ -15,7 +15,11 @@
   })
 
 
-  .controller('ScheduleCtrl', function($scope) {
+  .controller('ScheduleCtrl', function($scope, ScheduleService) {
+
+    $scope.events = ScheduleService.getEventsObjectByDate("09172016");
+
+
 
   })
 
