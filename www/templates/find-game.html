@@ -7,13 +7,13 @@
   <ion-content class="find-game-view">
 
     <div class="button-bar date-nav">
-      <a ng-href="#/tab/find-game/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
+      <a ng-show="{{showLastDateArrow(getLastDateString())}}" ng-href="#/tab/find-game/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
       <a class="date-display button button-block item-unselectable">
         <label class="date-title title-shadow">
           {{date | date:'MMMM dd'}}
         </label>
       </a>
-      <a ng-href="#/tab/find-game/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
+      <a ng-show="{{showNextDateArrow(getNextDateString())}}" ng-href="#/tab/find-game/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
     </div>
 
     <!-- <button class="button button-royal" ng-click="addGame()">Add Game</button> -->
