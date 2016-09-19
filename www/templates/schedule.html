@@ -1,8 +1,20 @@
 <ion-view view-title="Schedule">
+  <ion-nav-buttons side="right">
+    <a ng-href="#/tab/schedule/{{getCurrentDateString()}}" nav-transition="none" class="button button-royal button-clear">Today</a>
+  </ion-nav-buttons>
 
 
   <ion-content class="schedule-view">
 
+    <div class="button-bar date-nav">
+      <a ng-href="#/tab/schedule/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
+      <a class="date-display button button-block item-unselectable">
+        <label class="date-title title-shadow">
+          {{date | date:'MMMM dd'}}
+        </label>
+      </a>
+      <a ng-href="#/tab/schedule/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
+    </div>
 
     <h1>Schedule</h1>
 
