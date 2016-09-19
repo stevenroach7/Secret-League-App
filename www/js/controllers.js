@@ -19,33 +19,14 @@
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
     $scope.events = ScheduleService.getEventsObjectByDate($stateParams.dateString);
 
-
-    var getDateStringInWeekFuture = function() {
-      /* Returns the date string for the date 7 days in the future. */
-      var nextDate = new Date();
-      for (i = 0; i < 7; i++) {
-        nextDate = DateService.getNextDate(nextDate);
-      }
-      return DateService.dateToDateString(nextDate);
-    };
-
-    var getDateStringInWeekPast = function() {
-      /* Returns the date string for the date 7 days in the past. */
-      var lastDate = new Date();
-      for (i = 0; i < 7; i++) {
-        lastDate = DateService.getLastDate(lastDate);
-      }
-      return DateService.dateToDateString(lastDate);
-    };
-
     $scope.showNextDateArrow = function(dateString) {
       /* Determines whether next arrow for date navigation should be shown. */
-      return (getDateStringInWeekFuture() !== dateString);
+      return (DateService.getDateStringInWeekFuture() !== dateString);
     };
 
     $scope.showLastDateArrow = function(dateString) {
       /* Determines whether previous arrow for date navigation should be shown. */
-      return (getDateStringInWeekPast() !== dateString);
+      return (DateService.getDateStringInWeekPast() !== dateString);
     };
 
     $scope.getNextDateString = function() {
@@ -96,32 +77,14 @@
     //   });
     // };
 
-    var getDateStringInWeekFuture = function() {
-      /* Returns the date string for the date 7 days in the future. */
-      var nextDate = new Date();
-      for (i = 0; i < 7; i++) {
-        nextDate = DateService.getNextDate(nextDate);
-      }
-      return DateService.dateToDateString(nextDate);
-    };
-
-    var getDateStringInWeekPast = function() {
-      /* Returns the date string for the date 7 days in the past. */
-      var lastDate = new Date();
-      for (i = 0; i < 7; i++) {
-        lastDate = DateService.getLastDate(lastDate);
-      }
-      return DateService.dateToDateString(lastDate);
-    };
-
     $scope.showNextDateArrow = function(dateString) {
       /* Determines whether next arrow for date navigation should be shown. */
-      return (getDateStringInWeekFuture() !== dateString);
+      return (DateService.getDateStringInWeekFuture() !== dateString);
     };
 
     $scope.showLastDateArrow = function(dateString) {
       /* Determines whether previous arrow for date navigation should be shown. */
-      return (getDateStringInWeekPast() !== dateString);
+      return (DateService.getDateStringInWeekPast() !== dateString);
     };
 
     $scope.getNextDateString = function() {
