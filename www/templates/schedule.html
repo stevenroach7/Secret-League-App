@@ -4,9 +4,9 @@
   </ion-nav-buttons>
 
 
-  <ion-content class="schedule-view">
+  <ion-content class="schedule-view" scroll="false">
 
-    <div class="button-bar date-nav">
+    <div class="button-bar date-nav-schedule">
       <a ng-show="{{showLastDateArrow(getLastDateString())}}" ng-href="#/tab/schedule/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
       <a class="date-display button button-block item-unselectable">
         <label class="date-title title-shadow">
@@ -16,9 +16,23 @@
       <a ng-show="{{showNextDateArrow(getNextDateString())}}" ng-href="#/tab/schedule/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
     </div>
 
-    <h1>Schedule</h1>
+      <div class="cal-container">
+        <div class="time-bar">
+          Times
+        </div>
+        <div class="cal">
+          <h1>Content</h1>
+          sjflsjfls
 
-    {{events}}
+          slfjslkfjslk
+          fsjldkfjslkfjs
+          slkdjflskjfls
+          sfjdklfjslf
+        </div>
+      </div>
+      <div class="place-bar">
+        Places
+      </div>
 
   </ion-content>
 </ion-view>
