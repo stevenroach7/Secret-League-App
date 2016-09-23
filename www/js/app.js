@@ -52,7 +52,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 
   .state('tab.schedule', {
-    url: '/schedule/:dateString',
+    url: '/schedule/:dateString/:placeString',
     views: {
       'schedule': {
         templateUrl: 'templates/schedule.html',

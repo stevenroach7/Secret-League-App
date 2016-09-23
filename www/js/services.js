@@ -102,12 +102,12 @@
 
   servMod.factory('ScheduleService', function($firebaseObject) {
 
-    // var getEventsByDateAndRoom = function(dateString, roomString) {
-    //   /* Takes a dateString and a roomString and queries the firebase db to obtain a synchronized array of event objects on the date
-    //   specified by the dateString and in the room specified by the roomString. Then this functions sorts these events by their startTime variable and returns the array. */
+    // var getEventsByDateAndPlace = function(dateString, placeString) {
+    //   /* Takes a dateString and a placeString and queries the firebase db to obtain a synchronized array of event objects on the date
+    //   specified by the dateString and in the place specified by the placeString. Then this functions sorts these events by their startTime variable and returns the array. */
     //
-    //   // Get array of events on the date specified by the input dateString and the room specified by the input roomString.
-    //   var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(roomString);
+    //   // Get array of events on the date specified by the input dateString and the place specified by the input placeString.
+    //   var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(placeString);
     //   var events = $firebaseArray(eventsRef);
     //
     //   // Sort the games array in order of time.
@@ -116,29 +116,53 @@
     //   return sortedEvents;
     // };
 
+    var places = {
+      alumniGym: "Alumni Gym",
+      fieldHouseCourt1: "Court 1",
+      fieldHouseCourt2: "Court 2",
+      fieldHouseCourt3: "Court 3",
+      fieldHouseCourt4: "Court 4",
+      fieldHouseTrack: "Track",
+      rbCourt1: "Racqueball 1",
+      rbCourt2: "Racqueball 2",
+      studio1: "Studio 1",
+      studio2: "Studio 2"
+    };
+
+
     return {
 
       // getEventsObjectByDate: function(dateString) {
       //   var events = {
-      //     "alumniGym": getEventsByDateAndRoom(dateString, "alumniGym"),
-      //     "fieldHouseCourt1": getEventsByDateAndRoom(dateString, "fieldHouseCourt1"),
-      //     "fieldHouseCourt2": getEventsByDateAndRoom(dateString, "fieldHouseCourt2"),
-      //     "fieldHouseCourt3": getEventsByDateAndRoom(dateString, "fieldHouseCourt3"),
-      //     "fieldHouseCourt4": getEventsByDateAndRoom(dateString, "fieldHouseCourt4"),
-      //     "fieldHouseTrack": getEventsByDateAndRoom(dateString, "fieldHouseTrack"),
-      //     "rbCourt1": getEventsByDateAndRoom(dateString, "rbCourt1"),
-      //     "rbCourt2": getEventsByDateAndRoom(dateString, "rbCourt2"),
-      //     "studio1": getEventsByDateAndRoom(dateString, "studio1"),
-      //     "studio2": getEventsByDateAndRoom(dateString, "studio2")
+      //     "alumniGym": getEventsByDateAndPlace(dateString, "alumniGym"),
+      //     "fieldHouseCourt1": getEventsByDateAndPlace(dateString, "fieldHouseCourt1"),
+      //     "fieldHouseCourt2": getEventsByDateAndPlace(dateString, "fieldHouseCourt2"),
+      //     "fieldHouseCourt3": getEventsByDateAndPlace(dateString, "fieldHouseCourt3"),
+      //     "fieldHouseCourt4": getEventsByDateAndPlace(dateString, "fieldHouseCourt4"),
+      //     "fieldHouseTrack": getEventsByDateAndPlace(dateString, "fieldHouseTrack"),
+      //     "rbCourt1": getEventsByDateAndPlace(dateString, "rbCourt1"),
+      //     "rbCourt2": getEventsByDateAndPlace(dateString, "rbCourt2"),
+      //     "studio1": getEventsByDateAndPlace(dateString, "studio1"),
+      //     "studio2": getEventsByDateAndPlace(dateString, "studio2")
       //   };
       //   return events;
       // }
-      getEventsByDateAndRoom: function(dateString, roomString) {
-        /* Takes a dateString and a roomString and queries the firebase db to obtain a synchronized array of event objects on the date
-        specified by the dateString and in the room specified by the roomString. Then this functions sorts these events by their startTime variable and returns the array. */
+      getPlaceTitle: function(placeString) {
+        if (place.hasOwnProperty(placeString)) {
+          return places.placeString;
+        }
+        return null;
+      },
+      getPlaces: function() {
+        return places;
+      },
 
-        // Get array of events on the date specified by the input dateString and the room specified by the input roomString.
-        var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(roomString);
+      getEventsByDateAndPlace: function(dateString, placeString) {
+        /* Takes a dateString and a placeString and queries the firebase db to obtain a synchronized array of event objects on the date
+        specified by the dateString and in the place specified by the placeString. Then this functions sorts these events by their startTime variable and returns the array. */
+
+        // Get array of events on the date specified by the input dateString and the place specified by the input placeString.
+        var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(placeString);
         var events = $firebaseObject(eventsRef);
 
         // Sort the games array in order of time.

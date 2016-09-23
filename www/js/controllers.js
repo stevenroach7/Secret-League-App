@@ -47,6 +47,17 @@
     };
 
 
+    $scope.currentPlaceString = $stateParams.placeString;
+
+    $scope.places = ScheduleService.getPlaces();
+
+    // $scope.placeStringToTitle = function(placeString) {
+    //   return ScheduleService.getPlaceTitle(placeString);
+    // };
+
+
+
+
     var hoursToSeconds = function(hours) {
       /* Takes a value in hours and returns that value in seconds */
       return (hours * 3600);
@@ -67,45 +78,7 @@
 
     $scope.displayedTimes = getDisplayedTimes();
 
-    // $scope.getEventAtStartingTime = function(eventsArray, startTime) {
-    //   console.log("YO");
-    //   for (i = 0; i < eventsArray.length; i++) {
-    //     console.log(eventsArray[i]);
-    //   }
-    // };
-    //
-    // $scope.getEventAtStartingTime = function(startTime) {
-    //   return ScheduleService.getEventsByDateRoomStartTime("09232016", "alumniGym", startTime);
-    // };
-
-    // $scope.getEventAtStartingTime(displayedEvents, 3600);
-
-
-
-
-    $scope.events = ScheduleService.getEventsByDateAndRoom($stateParams.dateString, "fieldHouseCourt1");
-
-    //
-    // $scope.getEventAtStartingTime = function(seconds) {
-    //   /* Takes a time in seconds and returns an event with that starting time or null if no events exist at that time. */
-    //
-    //
-    //   for (i = 0; i < events.alumniGym.length; i++) {
-    //     console.log("hey");
-    //     if (events[i].alumniGym.hasOwnProperty("startTime")) {
-    //       if (events[i].alumniGym.startTime == seconds) {
-    //         console.log("YES");
-    //         return events.alumniGym[i];
-    //       }
-    //     }
-    //   }
-    //   return null;
-    //
-    //
-    //
-    //
-    // };
-
+    $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
 
 
   })

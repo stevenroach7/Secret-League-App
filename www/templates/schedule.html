@@ -45,7 +45,11 @@
         </div>
       </div>
       <div class="place-bar">
-        Places
+        <div class="place-label-box" ng-repeat="(placeString, placeTitle) in places">
+          <a class="place-label-button" ng-href="#/tab/schedule/{{currentDateString}}/{{placeString}}" nav-transition="none">
+            {{placeTitle}}
+          </a>
+        </div>
       </div>
 
   </ion-content>
