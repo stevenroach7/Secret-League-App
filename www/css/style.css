@@ -72,6 +72,15 @@
 
 }
 
+.event-label-container {
+  background-color: #424242;
+  color: white;
+}
+
+.event-label {
+  font-size: 9px;
+}
+
 .event-time-label {
   font-size: 10px;
   font-weight: bold;
