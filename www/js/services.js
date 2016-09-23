@@ -100,39 +100,53 @@
   });
 
 
-  servMod.factory('ScheduleService', function($firebaseArray) {
+  servMod.factory('ScheduleService', function($firebaseObject) {
 
-    var getEventsByDateAndRoom = function(dateString, roomString) {
-      /* Takes a dateString and a roomString and queries the firebase db to obtain a synchronized array of event objects on the date
-      specified by the dateString and in the room specified by the roomString. Then this functions sorts these events by their startTime variable and returns the array. */
-
-      // Get array of events on the date specified by the input dateString and the room specified by the input roomString.
-      var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(roomString);
-      var events = $firebaseArray(eventsRef);
-
-      // Sort the games array in order of time.
-      var sortByTimeQuery = eventsRef.orderByChild("startTime");
-      sortedEvents = $firebaseArray(sortByTimeQuery);
-      return sortedEvents;
-    };
+    // var getEventsByDateAndRoom = function(dateString, roomString) {
+    //   /* Takes a dateString and a roomString and queries the firebase db to obtain a synchronized array of event objects on the date
+    //   specified by the dateString and in the room specified by the roomString. Then this functions sorts these events by their startTime variable and returns the array. */
+    //
+    //   // Get array of events on the date specified by the input dateString and the room specified by the input roomString.
+    //   var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(roomString);
+    //   var events = $firebaseArray(eventsRef);
+    //
+    //   // Sort the games array in order of time.
+    //   var sortByTimeQuery = eventsRef.orderByChild("startTime");
+    //   sortedEvents = $firebaseArray(sortByTimeQuery);
+    //   return sortedEvents;
+    // };
 
     return {
 
-      getEventsObjectByDate: function(dateString) {
-        var events = {
-          "alumniGym": getEventsByDateAndRoom(dateString, "alumniGym"),
-          "fieldHouseCourt1": getEventsByDateAndRoom(dateString, "fieldHouseCourt1"),
-          "fieldHouseCourt2": getEventsByDateAndRoom(dateString, "fieldHouseCourt2"),
-          "fieldHouseCourt3": getEventsByDateAndRoom(dateString, "fieldHouseCourt3"),
-          "fieldHouseCourt4": getEventsByDateAndRoom(dateString, "fieldHouseCourt4"),
-          "fieldHouseTrack": getEventsByDateAndRoom(dateString, "fieldHouseTrack"),
-          "rbCourt1": getEventsByDateAndRoom(dateString, "rbCourt1"),
-          "rbCourt2": getEventsByDateAndRoom(dateString, "rbCourt2"),
-          "studio1": getEventsByDateAndRoom(dateString, "studio1"),
-          "studio2": getEventsByDateAndRoom(dateString, "studio2")
-        };
+      // getEventsObjectByDate: function(dateString) {
+      //   var events = {
+      //     "alumniGym": getEventsByDateAndRoom(dateString, "alumniGym"),
+      //     "fieldHouseCourt1": getEventsByDateAndRoom(dateString, "fieldHouseCourt1"),
+      //     "fieldHouseCourt2": getEventsByDateAndRoom(dateString, "fieldHouseCourt2"),
+      //     "fieldHouseCourt3": getEventsByDateAndRoom(dateString, "fieldHouseCourt3"),
+      //     "fieldHouseCourt4": getEventsByDateAndRoom(dateString, "fieldHouseCourt4"),
+      //     "fieldHouseTrack": getEventsByDateAndRoom(dateString, "fieldHouseTrack"),
+      //     "rbCourt1": getEventsByDateAndRoom(dateString, "rbCourt1"),
+      //     "rbCourt2": getEventsByDateAndRoom(dateString, "rbCourt2"),
+      //     "studio1": getEventsByDateAndRoom(dateString, "studio1"),
+      //     "studio2": getEventsByDateAndRoom(dateString, "studio2")
+      //   };
+      //   return events;
+      // }
+      getEventsByDateAndRoom: function(dateString, roomString) {
+        /* Takes a dateString and a roomString and queries the firebase db to obtain a synchronized array of event objects on the date
+        specified by the dateString and in the room specified by the roomString. Then this functions sorts these events by their startTime variable and returns the array. */
+
+        // Get array of events on the date specified by the input dateString and the room specified by the input roomString.
+        var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(roomString);
+        var events = $firebaseObject(eventsRef);
+
+        // Sort the games array in order of time.
+        // var sortByTimeQuery = eventsRef.orderByChild("startTime");
+        // sortedEvents = $firebaseArray(sortByTimeQuery);
         return events;
       }
+
 
     };
   });

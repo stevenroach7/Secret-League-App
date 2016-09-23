@@ -17,6 +17,7 @@
     </div>
 
       <div class="cal-container">
+        <!-- {{displayedEvents}} -->
         <div class="time-bar">
 
 
@@ -37,13 +38,13 @@
 
         <div class="event-label-box" ng-repeat="time in displayedTimes">
           <div class="event-label-container">
-            {{time | secondsToTime}}
+            {{events[time].eventName}}
           </div>
         </div>
 
         </div>
       </div>
-      <div class="place-bar" >
+      <div class="place-bar">
         Places
       </div>
 

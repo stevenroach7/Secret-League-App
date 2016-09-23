@@ -17,7 +17,6 @@
   .controller('ScheduleCtrl', function($scope, DateService, ScheduleService, $stateParams) {
 
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
-    $scope.events = ScheduleService.getEventsObjectByDate($stateParams.dateString);
 
     $scope.showNextDateArrow = function(dateString) {
       /* Determines whether next arrow for date navigation should be shown. */
@@ -59,14 +58,54 @@
 
       for (i = 7; i < 25; i++) {
         displayedTimes.push(hoursToSeconds(i));
-        console.log(i);
       }
       return displayedTimes;
 
 
     };
 
+
     $scope.displayedTimes = getDisplayedTimes();
+
+    // $scope.getEventAtStartingTime = function(eventsArray, startTime) {
+    //   console.log("YO");
+    //   for (i = 0; i < eventsArray.length; i++) {
+    //     console.log(eventsArray[i]);
+    //   }
+    // };
+    //
+    // $scope.getEventAtStartingTime = function(startTime) {
+    //   return ScheduleService.getEventsByDateRoomStartTime("09232016", "alumniGym", startTime);
+    // };
+
+    // $scope.getEventAtStartingTime(displayedEvents, 3600);
+
+
+
+
+    $scope.events = ScheduleService.getEventsByDateAndRoom($stateParams.dateString, "fieldHouseCourt1");
+
+    //
+    // $scope.getEventAtStartingTime = function(seconds) {
+    //   /* Takes a time in seconds and returns an event with that starting time or null if no events exist at that time. */
+    //
+    //
+    //   for (i = 0; i < events.alumniGym.length; i++) {
+    //     console.log("hey");
+    //     if (events[i].alumniGym.hasOwnProperty("startTime")) {
+    //       if (events[i].alumniGym.startTime == seconds) {
+    //         console.log("YES");
+    //         return events.alumniGym[i];
+    //       }
+    //     }
+    //   }
+    //   return null;
+    //
+    //
+    //
+    //
+    // };
+
 
 
   })
@@ -150,5 +189,17 @@
       return strTime;
     };
   });
+
+  // .filter('displayEventName', function($filter) {
+  //   return function(eventObject) {
+  //     console.log(eventObject);
+  //     if (true) {
+  //       console.log("WE got one.");
+  //       return eventObject;
+  //     }
+  //     return "No Event";
+  //   };
+  // });
+
 
 }());
