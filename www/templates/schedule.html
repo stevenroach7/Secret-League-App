@@ -23,7 +23,7 @@
 
 
           <div class="time-label-box" ng-repeat="time in displayedTimes">
-            <div class="label-container">
+            <div class="time-label-container">
               <label class="time-label">
                 {{time | secondsToTime}}
               </label>
@@ -34,16 +34,16 @@
 
         </div>
         <div class="cal">
-          <h1>Content</h1>
-          sjflsjfls
 
-          slfjslkfjslk
-          fsjldkfjslkfjs
-          slkdjflskjfls
-          sfjdklfjslf
+        <div class="event-label-box" ng-repeat="time in displayedTimes">
+          <div class="event-label-container">
+            {{time | secondsToTime}}
+          </div>
+        </div>
+
         </div>
       </div>
-      <div class="place-bar">
+      <div class="place-bar" >
         Places
       </div>
 
