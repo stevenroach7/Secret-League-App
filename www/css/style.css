@@ -80,10 +80,15 @@
 
 .place-label-box {
   height: 9%;
+  border: solid white 1px;
 }
 
 .place-label-button {
   color: white;
+}
+
+.place-label-button.active {
+  color: black;
 }
 
 

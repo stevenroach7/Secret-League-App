@@ -7,13 +7,13 @@
   <ion-content class="schedule-view" scroll="false">
 
     <div class="button-bar date-nav-schedule">
-      <a ng-show="{{showLastDateArrow(getLastDateString())}}" ng-href="#/tab/schedule/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
+      <a ng-show="{{showLastDateArrow(getLastDateString())}}" ng-href="#/tab/schedule/{{getLastDateString()}}/alumniGym" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
       <a class="date-display button button-block item-unselectable">
         <label class="date-title title-shadow">
           {{date | date:'MMMM dd'}}
         </label>
       </a>
-      <a ng-show="{{showNextDateArrow(getNextDateString())}}" ng-href="#/tab/schedule/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
+      <a ng-show="{{showNextDateArrow(getNextDateString())}}" ng-href="#/tab/schedule/{{getNextDateString()}}/alumniGym" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
     </div>
 
       <div class="cal-container">
@@ -46,7 +46,7 @@
       </div>
       <div class="place-bar">
         <div class="place-label-box" ng-repeat="(placeString, placeTitle) in places">
-          <a class="place-label-button" ng-href="#/tab/schedule/{{currentDateString}}/{{placeString}}" nav-transition="none">
+          <a class="place-label-button" ng-href="#/tab/schedule/{{currentDateString}}/{{placeString}}" nav-transition="none" ng-class="{true: 'active'}[placeString === currentPlaceString]">
             {{placeTitle}}
           </a>
         </div>
