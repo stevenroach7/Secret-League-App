@@ -18,7 +18,20 @@
 
       <div class="cal-container">
         <div class="time-bar">
-          Times
+
+
+
+
+          <div class="time-label-box" ng-repeat="time in displayedTimes">
+            <div class="label-container">
+              <label class="time-label">
+                {{time | secondsToTime}}
+              </label>
+            </div>
+          </div>
+
+
+
         </div>
         <div class="cal">
           <h1>Content</h1>

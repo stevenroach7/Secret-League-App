@@ -55,6 +55,21 @@
   height: 100%;
 }
 
+.time-label-box {
+  height: 4.935%;
+  border: solid black 1px;
+
+}
+
+.time-label {
+  font-size: 10px;
+  font-weight: bold;
+  margin-left: 10%;
+}
+
+
+
+
 
 /* Find Game Styling */
 .find-game-view {

@@ -47,6 +47,28 @@
       return DateService.dateToDateString(currentDate);
     };
 
+
+    var hoursToSeconds = function(hours) {
+      /* Takes a value in hours and returns that value in seconds */
+      return (hours * 3600);
+    };
+
+    var getDisplayedTimes = function() {
+
+      var displayedTimes = [];
+
+      for (i = 7; i < 25; i++) {
+        displayedTimes.push(hoursToSeconds(i));
+        console.log(i);
+      }
+      return displayedTimes;
+
+
+    };
+
+    $scope.displayedTimes = getDisplayedTimes();
+
+
   })
 
 
