@@ -76,11 +76,25 @@
 
     };
 
-
     $scope.displayedTimes = getDisplayedTimes();
-
     $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
 
+    $scope.doesEventExist = function(eventObject) {
+      if (eventObject) {
+        return true;
+      }
+      return false;
+    };
+
+    $scope.getEventHeight = function(eventObject) {
+      if (eventObject) {
+        var duration = eventObject.endTime - eventObject.startTime;
+        var durationHours = duration / 3600;
+        var durationPercent = durationHours * 100;
+        return durationPercent;
+      }
+      return 0;
+    };
 
   })
 

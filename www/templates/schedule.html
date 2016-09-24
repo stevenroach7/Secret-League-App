@@ -31,11 +31,11 @@
         </div>
         <div class="cal">
           <div class="event-label-box" ng-repeat="time in displayedTimes">
-            <div class="event-label-container">
-              <label class="event-label">
-                {{events[time].eventName}}
-              </label>
-            </div>
+              <div class="event-label-container" ng-show="doesEventExist(events[time]);" style="height: {{getEventHeight(events[time])}}%;">
+                <label class="event-label">
+                  {{events[time].eventName}}
+                </label>
+              </div>
           </div>
         </div>
       </div>
