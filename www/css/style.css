@@ -68,7 +68,7 @@
 
 .event-label-box {
   height: 4.935%;
-  border: solid #424242 0.25px;
+  border: solid #424242 0.01px;
 
 }
 
@@ -78,7 +78,7 @@
 }
 
 .event-label {
-  font-size: 9px;
+  font-size: 12px;
 }
 
 .event-time-label {
