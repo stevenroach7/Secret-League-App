@@ -37,7 +37,7 @@
 }
 
 .place-bar {
-  background-color: #886aea;
+  background-color: #424242;
   height: 100%;
   width: 100%;
 }
@@ -88,16 +88,19 @@
 }
 
 .place-label-box {
-  height: 9%;
-  border: solid white 1px;
+  height: 8.5%;
 }
 
 .place-label-button {
-  color: white;
+  font-size: 14px;
+  white-space: normal;
+  padding: 0;
+  margin-top: .5%;
+  height: 100%;
 }
 
 .place-label-button.active {
-  color: black;
+  background-color: #886aea;
 }
 
 

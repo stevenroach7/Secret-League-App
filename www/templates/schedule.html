@@ -41,7 +41,7 @@
       </div>
       <div class="place-bar">
         <div class="place-label-box" ng-repeat="(placeString, placeTitle) in places">
-          <a class="place-label-button" ng-href="#/tab/schedule/{{dateString}}/{{placeString}}" nav-transition="none" ng-class="{true: 'active'}[placeString === currentPlaceString]">
+          <a class="place-label-button item" ng-href="#/tab/schedule/{{dateString}}/{{placeString}}" nav-transition="none" ng-class="{true: 'active'}[placeString === currentPlaceString]">
             {{placeTitle}}
           </a>
         </div>
