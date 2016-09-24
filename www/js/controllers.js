@@ -17,6 +17,7 @@
   .controller('ScheduleCtrl', function($scope, DateService, ScheduleService, $stateParams) {
 
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
+    $scope.dateString = $stateParams.dateString;
 
     $scope.showNextDateArrow = function(dateString) {
       /* Determines whether next arrow for date navigation should be shown. */

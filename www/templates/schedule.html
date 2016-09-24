@@ -30,20 +30,18 @@
 
         </div>
         <div class="cal">
-
-        <div class="event-label-box" ng-repeat="time in displayedTimes">
-          <div class="event-label-container">
-            <label class="event-label">
-              {{events[time].eventName}}
-            </label>
+          <div class="event-label-box" ng-repeat="time in displayedTimes">
+            <div class="event-label-container">
+              <label class="event-label">
+                {{events[time].eventName}}
+              </label>
+            </div>
           </div>
-        </div>
-
         </div>
       </div>
       <div class="place-bar">
         <div class="place-label-box" ng-repeat="(placeString, placeTitle) in places">
-          <a class="place-label-button" ng-href="#/tab/schedule/{{currentDateString}}/{{placeString}}" nav-transition="none" ng-class="{true: 'active'}[placeString === currentPlaceString]">
+          <a class="place-label-button" ng-href="#/tab/schedule/{{dateString}}/{{placeString}}" nav-transition="none" ng-class="{true: 'active'}[placeString === currentPlaceString]">
             {{placeTitle}}
           </a>
         </div>
