@@ -56,7 +56,7 @@
 
 .time-label-box {
   height: 4.935%;
-  border: solid #424242 0.25px;
+  border: solid #424242 0.01px;
 
 }
 
@@ -68,7 +68,8 @@
 
 .event-label-box {
   /*height: 4.935%;*/
-  height: 2.4675%;
+  /*height: 2.4675%;*/
+  height: 1.23375%;
   /*border: solid #424242 0.01px;*/
 }
 

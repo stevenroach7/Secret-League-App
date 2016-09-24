@@ -30,7 +30,7 @@
 
         </div>
         <div class="cal">
-          <div class="event-label-box" ng-repeat="time in startingTimes" ng-class="{true: 'striped'}[time % 3600 !== 0]">
+          <div class="event-label-box" ng-repeat="time in startingTimes" ng-class="{true: 'striped'}[time % 1800 !== 0]">
             <div class="event-label-container" ng-show="doesEventExist(events[time]);" style="height: {{getEventHeight(events[time])}}%;">
               <label class="event-label">
                 {{events[time].eventName}}

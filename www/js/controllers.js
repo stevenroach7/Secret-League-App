@@ -79,7 +79,7 @@
 
       var startingTimes = [];
 
-      for (i = 7; i < 25; i+=0.5) {
+      for (i = 7; i < 25; i+=0.25) {
         startingTimes.push(hoursToSeconds(i));
       }
       return startingTimes;
@@ -102,7 +102,7 @@
         var duration = eventObject.endTime - eventObject.startTime;
         var durationHours = duration / 3600;
         var durationPercent = durationHours * 100;
-        return durationPercent * 2;
+        return durationPercent * 4;
       }
       return 0;
     };
