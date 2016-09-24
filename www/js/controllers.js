@@ -68,15 +68,26 @@
 
       var displayedTimes = [];
 
-      for (i = 7; i < 25; i++) {
+      for (i = 7; i < 25; i+=1) {
         displayedTimes.push(hoursToSeconds(i));
       }
       return displayedTimes;
+    };
 
 
+    var getStartingTimes = function() {
+
+      var startingTimes = [];
+
+      for (i = 7; i < 25; i+=0.5) {
+        startingTimes.push(hoursToSeconds(i));
+      }
+      return startingTimes;
     };
 
     $scope.displayedTimes = getDisplayedTimes();
+    $scope.startingTimes = getStartingTimes();
+
     $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
 
     $scope.doesEventExist = function(eventObject) {
@@ -91,7 +102,7 @@
         var duration = eventObject.endTime - eventObject.startTime;
         var durationHours = duration / 3600;
         var durationPercent = durationHours * 100;
-        return durationPercent;
+        return durationPercent * 2;
       }
       return 0;
     };
