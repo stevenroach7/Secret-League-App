@@ -47,16 +47,9 @@
       return DateService.dateToDateString(currentDate);
     };
 
-
     $scope.currentPlaceString = $stateParams.placeString;
 
     $scope.places = ScheduleService.getPlaces();
-
-    // $scope.placeStringToTitle = function(placeString) {
-    //   return ScheduleService.getPlaceTitle(placeString);
-    // };
-
-
 
 
     var hoursToSeconds = function(hours) {
