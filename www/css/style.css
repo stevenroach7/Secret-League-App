@@ -77,8 +77,6 @@
   /*background-color: #D3D3D3;*/
 }
 
-
-
 .event-label-container {
   background-color: #424242;
   color: #fff;
@@ -88,10 +86,8 @@
   font-size: 12px;
 }
 
-.event-time-label {
-  font-size: 10px;
-  font-weight: bold;
-  margin-left: 10%;
+.time-event-label {
+  font-size: 8px;
 }
 
 .place-label-box {

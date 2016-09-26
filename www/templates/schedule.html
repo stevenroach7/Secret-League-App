@@ -17,6 +17,7 @@
     </div>
 
       <div class="cal-container">
+
         <div class="time-bar">
           <div class="time-label-box" ng-repeat="time in displayedTimes">
             <div class="time-label-container">
@@ -25,19 +26,19 @@
               </label>
             </div>
           </div>
-
-
-
         </div>
+
         <div class="cal">
           <div class="event-label-box" ng-repeat="time in startingTimes" ng-class="{true: 'striped'}[time % 1800 !== 0]">
             <div class="event-label-container" ng-show="doesEventExist(events[time]);" style="height: {{getEventHeight(events[time])}}%;">
               <label class="event-label">
                 {{events[time].eventName}}
+                <span class="time-event-label"> ({{events[time].startTime | secondsToTime}} to {{events[time].endTime | secondsToTime}}) </span>
               </label>
             </div>
           </div>
         </div>
+        
       </div>
       <div class="place-bar">
         <div class="place-label-box" ng-repeat="(placeString, placeTitle) in places">
