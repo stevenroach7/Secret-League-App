@@ -58,7 +58,7 @@
     };
 
     var getDisplayedTimes = function() {
-
+    /* Helper function to create array of times in seconds that will be displayed as time labels. */
       var displayedTimes = [];
 
       for (i = 7; i < 25; i+=1) {
@@ -69,7 +69,7 @@
 
 
     var getStartingTimes = function() {
-
+      /* Helper function to create array of times in seconds that we will use to check if events start at each time. */
       var startingTimes = [];
 
       for (i = 7; i < 25; i+=0.25) {
@@ -84,6 +84,7 @@
     $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
 
     $scope.doesEventExist = function(eventObject) {
+      /* Takes an object and returns if it is truthy. */
       if (eventObject) {
         return true;
       }
@@ -91,11 +92,13 @@
     };
 
     $scope.getEventHeight = function(eventObject) {
+      /* Takes an event object and uses the start and end time properties to calculate the
+      percent scaled to 15 minutes the event element should take up. */
       if (eventObject) {
         var duration = eventObject.endTime - eventObject.startTime;
         var durationHours = duration / 3600;
-        var durationPercent = durationHours * 100;
-        return durationPercent * 4;
+        var durationPercent = 4 * (durationHours * 100); // Multiply by 4 because we need the percent height scaled to 15 minutes instead of one hour.
+        return durationPercent;
       }
       return 0;
     };
@@ -181,17 +184,5 @@
       return strTime;
     };
   });
-
-  // .filter('displayEventName', function($filter) {
-  //   return function(eventObject) {
-  //     console.log(eventObject);
-  //     if (true) {
-  //       console.log("WE got one.");
-  //       return eventObject;
-  //     }
-  //     return "No Event";
-  //   };
-  // });
-
 
 }());
