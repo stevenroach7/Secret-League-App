@@ -68,13 +68,13 @@
 
 .event-label-box {
   /*height: 4.935%;*/
-  /*height: 2.4675%;*/
-  height: 1.23375%;
+  height: 0.41125%;
   /*border: solid #424242 0.01px;*/
 }
 
 .event-label-box.striped {
   /*background-color: #D3D3D3;*/
+  /*background-color: #000000;*/
 }
 
 .event-label-container {
@@ -83,7 +83,7 @@
 }
 
 .event-label {
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .time-event-label {

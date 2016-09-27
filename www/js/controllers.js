@@ -54,7 +54,7 @@
 
     var hoursToSeconds = function(hours) {
       /* Takes a value in hours and returns that value in seconds */
-      return (hours * 3600);
+      return Math.round(hours * 3600); // Round to integer value
     };
 
     var getDisplayedTimes = function() {
@@ -72,7 +72,10 @@
       /* Helper function to create array of times in seconds that we will use to check if events start at each time. */
       var startingTimes = [];
 
-      for (i = 7; i < 25; i+=0.25) {
+      var increment = (1/12);
+      for (i = 7; i < 25; i+=increment) {
+        // console.log(hoursToSeconds(i));
+        // console.log(hoursToSeconds(i) % 1800);
         startingTimes.push(hoursToSeconds(i));
       }
       return startingTimes;
@@ -93,14 +96,22 @@
 
     $scope.getEventHeight = function(eventObject) {
       /* Takes an event object and uses the start and end time properties to calculate the
-      percent scaled to 15 minutes the event element should take up. */
+      percent scaled to 5 minutes the event element should take up. */
       if (eventObject) {
         var duration = eventObject.endTime - eventObject.startTime;
         var durationHours = duration / 3600;
-        var durationPercent = 4 * (durationHours * 100); // Multiply by 4 because we need the percent height scaled to 15 minutes instead of one hour.
+        var durationPercent = 12 * (durationHours * 100); // Multiply by 12 because we need the percent height scaled to 5 minutes instead of one hour.
         return durationPercent;
       }
       return 0;
+    };
+
+
+    $scope.isStripeOn = function(time) {
+      /* Takes a time and calculates if the event-label-container with the startingTime corresponding to this input time should be striped or not. */
+      // time % 1800 creates a sequence of 6 values when time is incremented by 300. (0, 300, 600, 900, 1200, 1500, etc.)
+      // We want groups of 15 minutes (900 seconds) to be striped so we stripe the first 3 values in the sequence.
+      return ((time % 1800) <= 600);
     };
 
   })
