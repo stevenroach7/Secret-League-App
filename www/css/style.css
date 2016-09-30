@@ -34,7 +34,6 @@
   color: #000;
   height: 100%;
   width: 80%;
-  /*border: solid #424242 0.01px;*/
 }
 
 .place-bar {
@@ -52,8 +51,7 @@
 
 .time-label-box {
   height: 4.935%;
-  /*border: solid #424242 0.01px;*/
-  outline: solid #424242 0.01px;
+  outline: solid #424242 0.01px; /* Use outline instead of border so box does not get bigger. */
 
 }
 
@@ -69,10 +67,9 @@
 }
 
 
-.event-label-box {
+.event-label-box { /* This refers to the background elements in the calendar with the height of each being 5 minutes */
   /*height: 4.935%;*/
   height: 0.41125%;
-  margin-left: 20%;
 }
 
 .event-label-box.striped {
@@ -80,10 +77,10 @@
   /*background-color: #000000;*/
 }
 
-.event-label-container {
+.event-label-container { /* This refers to the event elements whose height is specfied by the duration of time of the event. */
   background-color: #424242;
   color: #fff;
-  position: relative;
+  position: relative; /* Set position to relative so we can use z-index to make sure the event element is on top of everything. */
   z-index: 100;
 }
 
