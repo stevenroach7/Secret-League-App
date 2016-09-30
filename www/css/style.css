@@ -36,12 +36,6 @@
   width: 80%;
 }
 
-.place-bar {
-  background-color: #424242;
-  height: 100%;
-  width: 100%;
-}
-
 .time-bar {
   float: left;
   background-color: #886aea;
@@ -52,13 +46,13 @@
 .time-label-box {
   height: 4.935%;
   outline: solid #424242 0.01px; /* Use outline instead of border so box does not get bigger. */
-
 }
 
 .time-label {
   font-size: 10px;
   font-weight: bold;
   margin-left: 10%;
+  color: white;
 }
 
 .cal {
@@ -68,13 +62,13 @@
 
 
 .event-label-box { /* This refers to the background elements in the calendar with the height of each being 5 minutes */
-  /*height: 4.935%;*/
-  height: 0.41125%;
+  /*height: 4.935%;*/ /* The size of one hour. */
+  height: 0.41125%; /* The size of 5 minutes. */
+  margin-left: 20%; /* This value should be the same as the width of the place-bar. */
 }
 
 .event-label-box.striped {
   background-color: #D3D3D3;
-  /*background-color: #000000;*/
 }
 
 .event-label-container { /* This refers to the event elements whose height is specfied by the duration of time of the event. */
@@ -82,14 +76,23 @@
   color: #fff;
   position: relative; /* Set position to relative so we can use z-index to make sure the event element is on top of everything. */
   z-index: 100;
+  margin-left: 1%;
+  outline: solid black 0.01px; /* Use outline instead of border so box does not get bigger. */
+
 }
 
 .event-label {
   font-size: 10px;
+  margin-left: 1.5%;
 }
 
 .time-event-label {
   font-size: 8px;
+}
+
+
+.place-bar {
+  height: 100%;
 }
 
 .place-label-box {
@@ -97,15 +100,19 @@
 }
 
 .place-label-button {
-  font-size: 14px;
-  white-space: normal;
-  padding: 0;
-  margin-top: .5%;
+  font-size: 11px;
+  white-space: normal; /* Wrap text */
+  padding: 0; /* Bring text to top left. */
+  padding-top: 3%; /* Move text down a bit. */
+  padding-left: 0.5%; /* Move text left a bit. */
+  padding-right: 0.5%; /* Move text left a bit. */
+  margin-top: 0.5%; /* Create some empty space between place-label-button's */
   height: 100%;
 }
 
 .place-label-button.active {
   background-color: #886aea;
+  color: #fff;
 }
 
 
