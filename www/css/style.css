@@ -15,6 +15,13 @@
 /* Login Styling */
 
 
+.homescreen-logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
 
 
 /* Schedule Styling */
@@ -76,7 +83,6 @@
   color: #fff;
   position: relative; /* Set position to relative so we can use z-index to make sure the event element is on top of everything. */
   z-index: 100;
-  margin-left: 1%;
   outline: solid black 0.01px; /* Use outline instead of border so box does not get bigger. */
 
 }
@@ -93,13 +99,14 @@
 
 .place-bar {
   height: 100%;
+  margin-left: 80%;
 }
 
 .place-label-box {
   height: 8.5%;
 }
 
-.place-label-button {
+.place-label-button { /* Need to adjust this. */
   font-size: 11px;
   white-space: normal; /* Wrap text */
   padding: 0; /* Bring text to top left. */
