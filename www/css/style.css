@@ -103,18 +103,19 @@
 }
 
 .place-label-box {
-  height: 8.5%;
+  height: 8.75%;
 }
 
-.place-label-button { /* Need to adjust this. */
+.place-label-button {
   font-size: 11px;
+  text-align: center;
+  font-weight: bold;
   white-space: normal; /* Wrap text */
   padding: 0; /* Bring text to top left. */
-  padding-top: 3%; /* Move text down a bit. */
-  padding-left: 0.5%; /* Move text left a bit. */
-  padding-right: 0.5%; /* Move text left a bit. */
-  margin-top: 0.5%; /* Create some empty space between place-label-button's */
+  padding-top: 12%; /* Move text down a bit. */
+  margin-top: 1%; /* Create some empty space between place-label-button's */
   height: 100%;
+  border-radius: 10%;
 }
 
 .place-label-button.active {
