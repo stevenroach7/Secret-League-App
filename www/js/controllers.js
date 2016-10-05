@@ -100,6 +100,12 @@
     // TODO: Possibly check for null here
     $scope.events = schedule[dateString][placeString];
 
+
+    $scope.refreshData = function() {
+      // TODO: Rewrite this to use a promise.
+      schedule = ScheduleService.refreshSchedule(currentDate);
+    };
+
     $scope.doesEventExist = function(eventObject) {
       /* Takes an object and returns if it is truthy. */
       if (eventObject) {
