@@ -132,378 +132,380 @@
       studio2: "Studio 2"
     };
 
-    var schedule = {
-      "09282016": {},
-      "09292016": {},
-      "09302016": {},
-      "10012016": {},
-      "10022016": {},
-      "10032016": {},
-      "10042016": {},
-      "10052016" : {
-        "alumniGym" : {
-          "36000" : {
-            "dateString" : "10052016",
-            "endTime" : 41400,
-            "eventName" : "Men's Basketball Open Gym",
-            "place" : "Alumni Gym",
-            "startTime" : 36000
-          },
-          "41400" : {
-            "dateString" : "10052016",
-            "endTime" : 46800,
-            "eventName" : "Women's Basketball Open Gym",
-            "place" : "Alumni Gym",
-            "startTime" : 41400
-          }
-        },
-        "fieldHouseCourt1" : {
-          "36000" : {
-            "dateString" : "10052016",
-            "endTime" : 43200,
-            "eventName" : "Club Tennis",
-            "place" : "Court 1",
-            "startTime" : 36000
-          },
-          "50400" : {
-            "dateString" : "10052016",
-            "endTime" : 57600,
-            "eventName" : "Club Badminton",
-            "place" : "Court 1",
-            "startTime" : 50400
-          }
-        },
-        "fieldHouseCourt2" : {
-          "36000" : {
-            "dateString" : "10052016",
-            "endTime" : 43200,
-            "eventName" : "Club Tennis",
-            "place" : "Court 2",
-            "startTime" : 36000
-          },
-          "50400" : {
-            "dateString" : "10052016",
-            "endTime" : 57600,
-            "eventName" : "Club Badminton",
-            "place" : "Court 2",
-            "startTime" : 50400
-          }
-        },
-        "fieldHouseCourt3" : {
-          "36000" : {
-            "dateString" : "10052016",
-            "endTime" : 43200,
-            "eventName" : "Club Tennis",
-            "place" : "Court 3",
-            "startTime" : 36000
-          },
-          "50400" : {
-            "dateString" : "10052016",
-            "endTime" : 57600,
-            "eventName" : "Club Badminton",
-            "place" : "Court 3",
-            "startTime" : 50400
-          }
-        },
-        "fieldHouseCourt4" : {
-          "36000" : {
-            "dateString" : "10052016",
-            "endTime" : 43200,
-            "eventName" : "Club Tennis",
-            "place" : "Court 4",
-            "startTime" : 36000
-          }
-        },
-        "fieldHouseTrack" : {
-          "36000" : {
-            "dateString" : "10052016",
-            "endTime" : 43200,
-            "eventName" : "Club Tennis",
-            "place" : "Track",
-            "startTime" : 36000
-          }
-        },
-        "rbCourt1" : {
-          "36000" : {
-            "dateString" : "10052016",
-            "endTime" : 43200,
-            "eventName" : "Club Tennis",
-            "place" : "Racquetball 1",
-            "startTime" : 36000
-          }
-        },
-        "rbCourt2" : {
-          "36000" : {
-            "dateString" : "10052016",
-            "endTime" : 43200,
-            "eventName" : "Club Tennis",
-            "place" : "Racquetball 2",
-            "startTime" : 36000
-          }
-        },
-        "studio1" : {
-          "50400" : {
-            "dateString" : "10052016",
-            "endTime" : 57600,
-            "eventName" : "Team Asia",
-            "place" : "Studio 1",
-            "startTime" : 50400
-          }
-        }
-      },
-      "10062016" : {
-        "alumniGym" : {
-          "60300" : {
-            "dateString" : "10062016",
-            "endTime" : 67500,
-            "eventName" : "VB Practice",
-            "place" : "Alumni Gym",
-            "startTime" : 60300
-          }
-        },
-        "studio1" : {
-          "38700" : {
-            "dateString" : "10062016",
-            "endTime" : 42300,
-            "eventName" : "FY Seminar - Human Anatomy",
-            "place" : "Studio 1",
-            "startTime" : 38700
-          },
-          "43200" : {
-            "dateString" : "10062016",
-            "endTime" : 46800,
-            "eventName" : "WHAM Yoga",
-            "place" : "Studio 1",
-            "startTime" : 43200
-          },
-          "51300" : {
-            "dateString" : "10062016",
-            "endTime" : 54900,
-            "eventName" : "P.E. - Yoga I",
-            "place" : "Studio 1",
-            "startTime" : 51300
-          },
-          "55800" : {
-            "dateString" : "10062016",
-            "endTime" : 59400,
-            "eventName" : "P.E. Karate I/II",
-            "place" : "Studio 1",
-            "startTime" : 55800
-          },
-          "60300" : {
-            "dateString" : "10062016",
-            "endTime" : 63900,
-            "eventName" : "P.E. - Yoga I",
-            "place" : "Studio 1",
-            "startTime" : 60300
-          },
-          "68400" : {
-            "dateString" : "10062016",
-            "endTime" : 73800,
-            "eventName" : "P.E. - Beginning Social Dance",
-            "place" : "Studio 1",
-            "startTime" : 68400
-          },
-          "73800" : {
-            "dateString" : "10062016",
-            "endTime" : 77400,
-            "eventName" : "Physical Activity Class - Zumba",
-            "place" : "Studio 1",
-            "startTime" : 73800
-          },
-          "77400" : {
-            "dateString" : "10062016",
-            "endTime" : 82800,
-            "eventName" : "Dance Rehearsal",
-            "place" : "Studio 1",
-            "startTime" : 77400
-          }
-        },
-        "studio2" : {
-          "55800" : {
-            "dateString" : "10062016",
-            "endTime" : 59400,
-            "eventName" : "P.E. Tai Chi",
-            "place" : "Studio 2",
-            "startTime" : 55800
-          },
-          "60300" : {
-            "dateString" : "10062016",
-            "endTime" : 63900,
-            "eventName" : "P.E. - Pilates I",
-            "place" : "Studio 2",
-            "startTime" : 60300
-          },
-          "68400" : {
-            "dateString" : "10062016",
-            "endTime" : 72000,
-            "eventName" : "Physical Activity Class - Circuit Training",
-            "place" : "Studio 2",
-            "startTime" : 68400
-          },
-          "72000" : {
-            "dateString" : "10062016",
-            "endTime" : 75600,
-            "eventName" : "MMAC - Kickboxing",
-            "place" : "Studio 2",
-            "startTime" : 72000
-          },
-          "75600" : {
-            "dateString" : "10062016",
-            "endTime" : 77400,
-            "eventName" : "Dance Rehearsal",
-            "place" : "Studio 2",
-            "startTime" : 75600
-          }
-        }
-      },
-      "10072016" : {
-        "alumniGym" : {
-          "39600" : {
-            "dateString" : "10072016",
-            "endTime" : 46800,
-            "eventName" : "VB Practice",
-            "place" : "Alumni Gym",
-            "startTime" : 39600
-          },
-          "64800" : {
-            "dateString" : "10072016",
-            "endTime" : 70200,
-            "eventName" : "Men's Basketball Open Gym",
-            "place" : "Alumni Gym",
-            "startTime" : 64800
-          },
-          "72000" : {
-            "dateString" : "10072016",
-            "endTime" : 79200,
-            "eventName" : "Club Volleyball",
-            "place" : "Alumni Gym",
-            "startTime" : 72000
-          }
-        },
-        "fieldHouseCourt1" : {
-          "39600" : {
-            "dateString" : "10072016",
-            "endTime" : 46800,
-            "eventName" : "Women's Basketball Open Gym",
-            "place" : "Court 1",
-            "startTime" : 39600
-          }
-        },
-        "fieldHouseCourt4" : {
-          "64800" : {
-            "dateString" : "10072016",
-            "endTime" : 70200,
-            "eventName" : "MMAC-ju-jitsu",
-            "place" : "Court 4",
-            "startTime" : 64800
-          }
-        },
-        "studio1" : {
-          "36000" : {
-            "dateString" : "10072016",
-            "endTime" : 39600,
-            "eventName" : "P.E. - Yoga I",
-            "place" : "Studio 1",
-            "startTime" : 36000
-          },
-          "43200" : {
-            "dateString" : "10072016",
-            "endTime" : 46800,
-            "eventName" : "WHAM Yoga Barre",
-            "place" : "Studio 1",
-            "startTime" : 43200
-          },
-          "48000" : {
-            "dateString" : "10072016",
-            "endTime" : 51600,
-            "eventName" : "P.E. - Self Defense",
-            "place" : "Studio 1",
-            "startTime" : 48000
-          },
-          "54000" : {
-            "dateString" : "10072016",
-            "endTime" : 57600,
-            "eventName" : "P.E. - Yoga I",
-            "place" : "Studio 1",
-            "startTime" : 54000
-          },
-          "61200" : {
-            "dateString" : "10072016",
-            "endTime" : 64800,
-            "eventName" : "P.E. Class - Step Aerobics",
-            "place" : "Studio 1",
-            "startTime" : 61200
-          },
-          "64800" : {
-            "dateString" : "10072016",
-            "endTime" : 68400,
-            "eventName" : "P.E. Salsa PREP",
-            "place" : "Studio 1",
-            "startTime" : 64800
-          },
-          "68400" : {
-            "dateString" : "10072016",
-            "endTime" : 73800,
-            "eventName" : "P.E. - Salsa Dancing",
-            "place" : "Studio 1",
-            "startTime" : 68400
-          },
-          "73800" : {
-            "dateString" : "10072016",
-            "endTime" : 81000,
-            "eventName" : "Dance Rehearsal",
-            "place" : "Studio 1",
-            "startTime" : 73800
-          }
-        },
-        "studio2" : {
-          "46800" : {
-            "dateString" : "10072016",
-            "endTime" : 52200,
-            "eventName" : "Dance Rehearsal",
-            "place" : "Studio 2",
-            "startTime" : 46800
-          },
-          "60300" : {
-            "dateString" : "10072016",
-            "endTime" : 63900,
-            "eventName" : "P.E. - Pilates II",
-            "place" : "Studio 2",
-            "startTime" : 60300
-          },
-          "63900" : {
-            "dateString" : "10072016",
-            "endTime" : 68400,
-            "eventName" : "MMAC - Brazilian ju-jitsu",
-            "place" : "Studio 2",
-            "startTime" : 63900
-          },
-          "68400" : {
-            "dateString" : "10072016",
-            "endTime" : 72000,
-            "eventName" : "Physical Activity Class - Yoga",
-            "place" : "Studio 2",
-            "startTime" : 68400
-          },
-          "72000" : {
-            "dateString" : "10072016",
-            "endTime" : 79200,
-            "eventName" : "Bodacious",
-            "place" : "Studio 2",
-            "startTime" : 72000
-          }
-        }
-      },
-      "10082016": {},
-      "10092016": {},
-      "10102016": {},
-      "10112016": {},
-      "10122016": {}
-    };
-
+    // var schedule = {
+    //   "09282016": {},
+    //   "09292016": {},
+    //   "09302016": {},
+    //   "10012016": {},
+    //   "10022016": {},
+    //   "10032016": {},
+    //   "10042016": {},
+    //   "10052016" : {
+    //     "alumniGym" : {
+    //       "36000" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 41400,
+    //         "eventName" : "Men's Basketball Open Gym",
+    //         "place" : "Alumni Gym",
+    //         "startTime" : 36000
+    //       },
+    //       "41400" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 46800,
+    //         "eventName" : "Women's Basketball Open Gym",
+    //         "place" : "Alumni Gym",
+    //         "startTime" : 41400
+    //       }
+    //     },
+    //     "fieldHouseCourt1" : {
+    //       "36000" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 43200,
+    //         "eventName" : "Club Tennis",
+    //         "place" : "Court 1",
+    //         "startTime" : 36000
+    //       },
+    //       "50400" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 57600,
+    //         "eventName" : "Club Badminton",
+    //         "place" : "Court 1",
+    //         "startTime" : 50400
+    //       }
+    //     },
+    //     "fieldHouseCourt2" : {
+    //       "36000" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 43200,
+    //         "eventName" : "Club Tennis",
+    //         "place" : "Court 2",
+    //         "startTime" : 36000
+    //       },
+    //       "50400" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 57600,
+    //         "eventName" : "Club Badminton",
+    //         "place" : "Court 2",
+    //         "startTime" : 50400
+    //       }
+    //     },
+    //     "fieldHouseCourt3" : {
+    //       "36000" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 43200,
+    //         "eventName" : "Club Tennis",
+    //         "place" : "Court 3",
+    //         "startTime" : 36000
+    //       },
+    //       "50400" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 57600,
+    //         "eventName" : "Club Badminton",
+    //         "place" : "Court 3",
+    //         "startTime" : 50400
+    //       }
+    //     },
+    //     "fieldHouseCourt4" : {
+    //       "36000" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 43200,
+    //         "eventName" : "Club Tennis",
+    //         "place" : "Court 4",
+    //         "startTime" : 36000
+    //       }
+    //     },
+    //     "fieldHouseTrack" : {
+    //       "36000" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 43200,
+    //         "eventName" : "Club Tennis",
+    //         "place" : "Track",
+    //         "startTime" : 36000
+    //       }
+    //     },
+    //     "rbCourt1" : {
+    //       "36000" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 43200,
+    //         "eventName" : "Club Tennis",
+    //         "place" : "Racquetball 1",
+    //         "startTime" : 36000
+    //       }
+    //     },
+    //     "rbCourt2" : {
+    //       "36000" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 43200,
+    //         "eventName" : "Club Tennis",
+    //         "place" : "Racquetball 2",
+    //         "startTime" : 36000
+    //       }
+    //     },
+    //     "studio1" : {
+    //       "50400" : {
+    //         "dateString" : "10052016",
+    //         "endTime" : 57600,
+    //         "eventName" : "Team Asia",
+    //         "place" : "Studio 1",
+    //         "startTime" : 50400
+    //       }
+    //     }
+    //   },
+    //   "10062016" : {
+    //     "alumniGym" : {
+    //       "60300" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 67500,
+    //         "eventName" : "VB Practice",
+    //         "place" : "Alumni Gym",
+    //         "startTime" : 60300
+    //       }
+    //     },
+    //     "studio1" : {
+    //       "38700" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 42300,
+    //         "eventName" : "FY Seminar - Human Anatomy",
+    //         "place" : "Studio 1",
+    //         "startTime" : 38700
+    //       },
+    //       "43200" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 46800,
+    //         "eventName" : "WHAM Yoga",
+    //         "place" : "Studio 1",
+    //         "startTime" : 43200
+    //       },
+    //       "51300" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 54900,
+    //         "eventName" : "P.E. - Yoga I",
+    //         "place" : "Studio 1",
+    //         "startTime" : 51300
+    //       },
+    //       "55800" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 59400,
+    //         "eventName" : "P.E. Karate I/II",
+    //         "place" : "Studio 1",
+    //         "startTime" : 55800
+    //       },
+    //       "60300" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 63900,
+    //         "eventName" : "P.E. - Yoga I",
+    //         "place" : "Studio 1",
+    //         "startTime" : 60300
+    //       },
+    //       "68400" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 73800,
+    //         "eventName" : "P.E. - Beginning Social Dance",
+    //         "place" : "Studio 1",
+    //         "startTime" : 68400
+    //       },
+    //       "73800" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 77400,
+    //         "eventName" : "Physical Activity Class - Zumba",
+    //         "place" : "Studio 1",
+    //         "startTime" : 73800
+    //       },
+    //       "77400" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 82800,
+    //         "eventName" : "Dance Rehearsal",
+    //         "place" : "Studio 1",
+    //         "startTime" : 77400
+    //       }
+    //     },
+    //     "studio2" : {
+    //       "55800" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 59400,
+    //         "eventName" : "P.E. Tai Chi",
+    //         "place" : "Studio 2",
+    //         "startTime" : 55800
+    //       },
+    //       "60300" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 63900,
+    //         "eventName" : "P.E. - Pilates I",
+    //         "place" : "Studio 2",
+    //         "startTime" : 60300
+    //       },
+    //       "68400" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 72000,
+    //         "eventName" : "Physical Activity Class - Circuit Training",
+    //         "place" : "Studio 2",
+    //         "startTime" : 68400
+    //       },
+    //       "72000" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 75600,
+    //         "eventName" : "MMAC - Kickboxing",
+    //         "place" : "Studio 2",
+    //         "startTime" : 72000
+    //       },
+    //       "75600" : {
+    //         "dateString" : "10062016",
+    //         "endTime" : 77400,
+    //         "eventName" : "Dance Rehearsal",
+    //         "place" : "Studio 2",
+    //         "startTime" : 75600
+    //       }
+    //     }
+    //   },
+    //   "10072016" : {
+    //     "alumniGym" : {
+    //       "39600" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 46800,
+    //         "eventName" : "VB Practice",
+    //         "place" : "Alumni Gym",
+    //         "startTime" : 39600
+    //       },
+    //       "64800" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 70200,
+    //         "eventName" : "Men's Basketball Open Gym",
+    //         "place" : "Alumni Gym",
+    //         "startTime" : 64800
+    //       },
+    //       "72000" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 79200,
+    //         "eventName" : "Club Volleyball",
+    //         "place" : "Alumni Gym",
+    //         "startTime" : 72000
+    //       }
+    //     },
+    //     "fieldHouseCourt1" : {
+    //       "39600" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 46800,
+    //         "eventName" : "Women's Basketball Open Gym",
+    //         "place" : "Court 1",
+    //         "startTime" : 39600
+    //       }
+    //     },
+    //     "fieldHouseCourt4" : {
+    //       "64800" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 70200,
+    //         "eventName" : "MMAC-ju-jitsu",
+    //         "place" : "Court 4",
+    //         "startTime" : 64800
+    //       }
+    //     },
+    //     "studio1" : {
+    //       "36000" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 39600,
+    //         "eventName" : "P.E. - Yoga I",
+    //         "place" : "Studio 1",
+    //         "startTime" : 36000
+    //       },
+    //       "43200" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 46800,
+    //         "eventName" : "WHAM Yoga Barre",
+    //         "place" : "Studio 1",
+    //         "startTime" : 43200
+    //       },
+    //       "48000" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 51600,
+    //         "eventName" : "P.E. - Self Defense",
+    //         "place" : "Studio 1",
+    //         "startTime" : 48000
+    //       },
+    //       "54000" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 57600,
+    //         "eventName" : "P.E. - Yoga I",
+    //         "place" : "Studio 1",
+    //         "startTime" : 54000
+    //       },
+    //       "61200" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 64800,
+    //         "eventName" : "P.E. Class - Step Aerobics",
+    //         "place" : "Studio 1",
+    //         "startTime" : 61200
+    //       },
+    //       "64800" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 68400,
+    //         "eventName" : "P.E. Salsa PREP",
+    //         "place" : "Studio 1",
+    //         "startTime" : 64800
+    //       },
+    //       "68400" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 73800,
+    //         "eventName" : "P.E. - Salsa Dancing",
+    //         "place" : "Studio 1",
+    //         "startTime" : 68400
+    //       },
+    //       "73800" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 81000,
+    //         "eventName" : "Dance Rehearsal",
+    //         "place" : "Studio 1",
+    //         "startTime" : 73800
+    //       }
+    //     },
+    //     "studio2" : {
+    //       "46800" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 52200,
+    //         "eventName" : "Dance Rehearsal",
+    //         "place" : "Studio 2",
+    //         "startTime" : 46800
+    //       },
+    //       "60300" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 63900,
+    //         "eventName" : "P.E. - Pilates II",
+    //         "place" : "Studio 2",
+    //         "startTime" : 60300
+    //       },
+    //       "63900" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 68400,
+    //         "eventName" : "MMAC - Brazilian ju-jitsu",
+    //         "place" : "Studio 2",
+    //         "startTime" : 63900
+    //       },
+    //       "68400" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 72000,
+    //         "eventName" : "Physical Activity Class - Yoga",
+    //         "place" : "Studio 2",
+    //         "startTime" : 68400
+    //       },
+    //       "72000" : {
+    //         "dateString" : "10072016",
+    //         "endTime" : 79200,
+    //         "eventName" : "Bodacious",
+    //         "place" : "Studio 2",
+    //         "startTime" : 72000
+    //       }
+    //     }
+    //   },
+    //   "10082016": {},
+    //   "10092016": {},
+    //   "10102016": {},
+    //   "10112016": {},
+    //   "10122016": {}
+    // };
+    // var schedule = {};
 
     updateSchedule = function(currentDate) {
+
+      // TODO: Decompose this.
 
       var daysInWeek = 7;
 
@@ -519,13 +521,20 @@
         date = DateService.getNextDate(date);
       }
 
+      console.log("updated");
 
-      console.log(dateStrings);
+      // Create schedule Object
+      var schedule = {};
 
-      // Create twoWeekScheduleObject
-      // var twoWeekSchedule = {};
+      // Query DB and add to schedule
+      for(i = 0; i < dateStrings.length; i++) {
 
-      // Query DB and add to twoWeekSchedule
+        var dateObjRef = firebase.database().ref().child("schedule").child(dateStrings[i]);
+        var dateObj = $firebaseObject(dateObjRef);
+        schedule[dateStrings[i]] = dateObj;
+      }
+      return schedule;
+
     };
 
 
@@ -559,22 +568,22 @@
         return places;
       },
 
-      getEventsByDateAndPlace: function(dateString, placeString) {
-        /* Takes a dateString and a placeString and queries the firebase db to obtain a synchronized array of event objects on the date
-        specified by the dateString and in the place specified by the placeString. Then this functions sorts these events by their startTime variable and returns the array. */
-
-        // Get array of events on the date specified by the input dateString and the place specified by the input placeString.
-        var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(placeString);
-        var events = $firebaseObject(eventsRef);
-
-        // Sort the games array in order of time.
-        // var sortByTimeQuery = eventsRef.orderByChild("startTime");
-        // sortedEvents = $firebaseArray(sortByTimeQuery);
-        return events;
-      },
+      // getEventsByDateAndPlace: function(dateString, placeString) {
+      //   /* Takes a dateString and a placeString and queries the firebase db to obtain a synchronized array of event objects on the date
+      //   specified by the dateString and in the place specified by the placeString. Then this functions sorts these events by their startTime variable and returns the array. */
+      //
+      //   // Get array of events on the date specified by the input dateString and the place specified by the input placeString.
+      //   var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(placeString);
+      //   var events = $firebaseObject(eventsRef);
+      //
+      //   // Sort the games array in order of time.
+      //   // var sortByTimeQuery = eventsRef.orderByChild("startTime");
+      //   // sortedEvents = $firebaseArray(sortByTimeQuery);
+      //   return events;
+      // },
       getSchedule: function(currentDate) {
 
-        if (!schedule) {
+        if (typeof(schedule) === 'undefined') {
           schedule = updateSchedule(currentDate);
         }
         return schedule;

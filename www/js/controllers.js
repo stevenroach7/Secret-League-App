@@ -11,7 +11,6 @@
     var currentDate = new Date();
     $scope.currentDateString = DateService.dateToDateString(currentDate);
 
-
   })
 
 
@@ -81,7 +80,7 @@
       /* Helper function to create array of times in seconds that we will use to check if events start at each time. */
       var startingTimes = [];
 
-      var increment = (1/12);
+      var increment = (1/12); // Every 5 minutes
       for (i = 7; i < 25; i+=increment) {
         // console.log(hoursToSeconds(i));
         // console.log(hoursToSeconds(i) % 1800);
@@ -93,14 +92,10 @@
     $scope.displayedTimes = getDisplayedTimes();
     $scope.startingTimes = getStartingTimes();
 
-    // $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
     var dateString = $stateParams.dateString;
     var placeString = $stateParams.placeString;
 
-
-    ScheduleService.refreshSchedule(currentDate);
     var schedule = ScheduleService.getSchedule(currentDate);
-    console.log(schedule);
 
     // TODO: Possibly check for null here
     $scope.events = schedule[dateString][placeString];
