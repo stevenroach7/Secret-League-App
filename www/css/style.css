@@ -84,13 +84,14 @@
   position: relative; /* Set position to relative so we can use z-index to make sure the event element is on top of everything. */
   z-index: 100;
   outline: 1px dotted black; /* Use outline instead of border so box does not get bigger. */
-
 }
 
 .event-label {
   font-size: 10px;
   margin-left: 1.5%;
   vertical-align: text-top;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .event-label.small {
