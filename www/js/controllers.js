@@ -5,11 +5,12 @@
 
 
 
-  .controller('TabsCtrl', function($scope, DateService) {
+  .controller('TabsCtrl', function($scope, DateService, ScheduleService) {
 
     // Used so current date will show by default when find game tab is chosen.
     var currentDate = new Date();
     $scope.currentDateString = DateService.dateToDateString(currentDate);
+
 
   })
 
@@ -84,7 +85,18 @@
     $scope.displayedTimes = getDisplayedTimes();
     $scope.startingTimes = getStartingTimes();
 
-    $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
+    // $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
+    var dateString = $stateParams.dateString;
+    var placeString = $stateParams.placeString;
+    var currentDate = new Date();
+
+
+    ScheduleService.refreshSchedule(currentDate);
+    var twoWeekSchedule = ScheduleService.getTwoWeekSchedule(currentDate);
+    console.log(twoWeekSchedule);
+
+    // TODO: Possibly check for null here 
+    $scope.events = twoWeekSchedule[dateString][placeString];
 
     $scope.doesEventExist = function(eventObject) {
       /* Takes an object and returns if it is truthy. */
