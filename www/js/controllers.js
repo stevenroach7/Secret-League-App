@@ -99,11 +99,11 @@
 
 
     ScheduleService.refreshSchedule(currentDate);
-    var twoWeekSchedule = ScheduleService.getTwoWeekSchedule(currentDate);
-    console.log(twoWeekSchedule);
+    var schedule = ScheduleService.getSchedule(currentDate);
+    console.log(schedule);
 
     // TODO: Possibly check for null here
-    $scope.events = twoWeekSchedule[dateString][placeString];
+    $scope.events = schedule[dateString][placeString];
 
     $scope.doesEventExist = function(eventObject) {
       /* Takes an object and returns if it is truthy. */

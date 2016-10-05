@@ -132,7 +132,7 @@
       studio2: "Studio 2"
     };
 
-    var twoWeekSchedule = {
+    var schedule = {
       "09282016": {},
       "09292016": {},
       "09302016": {},
@@ -503,12 +503,24 @@
     };
 
 
-    updateTwoWeekSchedule = function(currentDate) {
+    updateSchedule = function(currentDate) {
+
+      var daysInWeek = 7;
 
       // Create dateStrings array
-      oneWeekPastDate = DateService.getDateInPast(currentDate, 7);
-      
-      console.log(oneWeekPastDate);
+      dateStrings = [];
+
+      // Initialize date to date daysInWeek in the past.
+      date = DateService.getDateInPast(currentDate, daysInWeek);
+
+      for (i = 0; i < ((2 * daysInWeek) + 1); i++) {
+        dateString = DateService.dateToDateString(date);
+        dateStrings.push(dateString);
+        date = DateService.getNextDate(date);
+      }
+
+
+      console.log(dateStrings);
 
       // Create twoWeekScheduleObject
       // var twoWeekSchedule = {};
@@ -560,16 +572,16 @@
         // sortedEvents = $firebaseArray(sortByTimeQuery);
         return events;
       },
-      getTwoWeekSchedule: function(currentDate) {
+      getSchedule: function(currentDate) {
 
-        if (!twoWeekSchedule) {
-          twoWeekSchedule = updateTwoWeekSchedule(currentDate);
+        if (!schedule) {
+          schedule = updateSchedule(currentDate);
         }
-        return twoWeekSchedule;
+        return schedule;
       },
       refreshSchedule: function(currentDate) {
 
-          updateTwoWeekSchedule(currentDate);
+          updateSchedule(currentDate);
       }
 
 
