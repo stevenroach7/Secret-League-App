@@ -90,12 +90,19 @@
 .event-label {
   font-size: 10px;
   margin-left: 1.5%;
+  vertical-align: text-top;
+}
+
+.event-label.small {
+  font-size: 8px;
 }
 
 .time-event-label {
   font-size: 8px;
 }
-
+.time-event-label.small {
+  font-size: 6px;
+}
 
 .place-bar {
   height: 100%;

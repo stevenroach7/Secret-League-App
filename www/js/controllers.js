@@ -94,16 +94,24 @@
       return false;
     };
 
-    $scope.getEventHeight = function(eventObject) {
-      /* Takes an event object and uses the start and end time properties to calculate the
-      percent scaled to 5 minutes the event element should take up. */
+
+
+    $scope.getDurationHours = function(eventObject) {
+      /* Takes an event object and uses the start and end time properties to the duration of the event in hours. */
       if (eventObject) {
         var duration = eventObject.endTime - eventObject.startTime;
         var durationHours = duration / 3600;
-        var durationPercent = 12 * (durationHours * 100); // Multiply by 12 because we need the percent height scaled to 5 minutes instead of one hour.
-        return durationPercent;
+        return durationHours;
       }
       return 0;
+    };
+
+
+    $scope.getEventHeight = function(durationHours) {
+      /* Takes duration of time in hours and calculates the
+      percent scaled to 5 minutes the event element height should have. */
+      var durationPercent = 12 * (durationHours * 100); // Multiply by 12 because we need the percent height scaled to 5 minutes instead of one hour.
+      return durationPercent;
     };
 
 

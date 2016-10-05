@@ -31,10 +31,10 @@
 
         <div class="cal">
           <div class="event-label-box" ng-repeat="time in startingTimes" ng-class="{true: 'striped'}[isStripeOn(time)]">
-            <div class="event-label-container" ng-show="doesEventExist(events[time]);" style="height: {{getEventHeight(events[time])}}%;">
-              <label class="event-label">
+            <div class="event-label-container" ng-show="doesEventExist(events[time]);" style="height: {{getEventHeight(getDurationHours(events[time]))}}%;">
+              <label class="event-label" ng-class="{true: 'small'}[getDurationHours(events[time]) < 1]">
                 {{events[time].eventName}}
-                <span class="time-event-label"> ({{events[time].startTime | secondsToTime}} to {{events[time].endTime | secondsToTime}}) </span>
+                <span class="time-event-label" ng-class="{true: 'small'}[getDurationHours(events[time]) < 1]"> ({{events[time].startTime | secondsToTime}} to {{events[time].endTime | secondsToTime}}) </span>
               </label>
             </div>
           </div>
