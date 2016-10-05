@@ -105,20 +105,6 @@
 
   servMod.factory('ScheduleService', function($firebaseObject, DateService) {
 
-    // var getEventsByDateAndPlace = function(dateString, placeString) {
-    //   /* Takes a dateString and a placeString and queries the firebase db to obtain a synchronized array of event objects on the date
-    //   specified by the dateString and in the place specified by the placeString. Then this functions sorts these events by their startTime variable and returns the array. */
-    //
-    //   // Get array of events on the date specified by the input dateString and the place specified by the input placeString.
-    //   var eventsRef = firebase.database().ref().child("schedule").child(dateString).child(placeString);
-    //   var events = $firebaseArray(eventsRef);
-    //
-    //   // Sort the games array in order of time.
-    //   var sortByTimeQuery = eventsRef.orderByChild("startTime");
-    //   sortedEvents = $firebaseArray(sortByTimeQuery);
-    //   return sortedEvents;
-    // };
-
     var places = {
       alumniGym: "Alumni Gym",
       fieldHouseCourt1: "Court 1",
