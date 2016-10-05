@@ -62,21 +62,21 @@
 
 
       // TODO: Rewrite these to take a number of days in the future so we can be more flexible. Also take a date, and make sure date returned is correct.
-      getDateStringInWeekFuture: function() {
-        /* Returns the date string for the date 7 days in the future. */
-        var nextDate = new Date();
-        for (i = 0; i < 8; i++) {
+      getDateInFuture: function(date, numDays) {
+        /* Returns the date as a Date Object numDays after the date inputted. */
+        var nextDate = date;
+        for (i = 0; i < numDays; i++) {
           nextDate = calcNextDate(nextDate);
         }
-        return convertDateToDateString(nextDate);
+        return nextDate;
       },
-      getDateStringInWeekPast: function() {
-        /* Returns the date string for the date 7 days in the past. */
-        var lastDate = new Date();
-        for (i = 0; i < 8; i++) {
+      getDateInPast: function(date, numDays) {
+        /* Returns the date as a Date Object numDays before the date inputted. */
+        var lastDate = date;
+        for (i = 0; i < numDays; i++) {
           lastDate = calcLastDate(lastDate);
         }
-        return convertDateToDateString(lastDate);
+        return lastDate;
       }
 
     };
@@ -506,7 +506,8 @@
     updateTwoWeekSchedule = function(currentDate) {
 
       // Create dateStrings array
-      oneWeekPastDate = DateService.getDateStringInWeekPast();
+      oneWeekPastDate = DateService.getDateInPast(currentDate, 7);
+      
       console.log(oneWeekPastDate);
 
       // Create twoWeekScheduleObject

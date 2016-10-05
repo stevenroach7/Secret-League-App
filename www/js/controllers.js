@@ -20,14 +20,22 @@
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
     $scope.dateString = $stateParams.dateString;
 
+    var currentDate = new Date();
+
     $scope.showNextDateArrow = function(dateString) {
       /* Determines whether next arrow for date navigation should be shown. */
-      return (DateService.getDateStringInWeekFuture() !== dateString);
+      dateInFuture = DateService.getDateInFuture(currentDate, 7);
+      dateNotShown = DateService.getNextDate(dateInFuture); // The day after the day 7 days from now is the one not shown so go forward one more.
+      dateStringNotShown = DateService.dateToDateString(dateNotShown);
+      return (dateStringNotShown !== dateString); // Compare based off of dateString because Date Object includes time.
     };
 
     $scope.showLastDateArrow = function(dateString) {
       /* Determines whether previous arrow for date navigation should be shown. */
-      return (DateService.getDateStringInWeekPast() !== dateString);
+      dateInPast = DateService.getDateInPast(currentDate, 7);
+      dateNotShown = DateService.getLastDate(dateInPast); // The day before the day 7 days from now is the one not shown so go back one more.
+      dateStringNotShown = DateService.dateToDateString(dateNotShown);
+      return (dateStringNotShown !== dateString); // Compare based off of dateString because Date Object includes time.
     };
 
     $scope.getNextDateString = function() {
@@ -88,14 +96,13 @@
     // $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
     var dateString = $stateParams.dateString;
     var placeString = $stateParams.placeString;
-    var currentDate = new Date();
 
 
     ScheduleService.refreshSchedule(currentDate);
     var twoWeekSchedule = ScheduleService.getTwoWeekSchedule(currentDate);
     console.log(twoWeekSchedule);
 
-    // TODO: Possibly check for null here 
+    // TODO: Possibly check for null here
     $scope.events = twoWeekSchedule[dateString][placeString];
 
     $scope.doesEventExist = function(eventObject) {
@@ -164,14 +171,22 @@
     //   });
     // };
 
+    var currentDate = new Date();
+
     $scope.showNextDateArrow = function(dateString) {
       /* Determines whether next arrow for date navigation should be shown. */
-      return (DateService.getDateStringInWeekFuture() !== dateString);
+      dateInFuture = DateService.getDateInFuture(currentDate, 7);
+      dateNotShown = DateService.getNextDate(dateInFuture); // The day after the day 7 days from now is the one not shown so go forward one more.
+      dateStringNotShown = DateService.dateToDateString(dateNotShown);
+      return (dateStringNotShown !== dateString); // Compare based off of dateString because Date Object includes time.
     };
 
     $scope.showLastDateArrow = function(dateString) {
       /* Determines whether previous arrow for date navigation should be shown. */
-      return (DateService.getDateStringInWeekPast() !== dateString);
+      dateInPast = DateService.getDateInPast(currentDate, 7);
+      dateNotShown = DateService.getLastDate(dateInPast); // The day before the day 7 days from now is the one not shown so go back one more.
+      dateStringNotShown = DateService.dateToDateString(dateNotShown);
+      return (dateStringNotShown !== dateString); // Compare based off of dateString because Date Object includes time.
     };
 
     $scope.getNextDateString = function() {
