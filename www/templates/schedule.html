@@ -1,8 +1,8 @@
 <ion-view view-title="Schedule">
 
-  <ion-nav-buttons side="left">
+  <!-- <ion-nav-buttons side="left">
     <button class="button button-royal button-clear icon ion-refresh" ng-click="refreshData()"></button>
-  </ion-nav-buttons>
+  </ion-nav-buttons> -->
 
   <ion-nav-buttons side="right">
     <a ng-href="#/tab/schedule/{{getCurrentDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-clear">Today</a>
@@ -19,7 +19,6 @@
         </label>
       </a>
       <a ng-show="{{showNextDateArrow(getNextDateString())}}" ng-href="#/tab/schedule/{{getNextDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
-      2
     </div>
 
     <hr class="horiz-line">
@@ -34,21 +33,19 @@
             </label>
           </div>
         </div>
-        <!-- 3 -->
       </div>
 
       <div class="cal">
         <div class="event-label-box" ng-repeat="time in startingTimes" ng-class="{true: 'striped'}[isStripeOn(time)]">
-          <div class="event-label-container" ng-show="doesEventExist(events[time]);" style="height: {{getEventHeight(getDurationHours(events[time]))}}%;">
-            <!-- <ion-scroll direction="x" has-bouncing="false" scrollbar-x="false"> TODO: Add back after I change how content is displayed. Use tables instead of div. -->
+          <!-- <div class="event-label-container" ng-show="doesEventExist(events[time]);" style="height: {{getEventHeight(getDurationHours(events[time]))}}%;"> -->
+            <ion-scroll class="event-label-container" ng-show="doesEventExist(events[time]);" style="height: {{getEventHeight(getDurationHours(events[time]))}}%;" direction="x" has-bouncing="false" scrollbar-x="false"> <!-- TODO: Add back after I change how content is displayed. Use tables instead of div. -->
               <label class="event-label" ng-class="{true: 'small'}[getDurationHours(events[time]) < 1]">
                 {{events[time].eventName}}
                 <span class="time-event-label" ng-class="{true: 'small'}[getDurationHours(events[time]) < 1]"> ({{events[time].startTime | secondsToTime}} to {{events[time].endTime | secondsToTime}}) </span>
               </label>
-            <!-- </ion-scroll> -->
-          </div>
+            </ion-scroll>
+          <!-- </div> -->
         </div>
-        <!-- 3 -->
       </div>
     </div>
     <div class="place-bar">
@@ -58,5 +55,6 @@
         </a>
       </div>
     </div>
+
   </ion-content>
 </ion-view>
