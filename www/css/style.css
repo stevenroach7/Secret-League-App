@@ -17,15 +17,38 @@
 }
 
 /* Login Styling */
-
+.login-view {
+  background-color: #424242;
+  text-align: center;
+}
 
 .homescreen-logo {
+  margin-top: 15%;
+  border-radius: 10%;
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
+.start-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 180px;
+  width: 180px;
+  border: 3px solid #424242;
+  border-radius: 100%;
+  vertical-align: middle;
+}
 
+.start-label {
+  color: #fff;
+  font-size: 28px;
+}
+
+.ball {
+  font-size: 180px;
+}
 
 
 /* Schedule Styling */
@@ -89,7 +112,7 @@
   color: #fff;
   position: relative; /* Set position to relative so we can use z-index to make sure the event element is on top of everything. */
   z-index: 100;
-  outline: 1px dotted white; /* Use outline instead of border so box does not get bigger. */
+  outline: 1px solid white; /* Use outline instead of border so box does not get bigger. */
   margin: 0;
   padding: 0;
 }

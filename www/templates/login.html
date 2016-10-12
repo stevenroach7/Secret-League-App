@@ -1,14 +1,16 @@
 <ion-view view-title="Secret League">
 
-  <ion-content class="login-view">
+  <ion-content class="login-view" scroll="false">
 
 
-    <div> <img class="homescreen-logo"ng-src="img/homescreen.png" alt="Secret League"></div>
+    <div><img class="homescreen-logo"ng-src="img/homescreen.png" alt="Secret League"></div>
 
+    <a ng-href="#/tab/schedule/{{currentDateString}}/alumniGym" class="button button-royal button-block start-button">
 
-    <ion-item>
-      <a ng-href="#/tab/schedule/{{currentDateString}}/alumniGym" class="button button-royal button-block">Get Started</a>
-    </ion-item>
+      <!-- <span class="start-label">Get Started</span> -->
+      <i class="ion-ios-basketball ball"></i>
+    </a>
+    <label class="start-label">Click the ball to get started!</label>
 
   </ion-content>
 </ion-view>
