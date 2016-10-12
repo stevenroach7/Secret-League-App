@@ -95,10 +95,12 @@
     var dateString = $stateParams.dateString;
     var placeString = $stateParams.placeString;
 
-    var schedule = ScheduleService.getSchedule(currentDate); // TODO: Do this in a better way. 
+    // var schedule = ScheduleService.getSchedule(currentDate); // TODO: Do this in a better way.
 
     // TODO: Possibly check for null here
-    $scope.events = schedule[dateString][placeString];
+    // $scope.events = schedule[dateString][placeString];
+
+    $scope.events = ScheduleService.getEventsByDateAndPlace(dateString, placeString);
 
 
     $scope.refreshData = function() {
