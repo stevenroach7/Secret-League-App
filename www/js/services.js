@@ -118,40 +118,39 @@
       studio2: "Studio 2"
     };
 
-    var schedule;
-
-    updateSchedule = function(currentDate) {
-
-      // TODO: Decompose this.
-
-      var daysInWeek = 7;
-
-      // Create dateStrings array
-      dateStrings = [];
-
-      // Initialize date to date daysInWeek in the past.
-      date = DateService.getDateInPast(currentDate, daysInWeek);
-
-      for (i = 0; i < ((2 * daysInWeek) + 1); i++) {
-        dateString = DateService.dateToDateString(date);
-        dateStrings.push(dateString);
-        date = DateService.getNextDate(date);
-      }
-
-      console.log("updated");
-
-      // Create schedule Object
-      schedule = {};
-
-      // Query DB and add to schedule
-      for(i = 0; i < dateStrings.length; i++) {
-        var dateObjRef = firebase.database().ref().child("schedule").child(dateStrings[i]);
-        var dateObj = $firebaseObject(dateObjRef);
-        schedule[dateStrings[i]] = dateObj;
-      }
-      return schedule;
-
-    };
+    // var schedule;
+    //
+    // updateSchedule = function(currentDate) {
+    //
+    //   // TODO: Decompose this.
+    //
+    //   var daysInWeek = 7;
+    //
+    //   // Create dateStrings array
+    //   dateStrings = [];
+    //
+    //   // Initialize date to date daysInWeek in the past.
+    //   date = DateService.getDateInPast(currentDate, daysInWeek);
+    //
+    //   for (i = 0; i < ((2 * daysInWeek) + 1); i++) {
+    //     dateString = DateService.dateToDateString(date);
+    //     dateStrings.push(dateString);
+    //     date = DateService.getNextDate(date);
+    //   }
+    //
+    //   console.log("updated");
+    //
+    //   // Create schedule Object
+    //   schedule = {};
+    //
+    //   // Query DB and add to schedule
+    //   for(i = 0; i < dateStrings.length; i++) {
+    //     var dateObjRef = firebase.database().ref().child("schedule").child(dateStrings[i]);
+    //     var dateObj = $firebaseObject(dateObjRef);
+    //     schedule[dateStrings[i]] = dateObj;
+    //   }
+    //   return schedule;
+    // };
 
 
     return {
@@ -165,16 +164,15 @@
       getPlaces: function() {
         return places;
       },
-
-      getSchedule: function(currentDate) {
-        if (typeof(schedule) === 'undefined' || typeof(schedule) === null) {
-          schedule = updateSchedule(currentDate);
-        }
-        return schedule;
-      },
-      refreshSchedule: function(currentDate) {
-          return updateSchedule(currentDate);
-      },
+      // getSchedule: function(currentDate) {
+      //   if (typeof(schedule) === 'undefined' || typeof(schedule) === null) {
+      //     schedule = updateSchedule(currentDate);
+      //   }
+      //   return schedule;
+      // },
+      // refreshSchedule: function(currentDate) {
+      //     return updateSchedule(currentDate);
+      // },
       getEventsByDateAndPlace: function(dateString, placeString) {
         /* Takes a dateString and a placeString and queries the firebase db to obtain a synchronized array of event objects on the date
         specified by the dateString and in the place specified by the placeString. Then this functions sorts these events by their startTime variable and returns the array. */

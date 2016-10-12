@@ -95,18 +95,18 @@
     var dateString = $stateParams.dateString;
     var placeString = $stateParams.placeString;
 
-    // var schedule = ScheduleService.getSchedule(currentDate); // TODO: Do this in a better way.
-
-    // TODO: Possibly check for null here
-    // $scope.events = schedule[dateString][placeString];
-
+    // Query data for one state at a time.
     $scope.events = ScheduleService.getEventsByDateAndPlace(dateString, placeString);
 
-
-    $scope.refreshData = function() {
-      // TODO: Rewrite this to use a promise.
-      schedule = ScheduleService.refreshSchedule(currentDate);
-    };
+    
+    // Old way of storing data. TODO: Consider this approach with an improved implementation later.
+    // var schedule = ScheduleService.getSchedule(currentDate);
+    // Possibly check for null here
+    // $scope.events = schedule[dateString][placeString];
+    // $scope.refreshData = function() {
+    //   // TODO: Rewrite this to use a promise.
+    //   schedule = ScheduleService.refreshSchedule(currentDate);
+    // };
 
     $scope.doesEventExist = function(eventObject) {
       /* Takes an object and returns if it is truthy. */
