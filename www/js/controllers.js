@@ -98,7 +98,7 @@
     // Query data for one state at a time.
     $scope.events = ScheduleService.getEventsByDateAndPlace(dateString, placeString);
 
-    
+
     // Old way of storing data. TODO: Consider this approach with an improved implementation later.
     // var schedule = ScheduleService.getSchedule(currentDate);
     // Possibly check for null here
@@ -220,7 +220,6 @@
 
   .filter('secondsToTime', function($filter) {
     return function(sec) {
-      // TODO: Test this
       var date = new Date(0, 0, 0);
       date.setSeconds(sec);
       var hours = date.getHours();
