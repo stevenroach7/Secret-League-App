@@ -93,7 +93,6 @@
     };
 
 
-
     $scope.getNextDateString = function() {
       /* Returns the date string for the next date. Used for page navigation. */
       var nextDate = DateService.getNextDate($scope.date);
@@ -204,10 +203,11 @@
   })
 
 
-  .controller('FindGameCtrl', function($scope, GamesService, DateService, $stateParams, $firebaseObject, $firebaseArray) {
+  .controller('FindGameCtrl', function($scope, GamesService, DateService, $stateParams, $state) {
 
 
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
+    $scope.dateString = $stateParams.dateString;
     $scope.games = GamesService.getGamesByDate($stateParams.dateString); // Get games on the date specfied by the dateString in the state parameters.
 
     // $scope.addGame = function() { // Used for creating fake games.
@@ -231,22 +231,72 @@
     //   });
     // };
 
-    var currentDate = new Date();
+    var getFutureDisallowedDateString = function() {
+      /* Returns the dateString for the first date in the future that should not be shown (8 days from current date). */
+      var currentDate = new Date();
+      var dateInFuture = DateService.getDateInFuture(currentDate, 7);
+      var dateDisallowed = DateService.getNextDate(dateInFuture); // The day after the day 7 days from now is the one not shown so go forward one more day.
+      var dateStringDisallowed = DateService.dateToDateString(dateDisallowed);
+      return dateStringDisallowed;
+    };
+
+    var getPastDisallowedDateString = function() {
+      /* Returns the dateString for the first date in the past that should not be shown (8 days from current date). */
+      var currentDate = new Date();
+      var dateInPast = DateService.getDateInPast(currentDate, 7);
+      var dateDisallowed = DateService.getLastDate(dateInPast); // The day before the day 7 days from now is the one not shown so go back one more day.
+      var dateStringDisallowed = DateService.dateToDateString(dateDisallowed);
+      return dateStringDisallowed;
+    };
 
     $scope.showNextDateArrow = function(dateString) {
       /* Determines whether next arrow for date navigation should be shown. */
-      dateInFuture = DateService.getDateInFuture(currentDate, 7);
-      dateNotShown = DateService.getNextDate(dateInFuture); // The day after the day 7 days from now is the one not shown so go forward one more.
-      dateStringNotShown = DateService.dateToDateString(dateNotShown);
-      return (dateStringNotShown !== dateString); // Compare based off of dateString because Date Object includes time.
+      var dateStringDisallowed = getFutureDisallowedDateString();
+      return (dateStringDisallowed !== dateString); // Compare based off of dateString because Date Object includes time.
     };
 
     $scope.showLastDateArrow = function(dateString) {
       /* Determines whether previous arrow for date navigation should be shown. */
-      dateInPast = DateService.getDateInPast(currentDate, 7);
-      dateNotShown = DateService.getLastDate(dateInPast); // The day before the day 7 days from now is the one not shown so go back one more.
-      dateStringNotShown = DateService.dateToDateString(dateNotShown);
-      return (dateStringNotShown !== dateString); // Compare based off of dateString because Date Object includes time.
+      var dateStringDisallowed = getPastDisallowedDateString();
+      return (dateStringDisallowed !== dateString); // Compare based off of dateString because Date Object includes time.
+    };
+
+    $scope.moveToNextDate = function(dateString) {
+      /* Takes a dateString and if valid, navigates the user to the find-game page for the
+      date after the one specified by the dateString. */
+
+      // Get dateString for next date.
+      var date = DateService.dateStringToDate(dateString);
+      var nextDate = DateService.getNextDate(date);
+      var nextDateString = DateService.dateToDateString(nextDate);
+
+      // Get Disallowed dateString
+      var dateStringDisallowed = getFutureDisallowedDateString();
+
+      if (dateStringDisallowed !== nextDateString) {
+        $state.go('tab.find-game', {
+          dateString: nextDateString
+        });
+      }
+    };
+
+    $scope.moveToLastDate = function(dateString) {
+      /* Takes a dateString and if valid, navigates the user to the schedule page for the
+      date after the one specified by the dateString. */
+
+      // Get dateString for last date.
+      var date = DateService.dateStringToDate(dateString);
+      var lastDate = DateService.getLastDate(date);
+      var lastDateString = DateService.dateToDateString(lastDate);
+
+      // Get Disallowed dateString
+      var dateStringDisallowed = getPastDisallowedDateString();
+
+      if (dateStringDisallowed !== lastDateString) {
+        $state.go('tab.find-game', {
+          dateString: lastDateString
+        });
+      }
     };
 
     $scope.getNextDateString = function() {
