@@ -9,7 +9,7 @@
   </ion-nav-buttons>
 
 
-  <ion-content class="schedule-view" scroll="false">
+  <ion-content class="schedule-view" scroll="false" on-swipe-left="moveToNextDate(dateString, currentPlaceString)" on-swipe-right="moveToLastDate(dateString, currentPlaceString)">
 
     <div class="button-bar date-nav-schedule">
       <a ng-show="{{showLastDateArrow(getLastDateString())}}" ng-href="#/tab/schedule/{{getLastDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>

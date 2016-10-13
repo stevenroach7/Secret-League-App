@@ -14,28 +14,85 @@
   })
 
 
-  .controller('ScheduleCtrl', function($scope, DateService, ScheduleService, $stateParams) {
+  .controller('ScheduleCtrl', function($scope, DateService, ScheduleService, $stateParams, $state) {
 
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
     $scope.dateString = $stateParams.dateString;
 
-    var currentDate = new Date();
+    var getFutureDisallowedDateString = function() {
+      /* Returns the dateString for the first date in the future that should not be shown (8 days from current date). */
+      var currentDate = new Date();
+      var dateInFuture = DateService.getDateInFuture(currentDate, 7);
+      var dateDisallowed = DateService.getNextDate(dateInFuture); // The day after the day 7 days from now is the one not shown so go forward one more day.
+      var dateStringDisallowed = DateService.dateToDateString(dateDisallowed);
+      return dateStringDisallowed;
+    };
+
+    var getPastDisallowedDateString = function() {
+      /* Returns the dateString for the first date in the past that should not be shown (8 days from current date). */
+      var currentDate = new Date();
+      var dateInPast = DateService.getDateInPast(currentDate, 7);
+      var dateDisallowed = DateService.getLastDate(dateInPast); // The day before the day 7 days from now is the one not shown so go back one more day.
+      var dateStringDisallowed = DateService.dateToDateString(dateDisallowed);
+      return dateStringDisallowed;
+    };
+
 
     $scope.showNextDateArrow = function(dateString) {
       /* Determines whether next arrow for date navigation should be shown. */
-      dateInFuture = DateService.getDateInFuture(currentDate, 7);
-      dateNotShown = DateService.getNextDate(dateInFuture); // The day after the day 7 days from now is the one not shown so go forward one more.
-      dateStringNotShown = DateService.dateToDateString(dateNotShown);
-      return (dateStringNotShown !== dateString); // Compare based off of dateString because Date Object includes time.
+      var dateStringDisallowed = getFutureDisallowedDateString();
+      return (dateStringDisallowed !== dateString); // Compare based off of dateString because Date Object includes time.
     };
 
     $scope.showLastDateArrow = function(dateString) {
       /* Determines whether previous arrow for date navigation should be shown. */
-      dateInPast = DateService.getDateInPast(currentDate, 7);
-      dateNotShown = DateService.getLastDate(dateInPast); // The day before the day 7 days from now is the one not shown so go back one more.
-      dateStringNotShown = DateService.dateToDateString(dateNotShown);
-      return (dateStringNotShown !== dateString); // Compare based off of dateString because Date Object includes time.
+      var dateStringDisallowed = getPastDisallowedDateString();
+      return (dateStringDisallowed !== dateString); // Compare based off of dateString because Date Object includes time.
     };
+
+
+    $scope.moveToNextDate = function(dateString, placeString) {
+      /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
+      date after the one specified by the dateString and the place specified by the placeString. */
+
+      // Get dateString for next date.
+      var date = DateService.dateStringToDate(dateString);
+      var nextDate = DateService.getNextDate(date);
+      var nextDateString = DateService.dateToDateString(nextDate);
+
+      // Get Disallowed dateString
+      var dateStringDisallowed = getFutureDisallowedDateString();
+
+      if (dateStringDisallowed !== nextDateString) {
+        $state.go('tab.schedule', {
+          dateString: nextDateString,
+          placeString: placeString
+        });
+      }
+    };
+
+
+    $scope.moveToLastDate = function(dateString, placeString) {
+      /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
+      date after the one specified by the dateString and the place specified by the placeString. */
+
+      // Get dateString for last date.
+      var date = DateService.dateStringToDate(dateString);
+      var lastDate = DateService.getLastDate(date);
+      var lastDateString = DateService.dateToDateString(lastDate);
+
+      // Get Disallowed dateString
+      var dateStringDisallowed = getPastDisallowedDateString();
+
+      if (dateStringDisallowed !== lastDateString) {
+        $state.go('tab.schedule', {
+          dateString: lastDateString,
+          placeString: placeString
+        });
+      }
+    };
+
+
 
     $scope.getNextDateString = function() {
       /* Returns the date string for the next date. Used for page navigation. */
