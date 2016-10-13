@@ -154,16 +154,6 @@
     // Query data for one state at a time.
     $scope.events = ScheduleService.getEventsByDateAndPlace(dateString, placeString);
 
-
-    // Old way of storing data. TODO: Consider this approach with an improved implementation later.
-    // var schedule = ScheduleService.getSchedule(dateString);
-    // // Possibly check for null here
-    // $scope.events = schedule[placeString];
-    // $scope.refreshData = function() {
-    //   // TODO: Rewrite this to use a promise.
-    //   schedule = ScheduleService.refreshSchedule(currentDate);
-    // };
-
     $scope.doesEventExist = function(eventObject) {
       /* Takes an object and returns if it is truthy. */
       if (eventObject) {
@@ -171,8 +161,6 @@
       }
       return false;
     };
-
-
 
     $scope.getDurationHours = function(eventObject) {
       /* Takes an event object and uses the start and end time properties to the duration of the event in hours. */
@@ -183,7 +171,6 @@
       }
       return 0;
     };
-
 
     $scope.getEventHeight = function(durationHours) {
       /* Takes duration of time in hours and calculates the
@@ -205,31 +192,9 @@
 
   .controller('FindGameCtrl', function($scope, GamesService, DateService, $stateParams, $state) {
 
-
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
     $scope.dateString = $stateParams.dateString;
     $scope.games = GamesService.getGamesByDate($stateParams.dateString); // Get games on the date specfied by the dateString in the state parameters.
-
-    // $scope.addGame = function() { // Used for creating fake games.
-    //
-    //   var d = new Date(), e = new Date(d);
-    //   var secondsSinceMidnight = (e - d.setHours(0,0,0,0)) / 1000;
-    //
-    //   $scope.games.$add(
-    //     {
-    //       dateString: "09152016",
-    //       time: secondsSinceMidnight, // Current time in seconds
-    //       sport: "Basketball",
-    //       place: "Leonard Center Alumni Gym",
-    //       skillLevel: "Casual"
-    //     }
-    //
-    //   ).then(function(ref) {
-    //     var id = ref.key;
-    //     console.log("added record with id " + id);
-    //     $scope.games.$indexFor(id); // returns location in the array
-    //   });
-    // };
 
     var getFutureDisallowedDateString = function() {
       /* Returns the dateString for the first date in the future that should not be shown (8 days from current date). */
