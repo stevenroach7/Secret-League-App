@@ -60,8 +60,6 @@
         return calcLastDate(date);
       },
 
-
-      // TODO: Rewrite these to take a number of days in the future so we can be more flexible. Also take a date, and make sure date returned is correct.
       getDateInFuture: function(date, numDays) {
         /* Returns the date as a Date Object numDays after the date inputted. */
         var nextDate = date;
