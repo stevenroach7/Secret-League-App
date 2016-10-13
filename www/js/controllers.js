@@ -156,9 +156,9 @@
 
 
     // Old way of storing data. TODO: Consider this approach with an improved implementation later.
-    // var schedule = ScheduleService.getSchedule(currentDate);
-    // Possibly check for null here
-    // $scope.events = schedule[dateString][placeString];
+    // var schedule = ScheduleService.getSchedule(dateString);
+    // // Possibly check for null here
+    // $scope.events = schedule[placeString];
     // $scope.refreshData = function() {
     //   // TODO: Rewrite this to use a promise.
     //   schedule = ScheduleService.refreshSchedule(currentDate);

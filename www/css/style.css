@@ -3,7 +3,7 @@
 /* General CSS */
 
  .title-shadow {
-  text-shadow: 2px 2px 2px #CCCCCC;
+  /*text-shadow: 2px 2px 2px #CCCCCC;*/
 }
 
 .item-unselectable.activated { /* The item-unselectable class is for items that are unselectable. */
