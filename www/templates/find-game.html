@@ -1,19 +1,18 @@
 <ion-view view-title="Find Game">
   <ion-nav-buttons side="right">
-    <a ng-href="#/tab/find-game/{{getCurrentDateString()}}" nav-transition="none" class="button button-royal button-clear">Today</a>
+    <a ng-href="#/tab/find-game/{{getDateStringToday()}}" nav-transition="none" class="button button-royal button-clear">Today</a>
   </ion-nav-buttons>
-
 
   <ion-content class="find-game-view" on-swipe-left="moveToNextDate(dateString)" on-swipe-right="moveToLastDate(dateString)">
 
     <div class="button-bar date-nav-find-game">
-      <a ng-show="{{showLastDateArrow(getLastDateString())}}" ng-href="#/tab/find-game/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
+      <a ng-show="{{showDateArrow(getLastDateString())}}" ng-href="#/tab/find-game/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
       <a class="date-display button button-block item-unselectable">
         <label class="date-title title-shadow">
           {{date | date:'MMMM dd'}}
         </label>
       </a>
-      <a ng-show="{{showNextDateArrow(getNextDateString())}}" ng-href="#/tab/find-game/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
+      <a ng-show="{{showDateArrow(getNextDateString())}}" ng-href="#/tab/find-game/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
     </div>
 
     <div class="game-display" ng-repeat="game in games">

@@ -1,19 +1,19 @@
 <ion-view view-title="Schedule">
 
   <ion-nav-buttons side="right">
-    <a ng-href="#/tab/schedule/{{getCurrentDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-clear">Today</a>
+    <a ng-href="#/tab/schedule/{{getDateStringToday()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-clear">Today</a>
   </ion-nav-buttons>
 
   <ion-content class="schedule-view" scroll="false" on-swipe-left="moveToNextDate(dateString, currentPlaceString)" on-swipe-right="moveToLastDate(dateString, currentPlaceString)">
 
     <div class="button-bar date-nav-schedule">
-      <a ng-show="{{showLastDateArrow(getLastDateString())}}" ng-href="#/tab/schedule/{{getLastDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
+      <a ng-show="{{showDateArrow(getLastDateString())}}" ng-href="#/tab/schedule/{{getLastDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
       <a class="date-display button button-block item-unselectable">
         <label class="date-title title-shadow">
           {{date | date:'MMMM dd'}}
         </label>
       </a>
-      <a ng-show="{{showNextDateArrow(getNextDateString())}}" ng-href="#/tab/schedule/{{getNextDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
+      <a ng-show="{{showDateArrow(getNextDateString())}}" ng-href="#/tab/schedule/{{getNextDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
     </div>
 
     <hr class="horiz-line">

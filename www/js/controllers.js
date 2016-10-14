@@ -4,12 +4,11 @@
   angular.module('starter.controllers', ['firebase'])
 
 
-
   .controller('TabsCtrl', function($scope, DateService, ScheduleService) {
 
-    // Used so current date will show by default when find game tab is chosen.
-    var currentDate = new Date();
-    $scope.currentDateString = DateService.dateToDateString(currentDate);
+    // Used so today's date will show by default on schedule and find-game tabs.
+    var dateToday = new Date();
+    $scope.dateStringToday = DateService.dateToDateString(dateToday);
 
   })
 
@@ -19,37 +18,11 @@
     $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
     $scope.dateString = $stateParams.dateString;
 
-    var getFutureDisallowedDateString = function() {
-      /* Returns the dateString for the first date in the future that should not be shown (8 days from current date). */
-      var currentDate = new Date();
-      var dateInFuture = DateService.getDateInFuture(currentDate, 7);
-      var dateDisallowed = DateService.getNextDate(dateInFuture); // The day after the day 7 days from now is the one not shown so go forward one more day.
-      var dateStringDisallowed = DateService.dateToDateString(dateDisallowed);
-      return dateStringDisallowed;
+    $scope.showDateArrow = function(dateString) {
+      /* Determines whether arrow for date navigation should be shown. */
+      var dateInQuestion = DateService.dateStringToDate(dateString);
+      return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
-
-    var getPastDisallowedDateString = function() {
-      /* Returns the dateString for the first date in the past that should not be shown (8 days from current date). */
-      var currentDate = new Date();
-      var dateInPast = DateService.getDateInPast(currentDate, 7);
-      var dateDisallowed = DateService.getLastDate(dateInPast); // The day before the day 7 days from now is the one not shown so go back one more day.
-      var dateStringDisallowed = DateService.dateToDateString(dateDisallowed);
-      return dateStringDisallowed;
-    };
-
-
-    $scope.showNextDateArrow = function(dateString) {
-      /* Determines whether next arrow for date navigation should be shown. */
-      var dateStringDisallowed = getFutureDisallowedDateString();
-      return (dateStringDisallowed !== dateString); // Compare based off of dateString because Date Object includes time.
-    };
-
-    $scope.showLastDateArrow = function(dateString) {
-      /* Determines whether previous arrow for date navigation should be shown. */
-      var dateStringDisallowed = getPastDisallowedDateString();
-      return (dateStringDisallowed !== dateString); // Compare based off of dateString because Date Object includes time.
-    };
-
 
     $scope.moveToNextDate = function(dateString, placeString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
@@ -58,19 +31,15 @@
       // Get dateString for next date.
       var date = DateService.dateStringToDate(dateString);
       var nextDate = DateService.getNextDate(date);
-      var nextDateString = DateService.dateToDateString(nextDate);
+      var nextDateString = DateService.dateToDateString(nextDate); // Used for state navigation.
 
-      // Get Disallowed dateString
-      var dateStringDisallowed = getFutureDisallowedDateString();
-
-      if (dateStringDisallowed !== nextDateString) {
+      if (DateService.isDateValid(nextDate)) {
         $state.go('tab.schedule', {
           dateString: nextDateString,
           placeString: placeString
         });
       }
     };
-
 
     $scope.moveToLastDate = function(dateString, placeString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
@@ -79,19 +48,15 @@
       // Get dateString for last date.
       var date = DateService.dateStringToDate(dateString);
       var lastDate = DateService.getLastDate(date);
-      var lastDateString = DateService.dateToDateString(lastDate);
+      var lastDateString = DateService.dateToDateString(lastDate); // Used for state navigation.
 
-      // Get Disallowed dateString
-      var dateStringDisallowed = getPastDisallowedDateString();
-
-      if (dateStringDisallowed !== lastDateString) {
+      if (DateService.isDateValid(lastDate)) {
         $state.go('tab.schedule', {
           dateString: lastDateString,
           placeString: placeString
         });
       }
     };
-
 
     $scope.getNextDateString = function() {
       /* Returns the date string for the next date. Used for page navigation. */
@@ -105,54 +70,42 @@
       return DateService.dateToDateString(lastDate);
     };
 
-    $scope.getCurrentDateString = function() {
-      /* Returns the date string for the current date. */
-      var currentDate = new Date();
-      return DateService.dateToDateString(currentDate);
+    $scope.getDateStringToday = function() {
+      /* Returns the date string for the today's date. */
+      var dateToday = new Date();
+      return DateService.dateToDateString(dateToday);
     };
 
     $scope.currentPlaceString = $stateParams.placeString;
-
     $scope.places = ScheduleService.getPlaces();
 
-
-    var hoursToSeconds = function(hours) {
-      /* Takes a value in hours and returns that value in seconds */
-      return Math.round(hours * 3600); // Round to integer value
-    };
-
-    var getDisplayedTimes = function() {
-    /* Helper function to create array of times in seconds that will be displayed as time labels. */
+    var getDisplayedTimes = function(startHour, endHour, increment) {
+    /* Takes a starting time and ending time in hours and an increment and
+    creates an array of times in seconds that will be displayed as time labels. */
       var displayedTimes = [];
 
-      for (i = 7; i < 25; i+=1) {
-        displayedTimes.push(hoursToSeconds(i));
+      for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
+        displayedTimes.push(DateService.hoursToSeconds(i));
       }
       return displayedTimes;
     };
 
-
-    var getStartingTimes = function() {
-      /* Helper function to create array of times in seconds that we will use to check if events start at each time. */
+    var getStartingTimes = function(startHour, endHour, increment) {
+      /* Takes a starting time and ending time in hours and an increment and creates an array of times in seconds
+      that we will use to check if events start at each time. */
       var startingTimes = [];
 
-      var increment = (1/12); // Every 5 minutes
-      for (i = 7; i < 25; i+=increment) {
-        // console.log(hoursToSeconds(i));
-        // console.log(hoursToSeconds(i) % 1800);
-        startingTimes.push(hoursToSeconds(i));
+      for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
+        startingTimes.push(DateService.hoursToSeconds(i));
       }
       return startingTimes;
     };
 
-    $scope.displayedTimes = getDisplayedTimes();
-    $scope.startingTimes = getStartingTimes();
-
-    var dateString = $stateParams.dateString;
-    var placeString = $stateParams.placeString;
+    $scope.displayedTimes = getDisplayedTimes(7, 25, 1); // Display times every 1 hour from 7 AM (inclusive) to 1 AM (exclusive).
+    $scope.startingTimes = getStartingTimes(7, 25, 1/12); // Check for events every 5 minutes (1/12 hours) starting from 7 AM (inclusive) to 1 AM (exclusive).
 
     // Query data for one state at a time.
-    $scope.events = ScheduleService.getEventsByDateAndPlace(dateString, placeString);
+    $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
 
     $scope.doesEventExist = function(eventObject) {
       /* Takes an object and returns if it is truthy. */
@@ -196,68 +149,38 @@
     $scope.dateString = $stateParams.dateString;
     $scope.games = GamesService.getGamesByDate($stateParams.dateString); // Get games on the date specfied by the dateString in the state parameters.
 
-    var getFutureDisallowedDateString = function() {
-      /* Returns the dateString for the first date in the future that should not be shown (8 days from current date). */
-      var currentDate = new Date();
-      var dateInFuture = DateService.getDateInFuture(currentDate, 7);
-      var dateDisallowed = DateService.getNextDate(dateInFuture); // The day after the day 7 days from now is the one not shown so go forward one more day.
-      var dateStringDisallowed = DateService.dateToDateString(dateDisallowed);
-      return dateStringDisallowed;
+    $scope.showDateArrow = function(dateString) {
+      /* Determines whether arrow for date navigation should be shown. */
+      var dateInQuestion = DateService.dateStringToDate(dateString);
+      return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    var getPastDisallowedDateString = function() {
-      /* Returns the dateString for the first date in the past that should not be shown (8 days from current date). */
-      var currentDate = new Date();
-      var dateInPast = DateService.getDateInPast(currentDate, 7);
-      var dateDisallowed = DateService.getLastDate(dateInPast); // The day before the day 7 days from now is the one not shown so go back one more day.
-      var dateStringDisallowed = DateService.dateToDateString(dateDisallowed);
-      return dateStringDisallowed;
-    };
-
-    $scope.showNextDateArrow = function(dateString) {
-      /* Determines whether next arrow for date navigation should be shown. */
-      var dateStringDisallowed = getFutureDisallowedDateString();
-      return (dateStringDisallowed !== dateString); // Compare based off of dateString because Date Object includes time.
-    };
-
-    $scope.showLastDateArrow = function(dateString) {
-      /* Determines whether previous arrow for date navigation should be shown. */
-      var dateStringDisallowed = getPastDisallowedDateString();
-      return (dateStringDisallowed !== dateString); // Compare based off of dateString because Date Object includes time.
-    };
-
-    $scope.moveToNextDate = function(dateString) {
-      /* Takes a dateString and if valid, navigates the user to the find-game page for the
-      date after the one specified by the dateString. */
+    $scope.moveToNextDate = function(dateString, placeString) {
+      /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
+      date after the one specified by the dateString and the place specified by the placeString. */
 
       // Get dateString for next date.
       var date = DateService.dateStringToDate(dateString);
       var nextDate = DateService.getNextDate(date);
-      var nextDateString = DateService.dateToDateString(nextDate);
+      var nextDateString = DateService.dateToDateString(nextDate); // Used for state navigation.
 
-      // Get Disallowed dateString
-      var dateStringDisallowed = getFutureDisallowedDateString();
-
-      if (dateStringDisallowed !== nextDateString) {
+      if (DateService.isDateValid(nextDate)) {
         $state.go('tab.find-game', {
           dateString: nextDateString
         });
       }
     };
 
-    $scope.moveToLastDate = function(dateString) {
-      /* Takes a dateString and if valid, navigates the user to the schedule page for the
-      date after the one specified by the dateString. */
+    $scope.moveToLastDate = function(dateString, placeString) {
+      /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
+      date after the one specified by the dateString and the place specified by the placeString. */
 
       // Get dateString for last date.
       var date = DateService.dateStringToDate(dateString);
       var lastDate = DateService.getLastDate(date);
-      var lastDateString = DateService.dateToDateString(lastDate);
+      var lastDateString = DateService.dateToDateString(lastDate); // Used for state navigation.
 
-      // Get Disallowed dateString
-      var dateStringDisallowed = getPastDisallowedDateString();
-
-      if (dateStringDisallowed !== lastDateString) {
+      if (DateService.isDateValid(lastDate)) {
         $state.go('tab.find-game', {
           dateString: lastDateString
         });
@@ -276,10 +199,10 @@
       return DateService.dateToDateString(lastDate);
     };
 
-    $scope.getCurrentDateString = function() {
-      /* Returns the date string for the current date. */
-      var currentDate = new Date();
-      return DateService.dateToDateString(currentDate);
+    $scope.getDateStringToday = function() {
+      /* Returns the date string for the date today. */
+      var dateToday = new Date();
+      return DateService.dateToDateString(dateToday);
     };
 
     $scope.isGamesEmpty = function(games) {
@@ -291,6 +214,7 @@
 
 
   .filter('secondsToTime', function($filter) {
+    /* Takes a time in seconds and converts it to a string represetation of the time. */
     return function(sec) {
       var date = new Date(0, 0, 0);
       date.setSeconds(sec);
