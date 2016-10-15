@@ -13,8 +13,7 @@
 }
 
 /* Hide scrollbar when overflow-scroll="true" */
-::-webkit-scrollbar,
-*::-webkit-scrollbar {
+::-webkit-scrollbar, *::-webkit-scrollbar {
     display: none;
 }
 
@@ -87,13 +86,12 @@
 .time-label-box {
   height: 5.55555%; /* 100 / 18 (Percent / Number or hours displayed) */
   outline: 1px solid #fff; /* Use outline instead of border so box does not get bigger. */
+  text-align: center;
 }
 
 .time-label {
   font-size: 9.5px;
   font-weight: bold;
-  text-align: center;
-  margin-left: 10%;
   color: white;
   vertical-align: text-top;
   overflow: hidden;
