@@ -112,13 +112,13 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .event-label {
   font-size: 11px;
   margin-left: 1.5%;
   vertical-align: text-top;
-  white-space: nowrap;
 }
 
 .event-label.small {
@@ -202,6 +202,11 @@
 
 .sport-icon, .time-title, .sport-title {
   color: #fff;
+}
+
+.sport-container {
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .sport-icon {
