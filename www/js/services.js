@@ -119,8 +119,8 @@
       fieldHouseCourt3: "Court 3",
       fieldHouseCourt4: "Court 4",
       fieldHouseTrack: "Track",
-      rbCourt1: "Racquetball 1",
-      rbCourt2: "Racquetball 2",
+      rbCourt1: "Squash 1",
+      rbCourt2: "Squash 2",
       studio1: "Studio 1",
       studio2: "Studio 2"
     };

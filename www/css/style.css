@@ -111,6 +111,7 @@
   outline: 1px solid white; /* Use outline instead of border so box does not get bigger. */
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .event-label {
@@ -118,7 +119,6 @@
   margin-left: 1.5%;
   vertical-align: text-top;
   white-space: nowrap;
-  overflow: hidden;
 }
 
 .event-label.small {
