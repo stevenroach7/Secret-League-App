@@ -7,13 +7,13 @@
   <ion-content class="schedule-view" scroll="false" on-swipe-left="moveToNextDate(dateString, currentPlaceString)" on-swipe-right="moveToLastDate(dateString, currentPlaceString)">
 
     <div class="button-bar date-nav-schedule">
-      <a ng-show="{{showDateArrow(getLastDateString())}}" ng-href="#/tab/schedule/{{getLastDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
+      <button class="button button-royal button-block icon ion-android-arrow-back" ng-show="{{showDateArrow(getLastDateString())}}" ng-click="moveToLastDate(dateString, currentPlaceString)"></button>
       <a class="date-display button button-block item-unselectable">
         <label class="date-title">
           {{date | date:'MMMM dd'}}
         </label>
       </a>
-      <a ng-show="{{showDateArrow(getNextDateString())}}" ng-href="#/tab/schedule/{{getNextDateString()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
+      <button class="button button-royal button-block icon ion-android-arrow-forward" ng-show="{{showDateArrow(getNextDateString())}}" ng-click="moveToNextDate(dateString, currentPlaceString)"></button>
     </div>
 
     <hr class="horiz-line">

@@ -6,13 +6,13 @@
   <ion-content class="find-game-view" on-swipe-left="moveToNextDate(dateString)" on-swipe-right="moveToLastDate(dateString)">
 
     <div class="button-bar date-nav-find-game">
-      <a ng-show="{{showDateArrow(getLastDateString())}}" ng-href="#/tab/find-game/{{getLastDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-back"></a>
+      <button class="button button-royal button-block icon ion-android-arrow-back" ng-show="{{showDateArrow(getLastDateString())}}" ng-click="moveToLastDate(dateString)"></button>
       <a class="date-display button button-block item-unselectable">
         <label class="date-title">
           {{date | date:'MMMM dd'}}
         </label>
       </a>
-      <a ng-show="{{showDateArrow(getNextDateString())}}" ng-href="#/tab/find-game/{{getNextDateString()}}" nav-transition="none" class="button button-royal button-block icon ion-android-arrow-forward"></a>
+      <button class="button button-royal button-block icon ion-android-arrow-forward" ng-show="{{showDateArrow(getNextDateString())}}" ng-click="moveToNextDate(dateString)"></button>
     </div>
 
     <div class="game-display" ng-repeat="game in games">
