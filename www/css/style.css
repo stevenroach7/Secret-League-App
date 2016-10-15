@@ -56,12 +56,13 @@
 /* Schedule Styling */
 .schedule-view {
   background-color: #D3D3D3;
+  /*min-height: 100%;*/
 }
-
 
 .date-nav-schedule {
   margin-top: -0.8%;
   margin-bottom: -0.8%;
+  /*height: 10%;*/
 }
 
 .cal-container {
@@ -90,7 +91,6 @@
   margin-left: 10%;
   color: white;
   vertical-align: text-top;
-
 }
 
 .cal {
