@@ -4,7 +4,7 @@
     <a ng-href="#/tab/schedule/{{getDateStringToday()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-clear">Today</a>
   </ion-nav-buttons>
 
-  <ion-content class="schedule-view" overflow-scroll="true" on-swipe-left="moveToNextDate(dateString, currentPlaceString)" on-swipe-right="moveToLastDate(dateString, currentPlaceString)">
+  <ion-content class="schedule-view" overflow-scroll="true" scrollbar-y="false" on-swipe-left="moveToNextDate(dateString, currentPlaceString)" on-swipe-right="moveToLastDate(dateString, currentPlaceString)">
 
     <div class="button-bar date-nav-schedule">
       <button class="button button-royal button-block icon ion-android-arrow-back" ng-show="{{showDateArrow(getLastDateString())}}" ng-click="moveToLastDate(dateString, currentPlaceString)"></button>

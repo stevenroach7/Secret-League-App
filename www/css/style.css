@@ -12,6 +12,12 @@
   padding: 0;
 }
 
+/* Hide scrollbar when overflow-scroll="true" */
+::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    display: none;
+}
+
 /* Login Styling */
 .login-view {
   background-color: #424242;
