@@ -90,11 +90,14 @@
 }
 
 .time-label {
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: bold;
+  text-align: center;
   margin-left: 10%;
   color: white;
   vertical-align: text-top;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .cal {
@@ -149,9 +152,7 @@
 }
 
 .place-label-box {
-  height: 9.8%; 
-  /* Slightly less than 100 / 10 (percent / number of places) to have a slight gap at the bottom. */
-  /*height: 10%;*/
+  height: 9.8%; /* Slightly less than 100 / 10 (percent / number of places) to have a slight gap at the bottom. */
 }
 
 .place-label-button {
@@ -164,6 +165,8 @@
   margin-top: 1%; /* Create some empty space between place-label-button's */
   height: 100%;
   border-radius: 10%;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .place-label-button.active {
