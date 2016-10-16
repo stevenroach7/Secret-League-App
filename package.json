@@ -1,7 +1,8 @@
 {
-  "name": "secret-league-app",
+  "name": "Secret League",
   "version": "1.1.1",
-  "description": "Secret-League-App: An Ionic project",
+  "description": "Secret-League-App: A mobile application to display Macalester College athletic
+   scheduling data and facilitate pickup sports games on campus",
   "dependencies": {
     "angularfire": "^2.0.2",
     "gulp": "^3.5.6",
@@ -30,5 +31,10 @@
       "version": "",
       "locator": "ios"
     }
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/stevenroach7/Secret-League-App.git"
+  },
+  "license": "UNLICENSED"
 }
