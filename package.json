@@ -1,8 +1,7 @@
 {
-  "name": "Secret League",
+  "name": "Secret-League-App",
   "version": "1.1.1",
-  "description": "Secret-League-App: A mobile application to display Macalester College athletic
-   scheduling data and facilitate pickup sports games on campus",
+  "description": "Secret League: A mobile application to display Macalester College athletic scheduling data and facilitate pickup sports games on campus",
   "dependencies": {
     "angularfire": "^2.0.2",
     "gulp": "^3.5.6",
@@ -13,6 +12,7 @@
   },
   "devDependencies": {
     "bower": "^1.3.3",
+    "gulp-angular-templatecache": "^2.0.0",
     "gulp-util": "^2.2.14",
     "shelljs": "^0.3.0"
   },
