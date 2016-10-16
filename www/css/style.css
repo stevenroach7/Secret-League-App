@@ -17,6 +17,20 @@
     display: none;
 }
 
+/* Date Navigation Styling (appears in schedule and find-game states). */
+.date-display {
+  background-color: #ffffff;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.date-title {
+  font-size: 13px;
+  font-weight: bold;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+
 /* Login Styling */
 .login-view {
   background-color: #424242;
@@ -179,19 +193,9 @@
   background-color: #D3D3D3;
 }
 
-.date-display {
-  background-color: #ffffff;
-}
-
 .date-nav-find-game {
   margin-top: -0.8%;
   margin-bottom: -2.8%;
-}
-
-.date-title {
-  font-size: 13px;
-  font-weight: bold;
-  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
 .no-games {
@@ -218,7 +222,7 @@
   color: #fff;
 }
 
-.sport-container {
+.time-container, .sport-container, .location-display, .skill-display {
   overflow: hidden;
   white-space: nowrap;
 }
