@@ -1,6 +1,6 @@
 (function() {
 
-  var servMod = angular.module('starter.services', []); // Assigning the module to a variable makes it easy to add new factories.
+  var servMod = angular.module('slApp.services', []); // Assigning the module to a variable makes it easy to add new factories.
 
   servMod.factory('DateService', function() {
     /* Contains methods relating to date and time. */

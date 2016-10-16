@@ -1,7 +1,7 @@
 (function() {
 
 
-  angular.module('starter.controllers', ['firebase'])
+  angular.module('slApp.controllers', ['firebase'])
 
 
   .controller('TabsCtrl', function($scope, DateService, ScheduleService) {
