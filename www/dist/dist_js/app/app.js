@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'slApp.services' is found in services.js
 // 'slApp.controllers' is found in controllers.js
-angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'slApp.templates', 'firebase'])
+angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'firebase'])
 
-.run(function($ionicPlatform) {
+.run(['$ionicPlatform', function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -21,9 +21,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'slApp.
       StatusBar.styleDefault();
     }
   });
-})
+}])
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
   // Disable transitions
   $ionicConfigProvider.views.transition('none');
@@ -36,7 +36,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'slApp.
 
   .state('login', {
       url: '/login',
-      templateUrl: 'login.html',
+      templateUrl: 'templates/login.html',
       controller: 'TabsCtrl'
   })
 
@@ -44,7 +44,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'slApp.
     .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'tabs.html',
+    templateUrl: 'templates/tabs.html',
     controller: 'TabsCtrl'
   })
 
@@ -55,7 +55,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'slApp.
     url: '/schedule/:dateString/:placeString',
     views: {
       'schedule': {
-        templateUrl: 'schedule.html',
+        templateUrl: 'templates/schedule.html',
         controller: 'ScheduleCtrl'
       }
     }
@@ -66,7 +66,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'slApp.
     url: '/find-game/:dateString',
     views: {
       'find-game': {
-        templateUrl: 'find-game.html',
+        templateUrl: 'templates/find-game.html',
         controller: 'FindGameCtrl'
       }
     }
@@ -76,4 +76,4 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'slApp.
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 
-});
+}]);
