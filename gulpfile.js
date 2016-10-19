@@ -74,7 +74,8 @@ gulp.task('ng_annotate', function (done) {
 });
 
 gulp.task('useref', function (done) {
-  return gulp.src('app/*.html')
-        .pipe(useref())
-        .pipe(gulp.dest('dist'));
+  gulp.src('./www/*.html')
+  .pipe(useref())
+  .pipe(gulp.dest('./www/dist'))
+  .on('end', done);
 });

@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'slApp.services' is found in services.js
 // 'slApp.controllers' is found in controllers.js
-angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'firebase'])
+angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templates', 'firebase'])
 
 .run(['$ionicPlatform', function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -36,7 +36,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'fireba
 
   .state('login', {
       url: '/login',
-      templateUrl: 'templates/login.html',
+      templateUrl: 'login.html',
       controller: 'TabsCtrl'
   })
 
@@ -44,7 +44,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'fireba
     .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html',
+    templateUrl: 'tabs.html',
     controller: 'TabsCtrl'
   })
 
@@ -55,7 +55,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'fireba
     url: '/schedule/:dateString/:placeString',
     views: {
       'schedule': {
-        templateUrl: 'templates/schedule.html',
+        templateUrl: 'schedule.html',
         controller: 'ScheduleCtrl'
       }
     }
@@ -66,7 +66,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'fireba
     url: '/find-game/:dateString',
     views: {
       'find-game': {
-        templateUrl: 'templates/find-game.html',
+        templateUrl: 'find-game.html',
         controller: 'FindGameCtrl'
       }
     }

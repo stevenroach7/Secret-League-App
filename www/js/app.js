@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'slApp.services' is found in services.js
 // 'slApp.controllers' is found in controllers.js
-angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'slApp.templates', 'firebase'])
+angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templates', 'firebase'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
