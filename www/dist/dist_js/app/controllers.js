@@ -24,7 +24,7 @@
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    $scope.moveToNextDate = function(dateString, placeString) {
+    $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
       date after the one specified by the dateString and the place specified by the placeString. */
 
@@ -35,13 +35,12 @@
 
       if (DateService.isDateValid(nextDate)) {
         $state.go('tab.schedule', {
-          dateString: nextDateString,
-          placeString: placeString
+          dateString: nextDateString
         });
       }
     };
 
-    $scope.moveToLastDate = function(dateString, placeString) {
+    $scope.moveToLastDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
       date after the one specified by the dateString and the place specified by the placeString. */
 
@@ -52,8 +51,7 @@
 
       if (DateService.isDateValid(lastDate)) {
         $state.go('tab.schedule', {
-          dateString: lastDateString,
-          placeString: placeString
+          dateString: lastDateString
         });
       }
     };
@@ -105,7 +103,13 @@
     $scope.startingTimes = getStartingTimes(7, 25, 1/12); // Check for events every 5 minutes (1/12 hours) starting from 7 AM (inclusive) to 1 AM (exclusive).
 
     // Query data for one state at a time.
-    $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
+    $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, 'alumniGym');
+
+    // Test Function
+    $scope.changeData = function(placeString) {
+      $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, placeString);
+      console.log($scope.events);
+    };
 
     $scope.doesEventExist = function(eventObject) {
       /* Takes an object and returns if it is truthy. */

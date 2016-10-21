@@ -52,7 +52,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
 
   .state('tab.schedule', {
-    url: '/schedule/:dateString/:placeString',
+    url: '/schedule/:dateString',
     views: {
       'schedule': {
         templateUrl: 'schedule.html',

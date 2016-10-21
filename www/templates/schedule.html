@@ -1,19 +1,19 @@
 <ion-view view-title="Schedule">
 
   <ion-nav-buttons side="right">
-    <a ng-href="#/tab/schedule/{{getDateStringToday()}}/{{currentPlaceString}}" nav-transition="none" class="button button-royal button-clear">Today</a>
+    <a ng-href="#/tab/schedule/{{getDateStringToday()}}" nav-transition="none" class="button button-royal button-clear">Today</a>
   </ion-nav-buttons>
 
-  <ion-content class="schedule-view" overflow-scroll="true" on-swipe-left="moveToNextDate(dateString, currentPlaceString)" on-swipe-right="moveToLastDate(dateString, currentPlaceString)">
+  <ion-content class="schedule-view" overflow-scroll="true" on-swipe-left="moveToNextDate(dateString)" on-swipe-right="moveToLastDate(dateString)">
 
     <div class="button-bar date-nav-schedule">
-      <button class="button button-royal button-block icon ion-android-arrow-back" ng-show="{{showDateArrow(getLastDateString())}}" ng-click="moveToLastDate(dateString, currentPlaceString)"></button>
+      <button class="button button-royal button-block icon ion-android-arrow-back" ng-show="{{showDateArrow(getLastDateString())}}" ng-click="moveToLastDate(dateString)"></button>
       <a class="date-display button button-block item-unselectable">
         <label class="date-title">
           {{date | date:'MMMM dd'}}
         </label>
       </a>
-      <button class="button button-royal button-block icon ion-android-arrow-forward" ng-show="{{showDateArrow(getNextDateString())}}" ng-click="moveToNextDate(dateString, currentPlaceString)"></button>
+      <button class="button button-royal button-block icon ion-android-arrow-forward" ng-show="{{showDateArrow(getNextDateString())}}" ng-click="moveToNextDate(dateString)"></button>
     </div>
 
     <hr class="horiz-line">
@@ -45,9 +45,10 @@
 
     <div class="place-bar">
       <div class="place-label-box" ng-repeat="(placeString, placeTitle) in places">
-        <a class="place-label-button item" ng-href="#/tab/schedule/{{dateString}}/{{placeString}}" nav-transition="none" ng-class="{true: 'active'}[placeString === currentPlaceString]">
+        <a class="place-label-button item" ng-click="changeData(placeString)" nav-transition="none" ng-class="{true: 'active'}[placeString === 'alumniGym']">
           {{placeTitle}}
         </a>
+
       </div>
     </div>
   </ion-content>
