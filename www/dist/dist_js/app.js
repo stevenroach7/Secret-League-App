@@ -154,9 +154,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       return DateService.dateToDateString(dateToday);
     };
 
-    $scope.currentPlaceString = $stateParams.placeString;
-    $scope.places = ScheduleService.getPlaces();
-
     var getDisplayedTimes = function(startHour, endHour, increment) {
     /* Takes a starting time and ending time in hours and an increment and
     creates an array of times in seconds that will be displayed as time labels. */
@@ -182,13 +179,16 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     $scope.displayedTimes = getDisplayedTimes(7, 25, 1); // Display times every 1 hour from 7 AM (inclusive) to 1 AM (exclusive).
     $scope.startingTimes = getStartingTimes(7, 25, 1/12); // Check for events every 5 minutes (1/12 hours) starting from 7 AM (inclusive) to 1 AM (exclusive).
 
-    // Query data for one state at a time.
-    $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, 'alumniGym');
+    $scope.places = ScheduleService.getPlaces();
+    $scope.currentPlaceString = 'alumniGym'; // Initialize currentPlaceString as alumniGym
 
-    // Test Function
-    $scope.changeData = function(placeString) {
-      $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, placeString);
-      console.log($scope.events);
+    // Query data for one state at a time.
+    $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $scope.currentPlaceString);
+
+    $scope.changePlace = function(newPlaceString) {
+      /* Takes a placeString and changes the data for the page to display the events for the new place as specified by the placeString. */
+      $scope.currentPlaceString = newPlaceString; // Update currentPlaceString variable
+      $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $scope.currentPlaceString); // Update events to reflect place change. 
     };
 
     $scope.doesEventExist = function(eventObject) {
@@ -215,7 +215,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       var durationPercent = 12 * (durationHours * 100); // Multiply by 12 because we need the percent height scaled to 5 minutes instead of one hour.
       return durationPercent;
     };
-
 
     $scope.isStripeOn = function(time) {
       /* Takes a time and calculates if the event-label-container with the startingTime corresponding to this input time should be striped or not. */
@@ -442,9 +441,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       studio2: "Studio 2"
     };
 
-
     return {
-
       getPlaceTitle: function(placeString) {
         /* Takes a placeString (abbreviated code for the place) and returns the corresponding string. */
         if (place.hasOwnProperty(placeString)) {
@@ -466,7 +463,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
         return events;
       }
-
     };
   }]);
 

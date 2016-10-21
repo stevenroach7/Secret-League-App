@@ -125,9 +125,7 @@
       studio2: "Studio 2"
     };
 
-
     return {
-
       getPlaceTitle: function(placeString) {
         /* Takes a placeString (abbreviated code for the place) and returns the corresponding string. */
         if (place.hasOwnProperty(placeString)) {
@@ -149,7 +147,6 @@
 
         return events;
       }
-
     };
   });
 

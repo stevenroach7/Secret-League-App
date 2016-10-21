@@ -45,11 +45,11 @@
 
     <div class="place-bar">
       <div class="place-label-box" ng-repeat="(placeString, placeTitle) in places">
-        <a class="place-label-button item" ng-click="changeData(placeString)" nav-transition="none" ng-class="{true: 'active'}[placeString === 'alumniGym']">
+        <a class="place-label-button item" ng-click="changePlace(placeString)" nav-transition="none" ng-class="{true: 'active'}[placeString === currentPlaceString]">
           {{placeTitle}}
         </a>
-
       </div>
     </div>
+
   </ion-content>
 </ion-view>
