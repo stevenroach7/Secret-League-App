@@ -125,9 +125,7 @@
       studio2: "Studio 2"
     };
 
-
     return {
-
       getPlaceTitle: function(placeString) {
         /* Takes a placeString (abbreviated code for the place) and returns the corresponding string. */
         if (place.hasOwnProperty(placeString)) {
@@ -139,6 +137,26 @@
         /* Returns the places object. */
         return places;
       },
+      getDisplayedTimes: function(startHour, endHour, increment) {
+      /* Takes a starting time and ending time in hours and an increment and
+      creates an array of times in seconds that will be displayed as time labels. */
+        var displayedTimes = [];
+
+        for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
+          displayedTimes.push(DateService.hoursToSeconds(i));
+        }
+        return displayedTimes;
+      },
+      getStartingTimes: function(startHour, endHour, increment) {
+        /* Takes a starting time and ending time in hours and an increment and creates an array of times in seconds
+        that we will use to check if events start at each time. */
+        var startingTimes = [];
+
+        for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
+          startingTimes.push(DateService.hoursToSeconds(i));
+        }
+        return startingTimes;
+      },
       getEventsByDateAndPlace: function(dateString, placeString) {
         /* Takes a dateString and a placeString and queries the firebase DB to obtain and return the events object
         specified by the dateString and in the place specified by the placeString. */
@@ -149,7 +167,6 @@
 
         return events;
       }
-
     };
   });
 

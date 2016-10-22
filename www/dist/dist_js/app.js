@@ -52,7 +52,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
 
   .state('tab.schedule', {
-    url: '/schedule/:dateString/:placeString',
+    url: '/schedule',
     views: {
       'schedule': {
         templateUrl: 'schedule.html',
@@ -63,7 +63,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
 
   .state('tab.find-game', {
-    url: '/find-game/:dateString',
+    url: '/find-game',
     views: {
       'find-game': {
         templateUrl: 'find-game.html',
@@ -86,17 +86,13 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
   .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', function($scope, DateService, ScheduleService) {
 
-    // Used so today's date will show by default on schedule and find-game tabs.
-    var dateToday = new Date();
-    $scope.dateStringToday = DateService.dateToDateString(dateToday);
-
   }])
 
 
   .controller('ScheduleCtrl', ['$scope', 'DateService', 'ScheduleService', '$stateParams', '$state', function($scope, DateService, ScheduleService, $stateParams, $state) {
 
-    $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
-    $scope.dateString = $stateParams.dateString;
+    $scope.date = new Date();
+    $scope.dateString = DateService.dateToDateString($scope.date);
 
     $scope.showDateArrow = function(dateString) {
       /* Determines whether arrow for date navigation should be shown. */
@@ -104,88 +100,68 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    $scope.moveToNextDate = function(dateString, placeString) {
+    var changeDate = function(date) {
+      /* Takes a date and if valid, updates date and dateString variables with the new date
+      and updates the events variable to reflect this date change. */
+      if (DateService.isDateValid(date)) {
+        $scope.date = date;
+        $scope.dateString = DateService.dateToDateString(date);
+        $scope.events = ScheduleService.getEventsByDateAndPlace($scope.dateString, $scope.currentPlaceString); // Update events to reflect date change.
+      }
+    };
+
+    $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
       date after the one specified by the dateString and the place specified by the placeString. */
 
       // Get dateString for next date.
       var date = DateService.dateStringToDate(dateString);
       var nextDate = DateService.getNextDate(date);
-      var nextDateString = DateService.dateToDateString(nextDate); // Used for state navigation.
-
-      if (DateService.isDateValid(nextDate)) {
-        $state.go('tab.schedule', {
-          dateString: nextDateString,
-          placeString: placeString
-        });
-      }
+      changeDate(nextDate);
     };
 
-    $scope.moveToLastDate = function(dateString, placeString) {
+    $scope.moveToLastDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
       date after the one specified by the dateString and the place specified by the placeString. */
 
       // Get dateString for last date.
       var date = DateService.dateStringToDate(dateString);
       var lastDate = DateService.getLastDate(date);
-      var lastDateString = DateService.dateToDateString(lastDate); // Used for state navigation.
+      changeDate(lastDate);
+    };
 
-      if (DateService.isDateValid(lastDate)) {
-        $state.go('tab.schedule', {
-          dateString: lastDateString,
-          placeString: placeString
-        });
-      }
+    $scope.moveToDateToday = function() {
+      /* Navigates the user to the schedule page for the current date. */
+      var dateToday = new Date();
+      changeDate(dateToday);
     };
 
     $scope.getNextDateString = function() {
-      /* Returns the date string for the next date. Used for page navigation. */
+      /* Returns the date string for the date after the date the schedule is on. */
       var nextDate = DateService.getNextDate($scope.date);
       return DateService.dateToDateString(nextDate);
     };
 
     $scope.getLastDateString = function() {
-      /* Returns the date string for the previous date. Used for page navigation.*/
+      /* Returns the date string for the date after the date the schedule is on. */
       var lastDate = DateService.getLastDate($scope.date);
       return DateService.dateToDateString(lastDate);
     };
 
-    $scope.getDateStringToday = function() {
-      /* Returns the date string for the today's date. */
-      var dateToday = new Date();
-      return DateService.dateToDateString(dateToday);
-    };
+    $scope.displayedTimes = ScheduleService.getDisplayedTimes(7, 25, 1); // Display times every 1 hour from 7 AM (inclusive) to 1 AM (exclusive).
+    $scope.startingTimes = ScheduleService.getStartingTimes(7, 25, 1/12); // Check for events every 5 minutes (1/12 hours) starting from 7 AM (inclusive) to 1 AM (exclusive).
 
-    $scope.currentPlaceString = $stateParams.placeString;
     $scope.places = ScheduleService.getPlaces();
+    $scope.currentPlaceString = 'alumniGym'; // Initialize currentPlaceString as alumniGym
 
-    var getDisplayedTimes = function(startHour, endHour, increment) {
-    /* Takes a starting time and ending time in hours and an increment and
-    creates an array of times in seconds that will be displayed as time labels. */
-      var displayedTimes = [];
+    // Query data for events on the current date at the current place.
+    $scope.events = ScheduleService.getEventsByDateAndPlace($scope.dateString, $scope.currentPlaceString);
 
-      for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
-        displayedTimes.push(DateService.hoursToSeconds(i));
-      }
-      return displayedTimes;
+    $scope.changePlace = function(newPlaceString) {
+      /* Takes a placeString and changes the data for the page to display the events for the new place as specified by the placeString. */
+      $scope.currentPlaceString = newPlaceString; // Update currentPlaceString variable
+      $scope.events = ScheduleService.getEventsByDateAndPlace($scope.dateString, $scope.currentPlaceString); // Update events to reflect place change.
     };
-
-    var getStartingTimes = function(startHour, endHour, increment) {
-      /* Takes a starting time and ending time in hours and an increment and creates an array of times in seconds
-      that we will use to check if events start at each time. */
-      var startingTimes = [];
-
-      for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
-        startingTimes.push(DateService.hoursToSeconds(i));
-      }
-      return startingTimes;
-    };
-
-    $scope.displayedTimes = getDisplayedTimes(7, 25, 1); // Display times every 1 hour from 7 AM (inclusive) to 1 AM (exclusive).
-    $scope.startingTimes = getStartingTimes(7, 25, 1/12); // Check for events every 5 minutes (1/12 hours) starting from 7 AM (inclusive) to 1 AM (exclusive).
-
-    // Query data for one state at a time.
-    $scope.events = ScheduleService.getEventsByDateAndPlace($stateParams.dateString, $stateParams.placeString);
 
     $scope.doesEventExist = function(eventObject) {
       /* Takes an object and returns if it is truthy. */
@@ -212,7 +188,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       return durationPercent;
     };
 
-
     $scope.isStripeOn = function(time) {
       /* Takes a time and calculates if the event-label-container with the startingTime corresponding to this input time should be striped or not. */
       // time % 1800 creates a sequence of 6 values when time is incremented by 300. (0, 300, 600, 900, 1200, 1500, etc.)
@@ -225,9 +200,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
   .controller('FindGameCtrl', ['$scope', 'GamesService', 'DateService', '$stateParams', '$state', function($scope, GamesService, DateService, $stateParams, $state) {
 
-    $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
-    $scope.dateString = $stateParams.dateString;
-    $scope.games = GamesService.getGamesByDate($stateParams.dateString); // Get games on the date specfied by the dateString in the state parameters.
+    $scope.date = new Date(); // initialize date variable based on date in this moment.
+    $scope.dateString = DateService.dateToDateString($scope.date);
+    $scope.games = GamesService.getGamesByDate($scope.dateString); // Get games on the date specfied by the dateString.
 
     $scope.showDateArrow = function(dateString) {
       /* Determines whether arrow for date navigation should be shown. */
@@ -235,36 +210,40 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    $scope.moveToNextDate = function(dateString, placeString) {
+    var changeDate = function(date) {
+      /* Takes a date and if valid, updates date and dateString variables with the new date
+      and updates the events variable to reflect this date change. */
+      if (DateService.isDateValid(date)) {
+        $scope.date = date;
+        $scope.dateString = DateService.dateToDateString(date);
+        $scope.games = GamesService.getGamesByDate($scope.dateString); // Update games to reflect date change.
+      }
+    };
+
+    $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
-      date after the one specified by the dateString and the place specified by the placeString. */
+      date after the one specified by the dateString. */
 
       // Get dateString for next date.
       var date = DateService.dateStringToDate(dateString);
       var nextDate = DateService.getNextDate(date);
-      var nextDateString = DateService.dateToDateString(nextDate); // Used for state navigation.
-
-      if (DateService.isDateValid(nextDate)) {
-        $state.go('tab.find-game', {
-          dateString: nextDateString
-        });
-      }
+      changeDate(nextDate);
     };
 
-    $scope.moveToLastDate = function(dateString, placeString) {
+    $scope.moveToLastDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
-      date after the one specified by the dateString and the place specified by the placeString. */
+      date after the one specified by the dateString. */
 
       // Get dateString for last date.
       var date = DateService.dateStringToDate(dateString);
       var lastDate = DateService.getLastDate(date);
-      var lastDateString = DateService.dateToDateString(lastDate); // Used for state navigation.
+      changeDate(lastDate);
+    };
 
-      if (DateService.isDateValid(lastDate)) {
-        $state.go('tab.find-game', {
-          dateString: lastDateString
-        });
-      }
+    $scope.moveToDateToday = function() {
+      /* Navigates the user to the find-game page for the current date. */
+      var dateToday = new Date();
+      changeDate(dateToday);
     };
 
     $scope.getNextDateString = function() {
@@ -438,9 +417,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       studio2: "Studio 2"
     };
 
-
     return {
-
       getPlaceTitle: function(placeString) {
         /* Takes a placeString (abbreviated code for the place) and returns the corresponding string. */
         if (place.hasOwnProperty(placeString)) {
@@ -452,6 +429,26 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         /* Returns the places object. */
         return places;
       },
+      getDisplayedTimes: function(startHour, endHour, increment) {
+      /* Takes a starting time and ending time in hours and an increment and
+      creates an array of times in seconds that will be displayed as time labels. */
+        var displayedTimes = [];
+
+        for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
+          displayedTimes.push(DateService.hoursToSeconds(i));
+        }
+        return displayedTimes;
+      },
+      getStartingTimes: function(startHour, endHour, increment) {
+        /* Takes a starting time and ending time in hours and an increment and creates an array of times in seconds
+        that we will use to check if events start at each time. */
+        var startingTimes = [];
+
+        for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
+          startingTimes.push(DateService.hoursToSeconds(i));
+        }
+        return startingTimes;
+      },
       getEventsByDateAndPlace: function(dateString, placeString) {
         /* Takes a dateString and a placeString and queries the firebase DB to obtain and return the events object
         specified by the dateString and in the place specified by the placeString. */
@@ -462,7 +459,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
         return events;
       }
-
     };
   }]);
 
