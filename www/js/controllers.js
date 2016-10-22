@@ -24,10 +24,9 @@
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-
     var changeDate = function(date) {
       /* Takes a date and if valid, updates date and currentDateString variables with the new date
-      and updates the events variable to reflect this date change */
+      and updates the events variable to reflect this date change. */
       if (DateService.isDateValid(date)) {
         $scope.date = date;
         $scope.currentDateString = DateService.dateToDateString(date);
@@ -62,46 +61,24 @@
     };
 
     $scope.getNextDateString = function() {
-      /* Returns the date string for the next date. Used for page navigation. */
+      /* Returns the date string for the date after the date the schedule is on. */
       var nextDate = DateService.getNextDate($scope.date);
       return DateService.dateToDateString(nextDate);
     };
 
     $scope.getLastDateString = function() {
-      /* Returns the date string for the previous date. Used for page navigation.*/
+      /* Returns the date string for the date after the date the schedule is on. */
       var lastDate = DateService.getLastDate($scope.date);
       return DateService.dateToDateString(lastDate);
     };
 
-    var getDisplayedTimes = function(startHour, endHour, increment) {
-    /* Takes a starting time and ending time in hours and an increment and
-    creates an array of times in seconds that will be displayed as time labels. */
-      var displayedTimes = [];
-
-      for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
-        displayedTimes.push(DateService.hoursToSeconds(i));
-      }
-      return displayedTimes;
-    };
-
-    var getStartingTimes = function(startHour, endHour, increment) {
-      /* Takes a starting time and ending time in hours and an increment and creates an array of times in seconds
-      that we will use to check if events start at each time. */
-      var startingTimes = [];
-
-      for (i = startHour; i < endHour; i+=increment) { // Go from startHour (inclusive) to endHour (exclusive).
-        startingTimes.push(DateService.hoursToSeconds(i));
-      }
-      return startingTimes;
-    };
-
-    $scope.displayedTimes = getDisplayedTimes(7, 25, 1); // Display times every 1 hour from 7 AM (inclusive) to 1 AM (exclusive).
-    $scope.startingTimes = getStartingTimes(7, 25, 1/12); // Check for events every 5 minutes (1/12 hours) starting from 7 AM (inclusive) to 1 AM (exclusive).
+    $scope.displayedTimes = ScheduleService.getDisplayedTimes(7, 25, 1); // Display times every 1 hour from 7 AM (inclusive) to 1 AM (exclusive).
+    $scope.startingTimes = ScheduleService.getStartingTimes(7, 25, 1/12); // Check for events every 5 minutes (1/12 hours) starting from 7 AM (inclusive) to 1 AM (exclusive).
 
     $scope.places = ScheduleService.getPlaces();
     $scope.currentPlaceString = 'alumniGym'; // Initialize currentPlaceString as alumniGym
 
-    // Query data for one state at a time.
+    // Query data for events on the current date at the current place.
     $scope.events = ScheduleService.getEventsByDateAndPlace($scope.currentDateString, $scope.currentPlaceString);
 
     $scope.changePlace = function(newPlaceString) {
