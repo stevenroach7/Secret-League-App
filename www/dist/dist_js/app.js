@@ -63,7 +63,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
 
   .state('tab.find-game', {
-    url: '/find-game/:dateString',
+    url: '/find-game',
     views: {
       'find-game': {
         templateUrl: 'find-game.html',
@@ -86,17 +86,13 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
   .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', function($scope, DateService, ScheduleService) {
 
-    // Used so today's date will show by default on schedule and find-game tabs.
-    var dateToday = new Date();
-    $scope.dateStringToday = DateService.dateToDateString(dateToday);
-
   }])
 
 
   .controller('ScheduleCtrl', ['$scope', 'DateService', 'ScheduleService', '$stateParams', '$state', function($scope, DateService, ScheduleService, $stateParams, $state) {
 
     $scope.date = new Date();
-    $scope.currentDateString = DateService.dateToDateString($scope.date);
+    $scope.dateString = DateService.dateToDateString($scope.date);
 
     $scope.showDateArrow = function(dateString) {
       /* Determines whether arrow for date navigation should be shown. */
@@ -105,12 +101,12 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     };
 
     var changeDate = function(date) {
-      /* Takes a date and if valid, updates date and currentDateString variables with the new date
+      /* Takes a date and if valid, updates date and dateString variables with the new date
       and updates the events variable to reflect this date change. */
       if (DateService.isDateValid(date)) {
         $scope.date = date;
-        $scope.currentDateString = DateService.dateToDateString(date);
-        $scope.events = ScheduleService.getEventsByDateAndPlace($scope.currentDateString, $scope.currentPlaceString); // Update events to reflect date change.
+        $scope.dateString = DateService.dateToDateString(date);
+        $scope.events = ScheduleService.getEventsByDateAndPlace($scope.dateString, $scope.currentPlaceString); // Update events to reflect date change.
       }
     };
 
@@ -159,12 +155,12 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     $scope.currentPlaceString = 'alumniGym'; // Initialize currentPlaceString as alumniGym
 
     // Query data for events on the current date at the current place.
-    $scope.events = ScheduleService.getEventsByDateAndPlace($scope.currentDateString, $scope.currentPlaceString);
+    $scope.events = ScheduleService.getEventsByDateAndPlace($scope.dateString, $scope.currentPlaceString);
 
     $scope.changePlace = function(newPlaceString) {
       /* Takes a placeString and changes the data for the page to display the events for the new place as specified by the placeString. */
       $scope.currentPlaceString = newPlaceString; // Update currentPlaceString variable
-      $scope.events = ScheduleService.getEventsByDateAndPlace($scope.currentDateString, $scope.currentPlaceString); // Update events to reflect place change.
+      $scope.events = ScheduleService.getEventsByDateAndPlace($scope.dateString, $scope.currentPlaceString); // Update events to reflect place change.
     };
 
     $scope.doesEventExist = function(eventObject) {
@@ -204,9 +200,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
   .controller('FindGameCtrl', ['$scope', 'GamesService', 'DateService', '$stateParams', '$state', function($scope, GamesService, DateService, $stateParams, $state) {
 
-    $scope.date = DateService.dateStringToDate($stateParams.dateString); // Get date object based on dateString in state parameters.
-    $scope.dateString = $stateParams.dateString;
-    $scope.games = GamesService.getGamesByDate($stateParams.dateString); // Get games on the date specfied by the dateString in the state parameters.
+    $scope.date = new Date(); // initialize date variable based on date in this moment.
+    $scope.dateString = DateService.dateToDateString($scope.date);
+    $scope.games = GamesService.getGamesByDate($scope.dateString); // Get games on the date specfied by the dateString.
 
     $scope.showDateArrow = function(dateString) {
       /* Determines whether arrow for date navigation should be shown. */
@@ -214,36 +210,40 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    $scope.moveToNextDate = function(dateString, placeString) {
+    var changeDate = function(date) {
+      /* Takes a date and if valid, updates date and dateString variables with the new date
+      and updates the events variable to reflect this date change. */
+      if (DateService.isDateValid(date)) {
+        $scope.date = date;
+        $scope.dateString = DateService.dateToDateString(date);
+        $scope.games = GamesService.getGamesByDate($scope.dateString); // Update games to reflect date change.
+      }
+    };
+
+    $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
-      date after the one specified by the dateString and the place specified by the placeString. */
+      date after the one specified by the dateString. */
 
       // Get dateString for next date.
       var date = DateService.dateStringToDate(dateString);
       var nextDate = DateService.getNextDate(date);
-      var nextDateString = DateService.dateToDateString(nextDate); // Used for state navigation.
-
-      if (DateService.isDateValid(nextDate)) {
-        $state.go('tab.find-game', {
-          dateString: nextDateString
-        });
-      }
+      changeDate(nextDate);
     };
 
-    $scope.moveToLastDate = function(dateString, placeString) {
+    $scope.moveToLastDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
-      date after the one specified by the dateString and the place specified by the placeString. */
+      date after the one specified by the dateString. */
 
       // Get dateString for last date.
       var date = DateService.dateStringToDate(dateString);
       var lastDate = DateService.getLastDate(date);
-      var lastDateString = DateService.dateToDateString(lastDate); // Used for state navigation.
+      changeDate(lastDate);
+    };
 
-      if (DateService.isDateValid(lastDate)) {
-        $state.go('tab.find-game', {
-          dateString: lastDateString
-        });
-      }
+    $scope.moveToDateToday = function() {
+      /* Navigates the user to the find-game page for the current date. */
+      var dateToday = new Date();
+      changeDate(dateToday);
     };
 
     $scope.getNextDateString = function() {

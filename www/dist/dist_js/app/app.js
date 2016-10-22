@@ -63,7 +63,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
 
   .state('tab.find-game', {
-    url: '/find-game/:dateString',
+    url: '/find-game',
     views: {
       'find-game': {
         templateUrl: 'find-game.html',
