@@ -95,32 +95,60 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   angular.module('slApp.controllers', ['firebase'])
 
 
-  .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', 'firebase', '$state', function($scope, DateService, ScheduleService, firebase, $state) {
+  .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', 'firebase', '$state', '$ionicModal', function($scope, DateService, ScheduleService, firebase, $state, $ionicModal) {
 
-
+    // TODO: Create general error alert message that takes a string and displays it in a message popup.
     // TODO: Create registration modal.
-    // TODO: Handle all errors with error messages.
+    $ionicModal.fromTemplateUrl('templates/registration-modal.html', {
+      scope: $scope
+    }).then(function(registrationModal) {
+      $scope.registrationModal = registrationModal;
+    });
 
-    $scope.loginData = {};
 
-    $scope.doRegister = function() { 
-      firebase.auth().createUserWithEmailAndPassword($scope.loginData.regEmail, $scope.loginData.regPassword1).catch(function(error) {
-        // Handle Errors here.
+    $scope.showRegistrationModal = function(athlete) {
+      $scope.registrationModal.show(); // Open modal
+    };
+
+    $scope.closeRegistrationModal = function() {
+      $scope.registrationModal.hide(); // Close modal
+    };
+
+
+    var doRegister = function() {
+      firebase.auth().createUserWithEmailAndPassword($scope.registrationModal.email, $scope.registrationModal.password1).catch(function(error) {
+        // TODO: Handle Errors here.
+        // TODO: send message to alert function if neccessary.
         var errorCode = error.code;
         var errorMessage = error.message;
         // ...
+        return false;
       });
+      return true;
     };
+
+
+    $scope.validateRegistration = function() {
+
+      // TODO: Check for valid input and send message to alert function if neccessary.
+
+      if (doRegister()) {
+        // TODO: Add user to firebase DB.
+        $scope.closeRegistrationModal();
+      }
+    };
+
+    $scope.loginData = {};
 
     $scope.doLogin = function() {
       firebase.auth().signInWithEmailAndPassword($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(error) {
         // TODO: Handle Errors here.
+        // TODO: send message to alert function if neccessary.
         var errorCode = error.code;
         var errorMessage = error.message;
         // ...
       });
     };
-
 
     // Track Authentication status.
     firebase.auth().onAuthStateChanged(function(user) { // TODO: Consider if this is secure enough.
@@ -137,12 +165,10 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     $scope.logout = function() {
       firebase.auth().signOut().then(function() {
         // Sign-out successful.
-      }, function(error) { // TODO: Handle Errors
+      }, function(error) { // TODO: Handle Errors, send message to alert function if neccessary.
         // An error happened.
       });
     };
-
-
 
 
   }])

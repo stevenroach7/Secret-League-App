@@ -1,0 +1,54 @@
+<ion-modal-view>
+
+  <ion-header-bar class="bar-stable">
+    <h1 class="title">Register for Secret League</h1>
+    <div class="buttons">
+      <button class="button button-clear button-royal" ng-click="closeRegistrationModal()">Close</button>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+
+    <form ng-submit="validateRegistration()">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Email: </span>
+          <input type="text" ng-model="registrationModal.email">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Password: </span>
+          <input type="password" ng-model="registrationModal.password1">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Retype Password: </span>
+          <input type="password" ng-model="registrationModal.password2">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Name: </span>
+          <input type="text" ng-model="registrationModal.name">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Graduation Year: </span>
+          <input type="tel" ng-model="registrationModal.gradYear">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Bio (140 characters or less): </span>
+          <input type="text" ng-model="registrationModal.bio">
+        </label>
+        <label class="item item-select">
+          <span class="input-label">Skill Level: </span>
+          <select ng-model="registrationModal.skillLevel"><option>Casual</option><option>Competitive</option></select>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Favorite Athlete: </span>
+          <input type="text" ng-model="registrationModal.favAthlete">
+        </label>
+        <label class="item">
+          <button class="button button-block button-royal" type="submit">Register</button>
+        </label>
+      </div>
+    </form>
+
+  </ion-content>
+
+</ion-modal-view>
