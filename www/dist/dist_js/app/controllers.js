@@ -4,7 +4,52 @@
   angular.module('slApp.controllers', ['firebase'])
 
 
-  .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', function($scope, DateService, ScheduleService) {
+  .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', 'firebase', '$state', function($scope, DateService, ScheduleService, firebase, $state) {
+
+
+    $scope.loginData = {};
+
+    $scope.doRegister = function() {
+      firebase.auth().createUserWithEmailAndPassword($scope.loginData.regEmail, $scope.loginData.regPassword1).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+      });
+    };
+
+    $scope.doLogin = function() {
+      firebase.auth().signInWithEmailAndPassword($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+      });
+    };
+
+    // Track Authentication status.
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        console.log(user.email);
+        $state.go('tab.schedule');
+      } else {
+        // No user is signed in.
+        $state.go('login');
+      }
+    });
+
+
+    $scope.logout = function() {
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+      }, function(error) {
+        // An error happened.
+      });
+    };
+
+
+
 
   }])
 

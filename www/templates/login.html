@@ -4,12 +4,50 @@
     <div class="login-container">
 
       <div><img class="homescreen-logo"ng-src="img/homescreen.png" alt="Secret League"></div>
-      <a ng-href="#/tab/schedule" class="button button-royal button-block start-button" nav-transition="none">
+      <!-- <a ng-href="#/tab/schedule" class="button button-royal button-block start-button" nav-transition="none">
         <i class="ion-ios-basketball ball"></i>
-      </a>
-      <label class="start-label">Click the ball to get started!</label>
+      </a> -->
+      <!-- <label class="start-label">Click the ball to get started!</label> -->
+      <!-- <button class="google-login" ng-click="loginWithGoogle()">Login with Google</button> -->
+      <form ng-submit="doLogin()">
+        <div class="list">
+          <label class="item item-input">
+            <span class="input-label">Email</span>
+            <input type="text" ng-model="loginData.loginEmail">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Password</span>
+            <input type="password" ng-model="loginData.loginPassword">
+          </label>
+          <label class="item">
+            <button class="button button-block button-royal" type="submit">Log in</button>
+          </label>
+        </div>
+      </form>
+
+      <form ng-submit="doRegister()">
+        <div class="list">
+          <label class="item item-input">
+            <span class="input-label">Email</span>
+            <input type="text" ng-model="loginData.regEmail">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Password</span>
+            <input type="password" ng-model="loginData.regPassword1">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Retype Password</span>
+            <input type="password" ng-model="loginData.regPassword2">
+          </label>
+          <label class="item">
+            <button class="button button-block button-royal" type="submit">Register</button>
+          </label>
+        </div>
+      </form>
+
+
+
 
     </div>
-
   </ion-content>
 </ion-view>
