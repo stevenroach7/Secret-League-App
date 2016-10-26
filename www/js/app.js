@@ -71,6 +71,16 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         controller: 'FindGameCtrl'
       }
     }
+  })
+
+  .state('tab.profile', {
+    url: '/profile',
+    views: {
+      'profile': {
+        templateUrl: 'templates/profile.html',
+        controller: 'ProfileCtrl'
+      }
+    }
   });
 
 

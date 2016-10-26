@@ -9860,6 +9860,7 @@ a.button {
 
 .homescreen-logo {
   margin-top: 4%;
+  margin-bottom: 4%;
   border-radius: 10%;
   display: block;
   margin-left: auto;
@@ -9888,6 +9889,10 @@ a.button {
   font-size: 180px;
 }
 
+.register-item {
+  margin-top: 4%;
+  margin-bottom: 4%;
+}
 
 /* Schedule Styling */
 .schedule-view {
@@ -10058,4 +10063,23 @@ a.button {
 .game-lower {
   background-color: #424242;
   border-color: #424242;
+}
+
+
+/* Profile Styling */
+.profile-view {
+  background-color: #D3D3D3;
+}
+
+.profile-top {
+  background: #424242;
+  padding: 5%;
+  /*height: 15%;*/
+}
+
+.profile-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFF;
 }

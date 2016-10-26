@@ -7,9 +7,12 @@
   .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', 'firebase', '$state', function($scope, DateService, ScheduleService, firebase, $state) {
 
 
+    // TODO: Create registration modal.
+    // TODO: Handle all errors with error messages.
+
     $scope.loginData = {};
 
-    $scope.doRegister = function() {
+    $scope.doRegister = function() { 
       firebase.auth().createUserWithEmailAndPassword($scope.loginData.regEmail, $scope.loginData.regPassword1).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
@@ -20,18 +23,18 @@
 
     $scope.doLogin = function() {
       firebase.auth().signInWithEmailAndPassword($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(error) {
-        // Handle Errors here.
+        // TODO: Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
         // ...
       });
     };
 
+
     // Track Authentication status.
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(function(user) { // TODO: Consider if this is secure enough.
       if (user) {
         // User is signed in.
-        console.log(user.email);
         $state.go('tab.schedule');
       } else {
         // No user is signed in.
@@ -43,7 +46,7 @@
     $scope.logout = function() {
       firebase.auth().signOut().then(function() {
         // Sign-out successful.
-      }, function(error) {
+      }, function(error) { // TODO: Handle Errors
         // An error happened.
       });
     };
@@ -235,6 +238,60 @@
     };
 
   }])
+
+  .controller('ProfileCtrl', ['$scope', '$ionicPopup', function($scope, $ionicPopup) {
+
+    // TODO: Connect to Database and get real data.
+
+    $scope.athlete = {
+      name: "Steven Roach",
+      email: "sroach07@gmail.com",
+      bio: "",
+      gradYear: "2018",
+      skillLevel: "Competitive",
+      favAthlete: "Rafael Nadal"
+    };
+
+    $scope.showProfilePopup = function(athlete) {
+
+      $scope.data = {};
+      $scope.data.name = athlete.name;
+      $scope.data.bio = athlete.bio;
+      $scope.data.skillLevel = athlete.skillLevel;
+      $scope.data.favAthlete = athlete.favAthlete;
+
+
+      var editProfilePopup = $ionicPopup.show({
+        template: 'Name: <input type="text" ng-model="data.name"> Bio: <input type="text" ng-model="data.bio"> Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option><option>Casual/Competitive</option></select></ion-item> <br />Favorite Athlete: <input type="text" ng-model="data.favAthlete">',
+        title: 'Edit Profile',
+        subTitle: '',
+        scope: $scope,
+        buttons: [{
+          text: 'Cancel'
+        }, {
+          text: 'Submit',
+          type: 'button-royal',
+          onTap: function(e) {
+            return $scope.data;
+          }
+        }]
+      });
+
+    editProfilePopup.then(function(res) {
+      if (res) {
+
+        if (res.name) {
+          athlete.name = res.name;
+          athlete.bio = res.bio;
+          athlete.skillLevel = res.skillLevel;
+          athlete.favAthlete = res.favAthlete;
+        }
+      }
+
+    });
+  };
+
+}])
 
 
   .filter('secondsToTime', ['$filter', function($filter) {
