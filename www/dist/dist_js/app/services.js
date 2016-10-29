@@ -2,6 +2,67 @@
 
   var servMod = angular.module('slApp.services', []); // Assigning the module to a variable makes it easy to add new factories.
 
+  servMod.factory('AuthenticationService', ['firebase', '$q', function(firebase, $q) {
+    /* Contains methods to handle user authentication. */
+
+
+    var getSignInErrorMessage = function(errorCode) {
+      /* Takes an signIn errorCode and returns a message to later be displayed to the user.
+      For security reasons, users are not told very much about why their login attempt failed. */
+      if (errorCode) {
+        switch(errorCode) {
+          case "auth/invalid-email":
+            return "Please enter a valid email address.";
+          case "auth/user-disabled":
+            return "Invalid Login Information.";
+          case "auth/user-not-found":
+            return "Invalid Login Information.";
+          case "auth/wrong-password":
+            return "Invalid Login Information.";
+          default:
+            return "Invalid Login Information.";
+        }
+      }
+      return "";
+    };
+
+    return {
+
+      signIn: function(email, password) {
+        /* Takes an email and a password and attempts to authenticate this user and sign them in. */
+        var deferred = $q.defer(); // deferred promise.
+        firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+          // SignIn successful. Send resolved promise.
+          deferred.resolve();
+        }, function(error) {
+          var errorCode = error.code;
+          var errorMessage = getSignInErrorMessage(errorCode);
+          deferred.reject(errorMessage);
+        });
+        return deferred.promise;
+      },
+
+      signOut: function() {
+        /* Uses the firebase authentication method to sign the user out. */
+        var deferred = $q.defer(); // deferred promise.
+        firebase.auth().signOut().then(function() {
+          // SignOut successful. Send resolved promise.
+          deferred.resolve();
+        }, function(error) {
+          // signOut Failed. Send rejected promise.
+          deferred.reject("Please Try Again.");
+        });
+        return deferred.promise;
+      }
+    };
+  }]);
+
+
+
+
+
+
+
   servMod.factory('DateService', function() {
     /* Contains methods relating to date and time. */
 

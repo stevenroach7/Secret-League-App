@@ -95,7 +95,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   angular.module('slApp.controllers', ['firebase'])
 
 
-  .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', 'firebase', '$state', '$ionicModal', '$firebaseObject', function($scope, DateService, ScheduleService, firebase, $state, $ionicModal, $firebaseObject) {
+  .controller('TabsCtrl', ['$scope', 'AuthenticationService', 'firebase', '$state', '$ionicModal', '$ionicPopup', function($scope, AuthenticationService, firebase, $state, $ionicModal, $ionicPopup) {
 
     // Create registration modal.
     $ionicModal.fromTemplateUrl('templates/registration-modal.html', {
@@ -113,8 +113,17 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       $scope.registrationModal.hide(); // Close modal
     };
 
-    // TODO: Create general error alert message that takes a string and displays it in a message popup.
-
+    var showErrorAlert = function(message) {
+      /* Takes a message and shows the message in an error alert popup. */
+     var alertPopup = $ionicPopup.alert({
+       title: "Error",
+       template: message,
+       okType: 'button-royal'
+     });
+     alertPopup.then(function(res) {
+       // Make popup go away when OK button is clicked.
+     });
+   };
 
 
     // Authentication calls to authentication service and error handling.
@@ -160,19 +169,22 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
     $scope.loginData = {};
 
-    $scope.doLogin = function() {
-      firebase.auth().signInWithEmailAndPassword($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(error) {
-        // TODO: Move this call to authentication service.
-        // TODO: Handle Errors here.
-        // TODO: send message to alert function if neccessary.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
+    $scope.login = function() {
+      AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(errorMessage) {
+        showErrorAlert(errorMessage);
       });
     };
 
-    // Track Authentication status.
-    firebase.auth().onAuthStateChanged(function(user) { // TODO: Consider if this is secure enough.
+    $scope.logout = function() {
+      /* Calls AuthenticationService method to sign user out. Sends error alert if neccessary. */
+      AuthenticationService.signOut().catch(function(errorMessage) {
+        showErrorAlert(errorMessage);
+      });
+    };
+
+    // Consider injecting in app.js.
+    firebase.auth().onAuthStateChanged(function(user) {
+      /*  Tracks user authentication status using observer and reroutes user if neccessary. */
       if (user) {
         // User is signed in.
         $state.go('tab.schedule');
@@ -181,17 +193,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         $state.go('login');
       }
     });
-
-
-    $scope.logout = function() {
-      // TODO: Move this call to authentication service.
-      firebase.auth().signOut().then(function() {
-        // Sign-out successful.
-      }, function(error) { // TODO: Handle Errors, send message to alert function if neccessary.
-        // An error happened.
-      });
-    };
-
 
   }])
 
@@ -454,6 +455,67 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 (function() {
 
   var servMod = angular.module('slApp.services', []); // Assigning the module to a variable makes it easy to add new factories.
+
+  servMod.factory('AuthenticationService', ['firebase', '$q', function(firebase, $q) {
+    /* Contains methods to handle user authentication. */
+
+
+    var getSignInErrorMessage = function(errorCode) {
+      /* Takes an signIn errorCode and returns a message to later be displayed to the user.
+      For security reasons, users are not told very much about why their login attempt failed. */
+      if (errorCode) {
+        switch(errorCode) {
+          case "auth/invalid-email":
+            return "Please enter a valid email address.";
+          case "auth/user-disabled":
+            return "Invalid Login Information.";
+          case "auth/user-not-found":
+            return "Invalid Login Information.";
+          case "auth/wrong-password":
+            return "Invalid Login Information.";
+          default:
+            return "Invalid Login Information.";
+        }
+      }
+      return "";
+    };
+
+    return {
+
+      signIn: function(email, password) {
+        /* Takes an email and a password and attempts to authenticate this user and sign them in. */
+        var deferred = $q.defer(); // deferred promise.
+        firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+          // SignIn successful. Send resolved promise.
+          deferred.resolve();
+        }, function(error) {
+          var errorCode = error.code;
+          var errorMessage = getSignInErrorMessage(errorCode);
+          deferred.reject(errorMessage);
+        });
+        return deferred.promise;
+      },
+
+      signOut: function() {
+        /* Uses the firebase authentication method to sign the user out. */
+        var deferred = $q.defer(); // deferred promise.
+        firebase.auth().signOut().then(function() {
+          // SignOut successful. Send resolved promise.
+          deferred.resolve();
+        }, function(error) {
+          // signOut Failed. Send rejected promise.
+          deferred.reject("Please Try Again.");
+        });
+        return deferred.promise;
+      }
+    };
+  }]);
+
+
+
+
+
+
 
   servMod.factory('DateService', function() {
     /* Contains methods relating to date and time. */

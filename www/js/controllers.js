@@ -4,7 +4,7 @@
   angular.module('slApp.controllers', ['firebase'])
 
 
-  .controller('TabsCtrl', function($scope, DateService, ScheduleService, firebase, $state, $ionicModal, $firebaseObject) {
+  .controller('TabsCtrl', function($scope, AuthenticationService, firebase, $state, $ionicModal, $ionicPopup) {
 
     // Create registration modal.
     $ionicModal.fromTemplateUrl('templates/registration-modal.html', {
@@ -22,8 +22,17 @@
       $scope.registrationModal.hide(); // Close modal
     };
 
-    // TODO: Create general error alert message that takes a string and displays it in a message popup.
-
+    var showErrorAlert = function(message) {
+      /* Takes a message and shows the message in an error alert popup. */
+     var alertPopup = $ionicPopup.alert({
+       title: "Error",
+       template: message,
+       okType: 'button-royal'
+     });
+     alertPopup.then(function(res) {
+       // Make popup go away when OK button is clicked.
+     });
+   };
 
 
     // Authentication calls to authentication service and error handling.
@@ -69,19 +78,22 @@
 
     $scope.loginData = {};
 
-    $scope.doLogin = function() {
-      firebase.auth().signInWithEmailAndPassword($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(error) {
-        // TODO: Move this call to authentication service.
-        // TODO: Handle Errors here.
-        // TODO: send message to alert function if neccessary.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
+    $scope.login = function() {
+      AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(errorMessage) {
+        showErrorAlert(errorMessage);
       });
     };
 
-    // Track Authentication status.
-    firebase.auth().onAuthStateChanged(function(user) { // TODO: Consider if this is secure enough.
+    $scope.logout = function() {
+      /* Calls AuthenticationService method to sign user out. Sends error alert if neccessary. */
+      AuthenticationService.signOut().catch(function(errorMessage) {
+        showErrorAlert(errorMessage);
+      });
+    };
+
+    // Consider injecting in app.js.
+    firebase.auth().onAuthStateChanged(function(user) {
+      /*  Tracks user authentication status using observer and reroutes user if neccessary. */
       if (user) {
         // User is signed in.
         $state.go('tab.schedule');
@@ -90,17 +102,6 @@
         $state.go('login');
       }
     });
-
-
-    $scope.logout = function() {
-      // TODO: Move this call to authentication service.
-      firebase.auth().signOut().then(function() {
-        // Sign-out successful.
-      }, function(error) { // TODO: Handle Errors, send message to alert function if neccessary.
-        // An error happened.
-      });
-    };
-
 
   })
 
