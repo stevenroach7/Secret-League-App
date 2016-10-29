@@ -26,7 +26,60 @@
       return "";
     };
 
+    var validateUserInfo = function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
+      /* Takes user inputted data and performs client side validation to determine if it is valid.
+      Returns a boolean for if data inputted is valid. */
+      // TODO: validate user info.
+      return true;
+    };
+
+
+
     return {
+
+      registerNewUser: function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
+        // TODO: Validate user info before sending to database.
+        var deferred = $q.defer(); // deferred promise.
+        if (!validateUserInfo()) {
+          var errorMessage = "Invalid Data. Please Try again"; // TODO: Write more specific error messages.
+          deferred.reject(errorMessage);
+          return deferred.promise;
+        }
+
+        firebase.auth().createUserWithEmailAndPassword(email, password1).catch(function(error) {
+          // TODO: Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          deferred.reject(errorMessage);
+          return deferred.promise;
+        }).then(function(user) {
+
+          // Add user to firebase DB.
+          var newUserInfo = {
+            name: name,
+            email: email,
+            gradYear: gradYear,
+            bio: bio,
+            skillLevel: skillLevel,
+            favAthlete: favAthlete
+          };
+          // Get firebase userID.
+          var newUserID = user.uid;
+
+          // Get reference to firebase users table so we can add a new user.
+          var usersRef = firebase.database().ref().child("users");
+
+          // Add new user to users object with key being the userID specified by the firebase authentication provider.
+          usersRef.child(newUserID).set(newUserInfo).catch(function(error) {
+            var errorMessage = "Server Error. Please Try Again.";
+            deferred.reject(errorMessage);
+            // TODO: delete user from authentication provider.
+          }).then(function(ref) {
+            deferred.resolve(); // success, resolve promise.
+          });
+        });
+        return deferred.promise;
+      },
 
       signIn: function(email, password) {
         /* Takes an email and a password and attempts to authenticate this user and sign them in. */
@@ -56,11 +109,6 @@
       }
     };
   }]);
-
-
-
-
-
 
 
   servMod.factory('DateService', function() {

@@ -34,51 +34,22 @@
      });
    };
 
-
-    // Authentication calls to authentication service and error handling.
-    var doRegister = function() {
-      firebase.auth().createUserWithEmailAndPassword($scope.registrationModal.email, $scope.registrationModal.password1).catch(function(error) {
-        // TODO: Handle Errors here.
-        // TODO: send message to alert function
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-      }).then(function(user) {
-
-        // Add user to firebase DB.
-        console.log($scope.registrationModal.name);
-        var newUserInfo = {
-          name: $scope.registrationModal.name,
-          email: $scope.registrationModal.email,
-          gradYear: $scope.registrationModal.gradYear,
-          bio: $scope.registrationModal.bio,
-          skillLevel: $scope.registrationModal.skillLevel,
-          favAthlete: $scope.registrationModal.favAthlete
-        };
-        var newUserID = user.uid;
-
-        var usersRef = firebase.database().ref().child("users");
-
-        // Add new user to users object with key being the userid specified by the auth.
-        usersRef.child(newUserID).set(newUserInfo).catch(function(error) {
-          // Alert message saying server error.
-        }).then(function(ref) {
-          $scope.closeRegistrationModal();
-        });
+    $scope.register = function() {
+      /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
+      AuthenticationService.registerNewUser($scope.registrationModal.name, $scope.registrationModal.password1,
+        $scope.registrationModal.password2, $scope.registrationModal.email, $scope.registrationModal.gradYear,
+         $scope.registrationModal.bio, $scope.registrationModal.skillLevel,
+         $scope.registrationModal.favAthlete).catch(function(errorMessage) {
+        showErrorAlert(errorMessage);
+      }).then(function() {
+        $scope.closeRegistrationModal();
       });
-    };
-
-
-    $scope.validateRegistration = function() {
-
-      // TODO: Check for valid input and send message to alert function if neccessary.
-      // TODO: Move database code to a service.
-      doRegister();
     };
 
     $scope.loginData = {};
 
     $scope.login = function() {
+      /* Calls AuthenticationService method to sign user in. Sends error alert if neccessary. */
       AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(errorMessage) {
         showErrorAlert(errorMessage);
       });
@@ -91,7 +62,7 @@
       });
     };
 
-    // Consider injecting in app.js.
+    // TODO: Consider injecting in app.js. http://stackoverflow.com/questions/33983526/angularfire-cannot-read-property-facebook-how-do-i-keep-using-authdata-through
     firebase.auth().onAuthStateChanged(function(user) {
       /*  Tracks user authentication status using observer and reroutes user if neccessary. */
       if (user) {

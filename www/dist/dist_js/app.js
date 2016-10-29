@@ -125,51 +125,22 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
      });
    };
 
-
-    // Authentication calls to authentication service and error handling.
-    var doRegister = function() {
-      firebase.auth().createUserWithEmailAndPassword($scope.registrationModal.email, $scope.registrationModal.password1).catch(function(error) {
-        // TODO: Handle Errors here.
-        // TODO: send message to alert function
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-      }).then(function(user) {
-
-        // Add user to firebase DB.
-        console.log($scope.registrationModal.name);
-        var newUserInfo = {
-          name: $scope.registrationModal.name,
-          email: $scope.registrationModal.email,
-          gradYear: $scope.registrationModal.gradYear,
-          bio: $scope.registrationModal.bio,
-          skillLevel: $scope.registrationModal.skillLevel,
-          favAthlete: $scope.registrationModal.favAthlete
-        };
-        var newUserID = user.uid;
-
-        var usersRef = firebase.database().ref().child("users");
-
-        // Add new user to users object with key being the userid specified by the auth.
-        usersRef.child(newUserID).set(newUserInfo).catch(function(error) {
-          // Alert message saying server error.
-        }).then(function(ref) {
-          $scope.closeRegistrationModal();
-        });
+    $scope.register = function() {
+      /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
+      AuthenticationService.registerNewUser($scope.registrationModal.name, $scope.registrationModal.password1,
+        $scope.registrationModal.password2, $scope.registrationModal.email, $scope.registrationModal.gradYear,
+         $scope.registrationModal.bio, $scope.registrationModal.skillLevel,
+         $scope.registrationModal.favAthlete).catch(function(errorMessage) {
+        showErrorAlert(errorMessage);
+      }).then(function() {
+        $scope.closeRegistrationModal();
       });
-    };
-
-
-    $scope.validateRegistration = function() {
-
-      // TODO: Check for valid input and send message to alert function if neccessary.
-      // TODO: Move database code to a service.
-      doRegister();
     };
 
     $scope.loginData = {};
 
     $scope.login = function() {
+      /* Calls AuthenticationService method to sign user in. Sends error alert if neccessary. */
       AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(errorMessage) {
         showErrorAlert(errorMessage);
       });
@@ -182,7 +153,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       });
     };
 
-    // Consider injecting in app.js.
+    // TODO: Consider injecting in app.js. http://stackoverflow.com/questions/33983526/angularfire-cannot-read-property-facebook-how-do-i-keep-using-authdata-through
     firebase.auth().onAuthStateChanged(function(user) {
       /*  Tracks user authentication status using observer and reroutes user if neccessary. */
       if (user) {
@@ -480,7 +451,60 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       return "";
     };
 
+    var validateUserInfo = function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
+      /* Takes user inputted data and performs client side validation to determine if it is valid.
+      Returns a boolean for if data inputted is valid. */
+      // TODO: validate user info.
+      return true;
+    };
+
+
+
     return {
+
+      registerNewUser: function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
+        // TODO: Validate user info before sending to database.
+        var deferred = $q.defer(); // deferred promise.
+        if (!validateUserInfo()) {
+          var errorMessage = "Invalid Data. Please Try again"; // TODO: Write more specific error messages.
+          deferred.reject(errorMessage);
+          return deferred.promise;
+        }
+
+        firebase.auth().createUserWithEmailAndPassword(email, password1).catch(function(error) {
+          // TODO: Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          deferred.reject(errorMessage);
+          return deferred.promise;
+        }).then(function(user) {
+
+          // Add user to firebase DB.
+          var newUserInfo = {
+            name: name,
+            email: email,
+            gradYear: gradYear,
+            bio: bio,
+            skillLevel: skillLevel,
+            favAthlete: favAthlete
+          };
+          // Get firebase userID.
+          var newUserID = user.uid;
+
+          // Get reference to firebase users table so we can add a new user.
+          var usersRef = firebase.database().ref().child("users");
+
+          // Add new user to users object with key being the userID specified by the firebase authentication provider.
+          usersRef.child(newUserID).set(newUserInfo).catch(function(error) {
+            var errorMessage = "Server Error. Please Try Again.";
+            deferred.reject(errorMessage);
+            // TODO: delete user from authentication provider.
+          }).then(function(ref) {
+            deferred.resolve(); // success, resolve promise.
+          });
+        });
+        return deferred.promise;
+      },
 
       signIn: function(email, password) {
         /* Takes an email and a password and attempts to authenticate this user and sign them in. */
@@ -510,11 +534,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       }
     };
   }]);
-
-
-
-
-
 
 
   servMod.factory('DateService', function() {
