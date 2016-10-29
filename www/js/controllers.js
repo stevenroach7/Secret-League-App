@@ -14,13 +14,29 @@
     });
 
 
+    var initializeRegistrationData = function() {
+      var regData = {
+        email: "",
+        password1: "",
+        password2: "",
+        name: "",
+        gradYear: "",
+        bio: "",
+        skillLevel: "",
+        favAthlete: undefined
+      };
+      return regData;
+    };
+
     $scope.showRegistrationModal = function(athlete) {
+      $scope.regData = initializeRegistrationData();
       $scope.registrationModal.show(); // Open modal
     };
 
     $scope.closeRegistrationModal = function() {
       $scope.registrationModal.hide(); // Close modal
     };
+
 
     var showErrorAlert = function(message) {
       /* Takes a message and shows the message in an error alert popup. */
@@ -30,34 +46,34 @@
        okType: 'button-royal'
      });
      alertPopup.then(function(res) {
-       // Make popup go away when OK button is clicked.
+       // Popup goes away automatically when OK button is clicked.
      });
    };
 
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
-      AuthenticationService.registerNewUser($scope.registrationModal.name, $scope.registrationModal.password1,
-        $scope.registrationModal.password2, $scope.registrationModal.email, $scope.registrationModal.gradYear,
-         $scope.registrationModal.bio, $scope.registrationModal.skillLevel,
-         $scope.registrationModal.favAthlete).catch(function(errorMessage) {
-        showErrorAlert(errorMessage);
-      }).then(function() {
-        $scope.closeRegistrationModal();
-      });
+      AuthenticationService.registerNewUser($scope.regData.name, $scope.regData.password1, $scope.regData.password2, $scope.regData.email, $scope.regData.gradYear, $scope.regData.bio, $scope.regData.skillLevel, $scope.regData.favAthlete)
+      .then(function() {
+         $scope.closeRegistrationModal();
+       }).catch(function(errorMessage) {
+         showErrorAlert(errorMessage);
+       });
     };
 
     $scope.loginData = {};
 
     $scope.login = function() {
       /* Calls AuthenticationService method to sign user in. Sends error alert if neccessary. */
-      AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(errorMessage) {
+      AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword)
+      .catch(function(errorMessage) {
         showErrorAlert(errorMessage);
       });
     };
 
     $scope.logout = function() {
       /* Calls AuthenticationService method to sign user out. Sends error alert if neccessary. */
-      AuthenticationService.signOut().catch(function(errorMessage) {
+      AuthenticationService.signOut()
+      .catch(function(errorMessage) {
         showErrorAlert(errorMessage);
       });
     };

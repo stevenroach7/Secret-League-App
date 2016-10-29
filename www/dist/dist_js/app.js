@@ -105,13 +105,29 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     });
 
 
+    var initializeRegistrationData = function() {
+      var regData = {
+        email: "",
+        password1: "",
+        password2: "",
+        name: "",
+        gradYear: "",
+        bio: "",
+        skillLevel: "",
+        favAthlete: undefined
+      };
+      return regData;
+    };
+
     $scope.showRegistrationModal = function(athlete) {
+      $scope.regData = initializeRegistrationData();
       $scope.registrationModal.show(); // Open modal
     };
 
     $scope.closeRegistrationModal = function() {
       $scope.registrationModal.hide(); // Close modal
     };
+
 
     var showErrorAlert = function(message) {
       /* Takes a message and shows the message in an error alert popup. */
@@ -121,34 +137,34 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
        okType: 'button-royal'
      });
      alertPopup.then(function(res) {
-       // Make popup go away when OK button is clicked.
+       // Popup goes away automatically when OK button is clicked.
      });
    };
 
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
-      AuthenticationService.registerNewUser($scope.registrationModal.name, $scope.registrationModal.password1,
-        $scope.registrationModal.password2, $scope.registrationModal.email, $scope.registrationModal.gradYear,
-         $scope.registrationModal.bio, $scope.registrationModal.skillLevel,
-         $scope.registrationModal.favAthlete).catch(function(errorMessage) {
-        showErrorAlert(errorMessage);
-      }).then(function() {
-        $scope.closeRegistrationModal();
-      });
+      AuthenticationService.registerNewUser($scope.regData.name, $scope.regData.password1, $scope.regData.password2, $scope.regData.email, $scope.regData.gradYear, $scope.regData.bio, $scope.regData.skillLevel, $scope.regData.favAthlete)
+      .then(function() {
+         $scope.closeRegistrationModal();
+       }).catch(function(errorMessage) {
+         showErrorAlert(errorMessage);
+       });
     };
 
     $scope.loginData = {};
 
     $scope.login = function() {
       /* Calls AuthenticationService method to sign user in. Sends error alert if neccessary. */
-      AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(errorMessage) {
+      AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword)
+      .catch(function(errorMessage) {
         showErrorAlert(errorMessage);
       });
     };
 
     $scope.logout = function() {
       /* Calls AuthenticationService method to sign user out. Sends error alert if neccessary. */
-      AuthenticationService.signOut().catch(function(errorMessage) {
+      AuthenticationService.signOut()
+      .catch(function(errorMessage) {
         showErrorAlert(errorMessage);
       });
     };
@@ -463,21 +479,19 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     return {
 
       registerNewUser: function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
-        // TODO: Validate user info before sending to database.
-        var deferred = $q.defer(); // deferred promise.
+
+        var deferred = $q.defer(); // Create deferred promise.
+
+        // Validate user info before sending to database.
         if (!validateUserInfo()) {
           var errorMessage = "Invalid Data. Please Try again"; // TODO: Write more specific error messages.
           deferred.reject(errorMessage);
           return deferred.promise;
         }
 
-        firebase.auth().createUserWithEmailAndPassword(email, password1).catch(function(error) {
-          // TODO: Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          deferred.reject(errorMessage);
-          return deferred.promise;
-        }).then(function(user) {
+        // Add user to firebase authentication provider.
+        firebase.auth().createUserWithEmailAndPassword(email, password1)
+        .then(function(user) {
 
           // Add user to firebase DB.
           var newUserInfo = {
@@ -495,13 +509,58 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
           var usersRef = firebase.database().ref().child("users");
 
           // Add new user to users object with key being the userID specified by the firebase authentication provider.
-          usersRef.child(newUserID).set(newUserInfo).catch(function(error) {
+          usersRef.child(newUserID).set(newUserInfo);
+        })
+        .then(function(ref) {
+          deferred.resolve(); // success, resolve promise.
+        }, function(error) {
+          deferred.reject(error.code);
+        });
+        return deferred.promise;
+      },
+
+      registerNewUser1: function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
+        // TODO: Validate user info before sending to database.
+
+        var deferred = $q.defer(); // deferred promise.
+        if (!validateUserInfo()) {
+          var errorMessage = "Invalid Data. Please Try again"; // TODO: Write more specific error messages.
+          deferred.reject(errorMessage);
+          return deferred.promise;
+        }
+
+        firebase.auth().createUserWithEmailAndPassword(email, password1).then(function(user) {
+
+          // Add user to firebase DB.
+          var newUserInfo = {
+            name: name,
+            email: email,
+            gradYear: gradYear,
+            bio: bio,
+            skillLevel: skillLevel,
+            favAthlete: favAthlete
+          };
+          // Get firebase userID.
+          var newUserID = user.uid;
+
+          // Get reference to firebase users table so we can add a new user.
+          var usersRef = firebase.database().ref().child("users");
+
+          // Add new user to users object with key being the userID specified by the firebase authentication provider.
+          usersRef.child(newUserID).set(newUserInfo).then(function(ref) {
+            deferred.resolve(); // success, resolve promise.
+          }, function(error) {
             var errorMessage = "Server Error. Please Try Again.";
+            console.log("error setting info");
             deferred.reject(errorMessage);
             // TODO: delete user from authentication provider.
-          }).then(function(ref) {
-            deferred.resolve(); // success, resolve promise.
           });
+        }, function(error) {
+          // TODO: Handle Errors here.
+          console.log("Error HERE!");
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          deferred.reject(errorMessage);
         });
         return deferred.promise;
       },
