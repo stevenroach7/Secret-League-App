@@ -4,10 +4,9 @@
   angular.module('slApp.controllers', ['firebase'])
 
 
-  .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', 'firebase', '$state', '$ionicModal', function($scope, DateService, ScheduleService, firebase, $state, $ionicModal) {
+  .controller('TabsCtrl', ['$scope', 'DateService', 'ScheduleService', 'firebase', '$state', '$ionicModal', '$firebaseObject', function($scope, DateService, ScheduleService, firebase, $state, $ionicModal, $firebaseObject) {
 
-    // TODO: Create general error alert message that takes a string and displays it in a message popup.
-    // TODO: Create registration modal.
+    // Create registration modal.
     $ionicModal.fromTemplateUrl('templates/registration-modal.html', {
       scope: $scope
     }).then(function(registrationModal) {
@@ -23,34 +22,56 @@
       $scope.registrationModal.hide(); // Close modal
     };
 
+    // TODO: Create general error alert message that takes a string and displays it in a message popup.
 
+
+
+    // Authentication calls to authentication service and error handling.
     var doRegister = function() {
       firebase.auth().createUserWithEmailAndPassword($scope.registrationModal.email, $scope.registrationModal.password1).catch(function(error) {
         // TODO: Handle Errors here.
-        // TODO: send message to alert function if neccessary.
+        // TODO: send message to alert function
         var errorCode = error.code;
         var errorMessage = error.message;
         // ...
-        return false;
+      }).then(function(user) {
+
+        // Add user to firebase DB.
+        console.log($scope.registrationModal.name);
+        var newUserInfo = {
+          name: $scope.registrationModal.name,
+          email: $scope.registrationModal.email,
+          gradYear: $scope.registrationModal.gradYear,
+          bio: $scope.registrationModal.bio,
+          skillLevel: $scope.registrationModal.skillLevel,
+          favAthlete: $scope.registrationModal.favAthlete
+        };
+        var newUserID = user.uid;
+
+        var usersRef = firebase.database().ref().child("users");
+
+        // Add new user to users object with key being the userid specified by the auth.
+        usersRef.child(newUserID).set(newUserInfo).catch(function(error) {
+          // Alert message saying server error.
+        }).then(function(ref) {
+          $scope.closeRegistrationModal();
+        });
       });
-      return true;
     };
 
 
     $scope.validateRegistration = function() {
 
       // TODO: Check for valid input and send message to alert function if neccessary.
-
-      if (doRegister()) {
-        // TODO: Add user to firebase DB.
-        $scope.closeRegistrationModal();
-      }
+      // TODO: Move database code to a service.
+      doRegister();
     };
 
     $scope.loginData = {};
 
     $scope.doLogin = function() {
       firebase.auth().signInWithEmailAndPassword($scope.loginData.loginEmail, $scope.loginData.loginPassword).catch(function(error) {
+        // TODO: Move this call to authentication service.
         // TODO: Handle Errors here.
         // TODO: send message to alert function if neccessary.
         var errorCode = error.code;
@@ -72,6 +93,7 @@
 
 
     $scope.logout = function() {
+      // TODO: Move this call to authentication service.
       firebase.auth().signOut().then(function() {
         // Sign-out successful.
       }, function(error) { // TODO: Handle Errors, send message to alert function if neccessary.
