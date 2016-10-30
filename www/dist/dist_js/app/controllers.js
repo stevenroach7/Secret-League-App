@@ -23,7 +23,7 @@
         gradYear: "",
         bio: "",
         skillLevel: "",
-        favAthlete: undefined
+        favAthlete: ""
       };
       return regData;
     };
@@ -202,7 +202,7 @@
   }])
 
 
-  .controller('FindGameCtrl', ['$scope', 'GamesService', 'DateService', '$stateParams', '$state', function($scope, GamesService, DateService, $stateParams, $state) {
+  .controller('FindGameCtrl', ['$scope', 'GamesService', 'DateService', '$state', function($scope, GamesService, DateService, $state) {
 
     $scope.date = new Date(); // initialize date variable based on date in this moment.
     $scope.dateString = DateService.dateToDateString($scope.date);
@@ -275,27 +275,18 @@
 
   }])
 
-  .controller('ProfileCtrl', ['$scope', '$ionicPopup', function($scope, $ionicPopup) {
+  .controller('ProfileCtrl', ['$scope', 'ProfileService', 'AuthenticationService', '$ionicPopup', function($scope, ProfileService, AuthenticationService, $ionicPopup) {
 
-    // TODO: Connect to Database and get real data.
+    var userID = AuthenticationService.getCurrentUserID();
+    $scope.user = ProfileService.getUser(userID);
 
-    $scope.athlete = {
-      name: "Steven Roach",
-      email: "sroach07@gmail.com",
-      bio: "",
-      gradYear: "2018",
-      skillLevel: "Competitive",
-      favAthlete: "Rafael Nadal"
-    };
+    $scope.showProfilePopup = function(user) {
 
-    $scope.showProfilePopup = function(athlete) {
-
-      $scope.data = {};
-      $scope.data.name = athlete.name;
-      $scope.data.bio = athlete.bio;
-      $scope.data.skillLevel = athlete.skillLevel;
-      $scope.data.favAthlete = athlete.favAthlete;
-
+      $scope.data = {}; // object to be used in popup.
+      $scope.data.name = $scope.user.name;
+      $scope.data.bio = $scope.user.bio;
+      $scope.data.skillLevel = $scope.user.skillLevel;
+      $scope.data.favAthlete = $scope.user.favAthlete;
 
       var editProfilePopup = $ionicPopup.show({
         template: 'Name: <input type="text" ng-model="data.name"> Bio: <input type="text" ng-model="data.bio"> Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option><option>Casual/Competitive</option></select></ion-item> <br />Favorite Athlete: <input type="text" ng-model="data.favAthlete">',
@@ -313,19 +304,17 @@
         }]
       });
 
-    editProfilePopup.then(function(res) {
-      if (res) {
-
-        if (res.name) {
-          athlete.name = res.name;
-          athlete.bio = res.bio;
-          athlete.skillLevel = res.skillLevel;
-          athlete.favAthlete = res.favAthlete;
+      editProfilePopup.then(function(res) {
+        if (res) {
+          if (res.name) { // TODO: Implement Validation here.
+            $scope.user.name = res.name;
+            $scope.user.bio = res.bio;
+            $scope.user.skillLevel = res.skillLevel;
+            $scope.user.favAthlete = res.favAthlete;
+          }
         }
-      }
-
-    });
-  };
+      });
+    };
 
 }])
 

@@ -37,6 +37,17 @@
 
     return {
 
+      getCurrentUserID: function() {
+        var user = firebase.auth().currentUser;
+        if (user) {
+          // User is signed in.
+          return user.uid;
+        } else {
+          // No user is signed in.
+          return null;
+        }
+      },
+
       registerNewUser: function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
 
         var deferred = $q.defer(); // Create deferred promise.
@@ -68,12 +79,12 @@
           var usersRef = firebase.database().ref().child("users");
 
           // Add new user to users object with key being the userID specified by the firebase authentication provider.
-          usersRef.child(newUserID).set(newUserInfo);
+          usersRef.child(newUserID).set(newUserInfo); // TODO: handle this error specifically, delete user from authentication table.
         })
         .then(function(ref) {
           deferred.resolve(); // success, resolve promise.
         }, function(error) {
-          deferred.reject(error.code);
+          deferred.reject(error.message); // TODO: Filter error message
         });
         return deferred.promise;
       },
@@ -339,6 +350,24 @@
         var sortByTimeQuery = gamesRef.orderByChild("time");
         sortedGames = $firebaseArray(sortByTimeQuery);
         return sortedGames;
+      }
+    };
+  }]);
+
+
+  servMod.factory('ProfileService', ['$firebaseObject', function($firebaseObject) {
+    /* Contains methods used to access and update profile data. */
+
+    return {
+      getUser: function(userID) {
+        /* Takes a userID and returns the user object in the firebase DB for that id. */
+
+        // Get array of games on the date specified by the input dateString.
+        var userRef = firebase.database().ref().child("users").child(userID);
+        var user = $firebaseObject(userRef);
+
+        // TODO: Implement 3 way data binding so user can change data.
+        return user;
       }
     };
   }]);

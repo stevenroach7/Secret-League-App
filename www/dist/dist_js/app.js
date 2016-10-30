@@ -114,7 +114,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         gradYear: "",
         bio: "",
         skillLevel: "",
-        favAthlete: undefined
+        favAthlete: ""
       };
       return regData;
     };
@@ -293,7 +293,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   }])
 
 
-  .controller('FindGameCtrl', ['$scope', 'GamesService', 'DateService', '$stateParams', '$state', function($scope, GamesService, DateService, $stateParams, $state) {
+  .controller('FindGameCtrl', ['$scope', 'GamesService', 'DateService', '$state', function($scope, GamesService, DateService, $state) {
 
     $scope.date = new Date(); // initialize date variable based on date in this moment.
     $scope.dateString = DateService.dateToDateString($scope.date);
@@ -366,27 +366,18 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
   }])
 
-  .controller('ProfileCtrl', ['$scope', '$ionicPopup', function($scope, $ionicPopup) {
+  .controller('ProfileCtrl', ['$scope', 'ProfileService', 'AuthenticationService', '$ionicPopup', function($scope, ProfileService, AuthenticationService, $ionicPopup) {
 
-    // TODO: Connect to Database and get real data.
+    var userID = AuthenticationService.getCurrentUserID();
+    $scope.user = ProfileService.getUser(userID);
 
-    $scope.athlete = {
-      name: "Steven Roach",
-      email: "sroach07@gmail.com",
-      bio: "",
-      gradYear: "2018",
-      skillLevel: "Competitive",
-      favAthlete: "Rafael Nadal"
-    };
+    $scope.showProfilePopup = function(user) {
 
-    $scope.showProfilePopup = function(athlete) {
-
-      $scope.data = {};
-      $scope.data.name = athlete.name;
-      $scope.data.bio = athlete.bio;
-      $scope.data.skillLevel = athlete.skillLevel;
-      $scope.data.favAthlete = athlete.favAthlete;
-
+      $scope.data = {}; // object to be used in popup.
+      $scope.data.name = $scope.user.name;
+      $scope.data.bio = $scope.user.bio;
+      $scope.data.skillLevel = $scope.user.skillLevel;
+      $scope.data.favAthlete = $scope.user.favAthlete;
 
       var editProfilePopup = $ionicPopup.show({
         template: 'Name: <input type="text" ng-model="data.name"> Bio: <input type="text" ng-model="data.bio"> Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option><option>Casual/Competitive</option></select></ion-item> <br />Favorite Athlete: <input type="text" ng-model="data.favAthlete">',
@@ -404,19 +395,17 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         }]
       });
 
-    editProfilePopup.then(function(res) {
-      if (res) {
-
-        if (res.name) {
-          athlete.name = res.name;
-          athlete.bio = res.bio;
-          athlete.skillLevel = res.skillLevel;
-          athlete.favAthlete = res.favAthlete;
+      editProfilePopup.then(function(res) {
+        if (res) {
+          if (res.name) { // TODO: Implement Validation here.
+            $scope.user.name = res.name;
+            $scope.user.bio = res.bio;
+            $scope.user.skillLevel = res.skillLevel;
+            $scope.user.favAthlete = res.favAthlete;
+          }
         }
-      }
-
-    });
-  };
+      });
+    };
 
 }])
 
@@ -478,6 +467,17 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
     return {
 
+      getCurrentUserID: function() {
+        var user = firebase.auth().currentUser;
+        if (user) {
+          // User is signed in.
+          return user.uid;
+        } else {
+          // No user is signed in.
+          return null;
+        }
+      },
+
       registerNewUser: function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
 
         var deferred = $q.defer(); // Create deferred promise.
@@ -509,12 +509,12 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
           var usersRef = firebase.database().ref().child("users");
 
           // Add new user to users object with key being the userID specified by the firebase authentication provider.
-          usersRef.child(newUserID).set(newUserInfo);
+          usersRef.child(newUserID).set(newUserInfo); // TODO: handle this error specifically, delete user from authentication table.
         })
         .then(function(ref) {
           deferred.resolve(); // success, resolve promise.
         }, function(error) {
-          deferred.reject(error.code);
+          deferred.reject(error.message); // TODO: Filter error message
         });
         return deferred.promise;
       },
@@ -780,6 +780,24 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         var sortByTimeQuery = gamesRef.orderByChild("time");
         sortedGames = $firebaseArray(sortByTimeQuery);
         return sortedGames;
+      }
+    };
+  }]);
+
+
+  servMod.factory('ProfileService', ['$firebaseObject', function($firebaseObject) {
+    /* Contains methods used to access and update profile data. */
+
+    return {
+      getUser: function(userID) {
+        /* Takes a userID and returns the user object in the firebase DB for that id. */
+
+        // Get array of games on the date specified by the input dateString.
+        var userRef = firebase.database().ref().child("users").child(userID);
+        var user = $firebaseObject(userRef);
+
+        // TODO: Implement 3 way data binding so user can change data.
+        return user;
       }
     };
   }]);
