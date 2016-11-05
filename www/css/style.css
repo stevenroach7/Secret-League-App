@@ -249,6 +249,33 @@
 }
 
 
+/* Create Game Styling */
+.date-item {
+  line-height: 200%;
+}
+
+.time-item, .sport-item, .place-item, .skill-item, .invite-item {
+  line-height: 60%;
+}
+
+.date-input {
+  text-align: end;
+  padding-right: 14% !important;
+}
+
+.time-display, .input-label, .invite-display {
+  display: inline-block;
+}
+
+.time-display, .invite-display {
+  float: right;
+  margin-right: 10%;
+  font-size: 15px;
+  margin-top: 2%;
+}
+
+
+
 /* Profile Styling */
 .profile-view {
   background-color: #D3D3D3;

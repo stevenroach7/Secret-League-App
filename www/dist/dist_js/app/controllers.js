@@ -275,6 +275,62 @@
 
   }])
 
+
+
+  .controller('CreateGameCtrl', ['$scope', 'GamesService', 'DateService', '$ionicPopup', function($scope, GamesService, DateService, $ionicPopup) {
+  //
+  //
+  //   $scope.athlete = TestProfileData.getAthlete(0); // TODO: Change 0 to userID of authenticated user.
+  //
+    var roundToNextHour = function(seconds) {
+      /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
+      var hours = Math.floor(seconds / 3600);
+      return (hours + 1) * 3600;
+    };
+
+    // var resetGameOptions = function() {
+    //   var currentDate = new Date();
+    //   $scope.gameOptions = {
+    //     id: (currentDate.getHours() * 3600) + (currentDate.getMinutes() * 60) + currentDate.getSeconds(),
+    //     date: currentDate,
+    //     time: roundToNextHour((currentDate.getHours() * 3600) + (currentDate.getMinutes() * 60) + currentDate.getSeconds()), // Current time in seconds
+    //     sport: "Basketball",
+    //     place: null,
+    //     skillLevel: $scope.athlete.skillLevel,
+    //     minPlayers: null,
+    //     maxPlayers: null,
+    //     gameCreatorID: $scope.athlete.userID,
+    //     playerIDs: [$scope.athlete.userID],
+    //     invitedPlayerIDs: [],
+    //     playersVisible: false
+    //   };
+
+  //   resetGameOptions();
+
+    var showAlert = function(message) {
+      var alertPopup = $ionicPopup.alert({
+        title: 'Invalid Input',
+        template: message,
+        cssClass: 'invalid-input-popup'
+      });
+    };
+
+    var isDateValid = function(date) {
+      /* Takes a date and returns a boolean for if the date is valid. A date is valid if is it on or after the current date (Does not use time to compare) but not more than a year after. */
+      var currentDate = new Date();
+      var currentDateNoTimeUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+      var dateNoTimeUTC = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+      if (dateNoTimeUTC < currentDateNoTimeUTC) { // Check date isn't before current date.
+        return false;
+      }
+      var MS_PER_DAY = 1000 * 60 * 60 * 24;
+      var DAYS_IN_YEAR = 365;
+      var daysDifference = Math.floor((dateNoTimeUTC - currentDateNoTimeUTC) / MS_PER_DAY);
+      return (daysDifference < 365);
+    };
+    
+  }])
+
   .controller('ProfileCtrl', ['$scope', 'ProfileService', 'AuthenticationService', '$ionicPopup', function($scope, ProfileService, AuthenticationService, $ionicPopup) {
 
     var userID = AuthenticationService.getCurrentUserID();

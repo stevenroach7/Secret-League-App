@@ -73,6 +73,16 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     }
   })
 
+  .state('tab.create-game', {
+  url: '/create-game',
+  views: {
+    'create-game': {
+      templateUrl: 'templates/create-game.html',
+      controller: 'CreateGameCtrl'
+    }
+  }
+})
+
   .state('tab.profile', {
     url: '/profile',
     views: {

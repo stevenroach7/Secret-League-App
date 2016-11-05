@@ -30,6 +30,7 @@
       /* Takes user inputted data and performs client side validation to determine if it is valid.
       Returns a boolean for if data inputted is valid. */
       // TODO: validate user info.
+      // /^[A-Za-z\s]+$/.test(x);
       return true;
     };
 

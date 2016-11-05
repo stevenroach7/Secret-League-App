@@ -1,0 +1,56 @@
+<ion-view view-title="Create Game">
+
+  <ion-content>
+
+    <form class="create-game-form" class="list">
+
+      <label class="item item-select item-input date-item">
+        <span class="input-label">Date</span>
+        <input type="date" class="date-input" ng-model="gameOptions.date">
+      </label>
+<!--
+      <label class="item item-select time-item" ng-click="chooseTime();">
+          <span class="input-label">Time</span>
+          <span class="time-display">{{gameOptions.time | secondsToTime}}</span>
+      </label> -->
+
+      <label class="item item-select sport-item">
+          <span class="input-label">Sport</span>
+          <select ng-model="gameOptions.sport">
+              <option>Basketball</option>
+              <!-- <option>Soccer</option>
+              <option>Frisbee</option> -->
+          </select>
+      </label>
+
+      <label class="item item-select place-item">
+          <span class="input-label">Place</span>
+          <select ng-model="gameOptions.place">
+              <option>Leonard Center Field House</option>
+              <option>Leonard Center Alumni Gym</option>
+              <!-- <option>Football Field</option>
+              <option>Shaw Field</option> -->
+          </select>
+      </label>
+      <label class="item item-select skill-item">
+          <span class="input-label">Skill Level</span>
+          <select ng-model="gameOptions.skillLevel">
+              <option>Casual</option>
+              <option>Competitive</option>
+          </select>
+      </label>
+      <label class="item players-item">
+          <span class="input-label players-label">Number of Players</span>
+          <div>
+            <!-- <rzslider rz-slider-model="slider.min" rz-slider-high="slider.max" rz-slider-options="slider.options"></rzslider> -->
+          </div>
+      </label>
+
+      <label class="item create-game-item">
+        <button id="create-game-button" class="button button-royal button-block " ng-click="">Create Game</button>
+      </label>
+
+    </form>
+
+  </ion-content>
+</ion-view>
