@@ -8,11 +8,11 @@
         <span class="input-label">Date</span>
         <input type="date" class="date-input" ng-model="gameOptions.date">
       </label>
-<!--
-      <label class="item item-select time-item" ng-click="chooseTime();">
-          <span class="input-label">Time</span>
-          <span class="time-display">{{gameOptions.time | secondsToTime}}</span>
-      </label> -->
+
+      <label class="item item-select item-input time-item">
+        <span class="input-label">Time</span>
+        <input type="time" class="time-input" ng-model="gameOptions.time">
+      </label>
 
       <label class="item item-select sport-item">
           <span class="input-label">Sport</span>
@@ -37,7 +37,7 @@
       </label>
 
       <label class="item create-game-item">
-        <button id="create-game-button" class="button button-royal button-block " ng-click="">Create Game</button>
+        <button id="create-game-button" class="button button-royal button-block" ng-click="createGame()">Create Game</button>
       </label>
 
     </form>

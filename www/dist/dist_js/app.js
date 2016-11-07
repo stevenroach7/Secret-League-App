@@ -379,34 +379,27 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
 
   .controller('CreateGameCtrl', ['$scope', 'GamesService', 'DateService', '$ionicPopup', function($scope, GamesService, DateService, $ionicPopup) {
-  //
-  //
-  //   $scope.athlete = TestProfileData.getAthlete(0); // TODO: Change 0 to userID of authenticated user.
-  //
+
+
     var roundToNextHour = function(seconds) {
       /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
       var hours = Math.floor(seconds / 3600);
       return (hours + 1) * 3600;
     };
 
-    // var resetGameOptions = function() {
-    //   var currentDate = new Date();
-    //   $scope.gameOptions = {
-    //     id: (currentDate.getHours() * 3600) + (currentDate.getMinutes() * 60) + currentDate.getSeconds(),
-    //     date: currentDate,
-    //     time: roundToNextHour((currentDate.getHours() * 3600) + (currentDate.getMinutes() * 60) + currentDate.getSeconds()), // Current time in seconds
-    //     sport: "Basketball",
-    //     place: null,
-    //     skillLevel: $scope.athlete.skillLevel,
-    //     minPlayers: null,
-    //     maxPlayers: null,
-    //     gameCreatorID: $scope.athlete.userID,
-    //     playerIDs: [$scope.athlete.userID],
-    //     invitedPlayerIDs: [],
-    //     playersVisible: false
-    //   };
+    var resetGameOptions = function() {
+      /* Resets create game options to defaults. */
+      var currentDate = new Date();
+      $scope.gameOptions = {
+        date: currentDate,
+        time: DateService.secondsToDate(roundToNextHour((currentDate.getHours() * 3600) + (currentDate.getMinutes() * 60) + currentDate.getSeconds())),
+        sport: "Basketball",
+        place: null,
+        skillLevel: null,
+      };
+    };
 
-  //   resetGameOptions();
+    resetGameOptions();
 
     var showAlert = function(message) {
       var alertPopup = $ionicPopup.alert({
@@ -417,7 +410,8 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     };
 
     var isDateValid = function(date) {
-      /* Takes a date and returns a boolean for if the date is valid. A date is valid if is it on or after the current date (Does not use time to compare) but not more than a year after. */
+      /* Takes a date and returns a boolean for if the date is valid. A date is valid if is it on or after the current date
+      (Does not use time to compare) but not more than 14 days after. */
       var currentDate = new Date();
       var currentDateNoTimeUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
       var dateNoTimeUTC = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
@@ -427,9 +421,14 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       var MS_PER_DAY = 1000 * 60 * 60 * 24;
       var DAYS_IN_YEAR = 365;
       var daysDifference = Math.floor((dateNoTimeUTC - currentDateNoTimeUTC) / MS_PER_DAY);
-      return (daysDifference < 365);
+      return (daysDifference < 14);
     };
-    
+
+
+    $scope.createGame = function() {
+      console.log("OK");
+    };
+
   }])
 
   .controller('ProfileCtrl', ['$scope', 'ProfileService', 'AuthenticationService', '$ionicPopup', function($scope, ProfileService, AuthenticationService, $ionicPopup) {
@@ -764,6 +763,24 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       hoursToSeconds: function(hours) {
         /* Takes a value in hours and returns that value in seconds. */
         return Math.round(hours * 3600); // Round to integer value
+      },
+      dateToSeconds: function(date) {
+        /* Takes a JS date object and returns the amount of seconds passed in that day. */
+        return (date.getHours * 3600) + (date.getMinutes * 60) + date.getSeconds;
+      },
+      secondsToDate: function(seconds) {
+        /* Takes an int seconds and returns a JS date object for the current date with the
+        specified amount of seconds passed in that day.*/
+        var hours = Math.floor(seconds / 3600);
+        seconds = seconds % 3600;
+        var minutes = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        d = new Date();
+        d.setHours(hours);
+        d.setMinutes(minutes);
+        d.setSeconds(seconds);
+        d.setMilliseconds(0);
+        return d;
       }
     };
   });
@@ -831,8 +848,8 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   }]);
 
 
-  servMod.factory('GamesService', ['$firebaseArray', function($firebaseArray) {
-    /* Contains methods used to access games data. */
+  servMod.factory('GamesService', ['$firebaseArray', '$firebaseObject', function($firebaseArray, $firebaseObject) {
+    /* Contains methods used to access and modify games data. */
 
     return {
       getGamesByDate: function(dateString) {
@@ -852,6 +869,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   }]);
 
 
+
   servMod.factory('ProfileService', ['$firebaseObject', function($firebaseObject) {
     /* Contains methods used to access and update profile data. */
 
@@ -859,7 +877,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       getUser: function(userID) {
         /* Takes a userID and returns the user object in the firebase DB for that id. */
 
-        // Get array of games on the date specified by the input dateString.
+        // Get user object as specified by userID.
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
 

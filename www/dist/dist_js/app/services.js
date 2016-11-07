@@ -268,6 +268,24 @@
       hoursToSeconds: function(hours) {
         /* Takes a value in hours and returns that value in seconds. */
         return Math.round(hours * 3600); // Round to integer value
+      },
+      dateToSeconds: function(date) {
+        /* Takes a JS date object and returns the amount of seconds passed in that day. */
+        return (date.getHours * 3600) + (date.getMinutes * 60) + date.getSeconds;
+      },
+      secondsToDate: function(seconds) {
+        /* Takes an int seconds and returns a JS date object for the current date with the
+        specified amount of seconds passed in that day.*/
+        var hours = Math.floor(seconds / 3600);
+        seconds = seconds % 3600;
+        var minutes = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        d = new Date();
+        d.setHours(hours);
+        d.setMinutes(minutes);
+        d.setSeconds(seconds);
+        d.setMilliseconds(0);
+        return d;
       }
     };
   });
@@ -335,8 +353,8 @@
   }]);
 
 
-  servMod.factory('GamesService', ['$firebaseArray', function($firebaseArray) {
-    /* Contains methods used to access games data. */
+  servMod.factory('GamesService', ['$firebaseArray', '$firebaseObject', function($firebaseArray, $firebaseObject) {
+    /* Contains methods used to access and modify games data. */
 
     return {
       getGamesByDate: function(dateString) {
@@ -356,6 +374,7 @@
   }]);
 
 
+
   servMod.factory('ProfileService', ['$firebaseObject', function($firebaseObject) {
     /* Contains methods used to access and update profile data. */
 
@@ -363,7 +382,7 @@
       getUser: function(userID) {
         /* Takes a userID and returns the user object in the firebase DB for that id. */
 
-        // Get array of games on the date specified by the input dateString.
+        // Get user object as specified by userID.
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
 
