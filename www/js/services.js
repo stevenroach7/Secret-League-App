@@ -251,7 +251,8 @@
         return calcPastDate(date, numDays);
       },
       isDateValid: function(dateInQuestion) {
-        /* Takes a date and returns a boolean for if the date is valid for the navigation to travel to. */
+        /* Takes a date and returns a boolean for if the date is valid for the navigation
+        in the schedule page and the schedule page to travel to. */
 
         // Get dateStrings for disallowed dates based on current date.
         var currentDate = new Date();
@@ -271,7 +272,7 @@
       },
       dateToSeconds: function(date) {
         /* Takes a JS date object and returns the amount of seconds passed in that day. */
-        return (date.getHours * 3600) + (date.getMinutes * 60) + date.getSeconds;
+        return (date.getHours() * 3600) + (date.getMinutes() * 60) + date.getSeconds();
       },
       secondsToDate: function(seconds) {
         /* Takes an int seconds and returns a JS date object for the current date with the
@@ -353,8 +354,22 @@
   });
 
 
-  servMod.factory('GamesService', function($firebaseArray, $firebaseObject) {
+  servMod.factory('GamesService', function($firebaseArray, $firebaseObject, DateService) {
     /* Contains methods used to access and modify games data. */
+
+
+    var formatGame = function(gameOptions, userID) {
+      /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
+      Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
+      var game = {};
+      game.creatorID = userID; // Add userID to gameOptions so we can keep track of who created this game.
+      game.dateString = DateService.dateToDateString(gameOptions.date);
+      game.time = DateService.dateToSeconds(gameOptions.time);
+      game.skillLevel = gameOptions.skillLevel;
+      game.sport = gameOptions.sport;
+      game.place = gameOptions.place;
+      return game;
+    };
 
     return {
       getGamesByDate: function(dateString) {
@@ -369,6 +384,38 @@
         var sortByTimeQuery = gamesRef.orderByChild("time");
         sortedGames = $firebaseArray(sortByTimeQuery);
         return sortedGames;
+      },
+      isDateValid: function(date) {
+        /* Takes a date and returns a boolean for if the date is valid. A date is valid if is it on or after the current date
+        (Does not use time to compare) but not more than 14 days after. */
+        var currentDate = new Date();
+        var currentDateNoTimeUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+        var dateNoTimeUTC = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+        if (dateNoTimeUTC < currentDateNoTimeUTC) { // Check date isn't before current date.
+          return false;
+        }
+        var MS_PER_DAY = 1000 * 60 * 60 * 24;
+        var DAYS_IN_YEAR = 365;
+        var daysDifference = Math.floor((dateNoTimeUTC - currentDateNoTimeUTC) / MS_PER_DAY);
+        return (daysDifference < 14);
+      },
+      addGame: function(gameOptions, userID) {
+        /* Takes a gameOptions object and adds it to the firebase DB into the games Object. */
+        // TODO: Check that this user hasn't created too many games.
+
+        var game = formatGame(gameOptions, userID);
+
+        var gamesRef = firebase.database().ref().child("games").child(game.dateString);
+        var games = $firebaseArray(gamesRef);
+
+        games.$add(game)
+        .then(function(ref) {
+          var id = ref.key;
+          console.log("added record with id " + id);
+          games.$indexFor(id); // returns location in the array
+          // TODO: handle successful data entry
+        });
+        // TODO: handle error returned from DB. 
       }
     };
   });

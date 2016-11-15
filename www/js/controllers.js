@@ -52,6 +52,7 @@
 
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
+      // TODO: Pass regData object instead of having so many parameters.
       AuthenticationService.registerNewUser($scope.regData.name, $scope.regData.password1, $scope.regData.password2, $scope.regData.email, $scope.regData.gradYear, $scope.regData.bio, $scope.regData.skillLevel, $scope.regData.favAthlete)
       .then(function() {
          $scope.closeRegistrationModal();
@@ -277,8 +278,7 @@
 
 
 
-  .controller('CreateGameCtrl', function($scope, GamesService, DateService, $ionicPopup) {
-
+  .controller('CreateGameCtrl', function($scope, GamesService, DateService, AuthenticationService, $ionicPopup, $state) {
 
     var roundToNextHour = function(seconds) {
       /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
@@ -295,6 +295,7 @@
         sport: "Basketball",
         place: null,
         skillLevel: null,
+        creatorID: null
       };
     };
 
@@ -304,28 +305,31 @@
       var alertPopup = $ionicPopup.alert({
         title: 'Invalid Input',
         template: message,
-        cssClass: 'invalid-input-popup'
+        cssClass: 'invalid-input-popup',
+        okType: 'button-royal'
       });
     };
 
-    var isDateValid = function(date) {
-      /* Takes a date and returns a boolean for if the date is valid. A date is valid if is it on or after the current date
-      (Does not use time to compare) but not more than 14 days after. */
-      var currentDate = new Date();
-      var currentDateNoTimeUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-      var dateNoTimeUTC = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
-      if (dateNoTimeUTC < currentDateNoTimeUTC) { // Check date isn't before current date.
+
+    var validateGameCreated = function(gameOptions) {
+      /* Takes a gameOptions object and returns a boolean for if the game is valid. Displays the necessary alert messages if invalid. */
+      if (!$scope.gameOptions.date || !$scope.gameOptions.time || !$scope.gameOptions.sport || !$scope.gameOptions.place || !$scope.gameOptions.skillLevel) {
+        showAlert("Please fill out all fields.");
+        return false;
+      } else if (!GamesService.isDateValid($scope.gameOptions.date)) { // Check to make sure date entered is valid.
+        showAlert("Please choose a valid date.");
         return false;
       }
-      var MS_PER_DAY = 1000 * 60 * 60 * 24;
-      var DAYS_IN_YEAR = 365;
-      var daysDifference = Math.floor((dateNoTimeUTC - currentDateNoTimeUTC) / MS_PER_DAY);
-      return (daysDifference < 14);
+      return true;
     };
 
-
     $scope.createGame = function() {
-      console.log("OK");
+      /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page.*/
+      if (validateGameCreated($scope.gameOptions)) {
+        var userID = AuthenticationService.getCurrentUserID();
+        GamesService.addGame($scope.gameOptions, userID); // TODO: Probably make this a promise
+        $state.go('tab.find-game');
+      }
     };
 
   })

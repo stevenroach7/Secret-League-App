@@ -153,6 +153,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
+      // TODO: Pass regData object instead of having so many parameters.
       AuthenticationService.registerNewUser($scope.regData.name, $scope.regData.password1, $scope.regData.password2, $scope.regData.email, $scope.regData.gradYear, $scope.regData.bio, $scope.regData.skillLevel, $scope.regData.favAthlete)
       .then(function() {
          $scope.closeRegistrationModal();
@@ -378,8 +379,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
 
 
-  .controller('CreateGameCtrl', ['$scope', 'GamesService', 'DateService', '$ionicPopup', function($scope, GamesService, DateService, $ionicPopup) {
-
+  .controller('CreateGameCtrl', ['$scope', 'GamesService', 'DateService', '$ionicPopup', 'AuthenticationService', function($scope, GamesService, DateService, $ionicPopup, AuthenticationService) {
 
     var roundToNextHour = function(seconds) {
       /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
@@ -396,6 +396,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         sport: "Basketball",
         place: null,
         skillLevel: null,
+        creatorID: null
       };
     };
 
@@ -405,28 +406,30 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       var alertPopup = $ionicPopup.alert({
         title: 'Invalid Input',
         template: message,
-        cssClass: 'invalid-input-popup'
+        cssClass: 'invalid-input-popup',
+        okType: 'button-royal'
       });
     };
 
-    var isDateValid = function(date) {
-      /* Takes a date and returns a boolean for if the date is valid. A date is valid if is it on or after the current date
-      (Does not use time to compare) but not more than 14 days after. */
-      var currentDate = new Date();
-      var currentDateNoTimeUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-      var dateNoTimeUTC = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
-      if (dateNoTimeUTC < currentDateNoTimeUTC) { // Check date isn't before current date.
+
+    var validateGameCreated = function(gameOptions) {
+      /* Takes a gameOptions object and returns a boolean for if the game is valid. Displays the necessary alert messages if invalid. */
+      if (!$scope.gameOptions.date || !$scope.gameOptions.time || !$scope.gameOptions.sport || !$scope.gameOptions.place || !$scope.gameOptions.skillLevel) {
+        showAlert("Please fill out all fields.");
+        return false;
+      } else if (!GamesService.isDateValid($scope.gameOptions.date)) { // Check to make sure date entered is valid.
+        showAlert("Please choose a valid date.");
         return false;
       }
-      var MS_PER_DAY = 1000 * 60 * 60 * 24;
-      var DAYS_IN_YEAR = 365;
-      var daysDifference = Math.floor((dateNoTimeUTC - currentDateNoTimeUTC) / MS_PER_DAY);
-      return (daysDifference < 14);
+      return true;
     };
 
-
     $scope.createGame = function() {
-      console.log("OK");
+      /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page.*/
+      if (validateGameCreated($scope.gameOptions)) {
+        var userID = AuthenticationService.getCurrentUserID();
+        GamesService.addGame($scope.gameOptions, userID);
+      }
     };
 
   }])
@@ -746,7 +749,8 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         return calcPastDate(date, numDays);
       },
       isDateValid: function(dateInQuestion) {
-        /* Takes a date and returns a boolean for if the date is valid for the navigation to travel to. */
+        /* Takes a date and returns a boolean for if the date is valid for the navigation
+        in the schedule page and the schedule page to travel to. */
 
         // Get dateStrings for disallowed dates based on current date.
         var currentDate = new Date();
@@ -766,7 +770,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       },
       dateToSeconds: function(date) {
         /* Takes a JS date object and returns the amount of seconds passed in that day. */
-        return (date.getHours * 3600) + (date.getMinutes * 60) + date.getSeconds;
+        return (date.getHours() * 3600) + (date.getMinutes() * 60) + date.getSeconds();
       },
       secondsToDate: function(seconds) {
         /* Takes an int seconds and returns a JS date object for the current date with the
@@ -848,8 +852,24 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   }]);
 
 
-  servMod.factory('GamesService', ['$firebaseArray', '$firebaseObject', function($firebaseArray, $firebaseObject) {
+  servMod.factory('GamesService', ['$firebaseArray', '$firebaseObject', 'DateService', function($firebaseArray, $firebaseObject, DateService) {
     /* Contains methods used to access and modify games data. */
+
+
+    var formatGame = function(gameOptions, userID) {
+      /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
+      Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
+      var game = {};
+      game.creatorID = userID; // Add userID to gameOptions so we can keep track of who created this game.
+      game.dateString = DateService.dateToDateString(gameOptions.date);
+      game.time = DateService.dateToSeconds(gameOptions.time);
+      game.skillLevel = gameOptions.skillLevel;
+      game.sport = gameOptions.sport;
+      game.place = gameOptions.place;
+      return game;
+    };
+
+
 
     return {
       getGamesByDate: function(dateString) {
@@ -864,6 +884,39 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         var sortByTimeQuery = gamesRef.orderByChild("time");
         sortedGames = $firebaseArray(sortByTimeQuery);
         return sortedGames;
+      },
+      isDateValid: function(date) {
+        /* Takes a date and returns a boolean for if the date is valid. A date is valid if is it on or after the current date
+        (Does not use time to compare) but not more than 14 days after. */
+        var currentDate = new Date();
+        var currentDateNoTimeUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+        var dateNoTimeUTC = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+        if (dateNoTimeUTC < currentDateNoTimeUTC) { // Check date isn't before current date.
+          return false;
+        }
+        var MS_PER_DAY = 1000 * 60 * 60 * 24;
+        var DAYS_IN_YEAR = 365;
+        var daysDifference = Math.floor((dateNoTimeUTC - currentDateNoTimeUTC) / MS_PER_DAY);
+        return (daysDifference < 14);
+      },
+      addGame: function(gameOptions, userID) {
+        /* Takes a gameOptions object and adds it to the firebase DB into the games Object. */
+        // TODO: Check that this user hasn't created too many games.
+
+        var game = formatGame(gameOptions, userID);
+
+
+
+        var gamesRef = firebase.database().ref().child("games").child(game.dateString);
+        var games = $firebaseArray(gamesRef);
+
+        games.$add(game)
+        .then(function(ref) {
+          var id = ref.key;
+          console.log("added record with id " + id);
+          games.$indexFor(id); // returns location in the array
+        });
+
       }
     };
   }]);
