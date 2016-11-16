@@ -477,7 +477,7 @@
 
 
 
-  servMod.factory('ProfileService', ['$firebaseObject', function($firebaseObject) {
+  servMod.factory('ProfileService', ['$firebaseObject', '$q', function($firebaseObject, $q) {
     /* Contains methods used to access and update profile data. */
 
     return {
@@ -488,9 +488,31 @@
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
 
-        // TODO: Implement 3 way data binding so user can change data.
         return user;
+      },
+      updateProfile: function(userID, name, bio, skillLevel, favAthlete) {
+        /* Takes a userID, and a name, bio, and athlete, and updates the corresponding user in the DB with the new values. */
+        var deferred = $q.defer();
+
+        var userRef = firebase.database().ref().child("users").child(userID);
+        var user = $firebaseObject(userRef);
+        user.$loaded()
+        .then(function(){
+          user.name = name;
+          user.bio = bio;
+          user.skillLevel = skillLevel;
+          user.favAthlete = favAthlete;
+          user.$save()
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject();
+          });
+        });
+      return deferred.promise;
       }
+      
     };
   }]);
 

@@ -465,6 +465,23 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     var userID = AuthenticationService.getCurrentUserID();
     $scope.user = ProfileService.getUser(userID);
 
+    var showAlert = function(titleMessage, templateMessage) {
+      var alertPopup = $ionicPopup.alert({
+        title: titleMessage,
+        template: templateMessage,
+        okType: 'button-royal'
+      });
+    };
+
+    validateProfileEdit = function(name) {
+      /* Takes name and sends an alert if invalid. Returns a boolean for if valid. */
+      if (name.length > 0) {
+        return true;
+      } else {
+        return showAlert("Invalid Input", "You must enter a value for name.");
+      }
+    };
+
     $scope.showProfilePopup = function(user) {
 
       $scope.data = {}; // object to be used in popup.
@@ -474,7 +491,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       $scope.data.favAthlete = $scope.user.favAthlete;
 
       var editProfilePopup = $ionicPopup.show({
-        template: 'Name: <input type="text" ng-model="data.name"> Bio: <input type="text" ng-model="data.bio"> Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option><option>Casual/Competitive</option></select></ion-item> <br />Favorite Athlete: <input type="text" ng-model="data.favAthlete">',
+        template: 'Name: <input type="text" ng-model="data.name" maxlength="30"> Bio: <input type="text" ng-model="data.bio" maxlength="30"> Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select></ion-item> <br />Favorite Athlete: <input type="text" ng-model="data.favAthlete" maxlength="30">',
         title: 'Edit Profile',
         subTitle: '',
         scope: $scope,
@@ -491,11 +508,11 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
       editProfilePopup.then(function(res) {
         if (res) {
-          if (res.name) { // TODO: Implement Validation here.
-            $scope.user.name = res.name;
-            $scope.user.bio = res.bio;
-            $scope.user.skillLevel = res.skillLevel;
-            $scope.user.favAthlete = res.favAthlete;
+          if (validateProfileEdit(res.name)) {
+            ProfileService.updateProfile(userID, res.name, res.bio, res.skillLevel, res.favAthlete)
+            .catch(function() {
+              showAlert("Server Error", "Please Try Again");
+            });
           }
         }
       });
@@ -979,7 +996,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
         var deferred = $q.defer(); // deferred promise.
 
-        formatGame(gameOptions, userID) // format game is asynchrous because it needs to query the users object to get the user name.
+        formatGame(gameOptions, userID) // format game is asynchrous because it needs to query the users object to get the user name. It is always resolved.
         .then(function(game) {
           var gamesRef = firebase.database().ref().child("games").child(game.dateString);
           var games = $firebaseArray(gamesRef);
@@ -1001,7 +1018,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
 
 
-  servMod.factory('ProfileService', ['$firebaseObject', function($firebaseObject) {
+  servMod.factory('ProfileService', ['$firebaseObject', '$q', function($firebaseObject, $q) {
     /* Contains methods used to access and update profile data. */
 
     return {
@@ -1012,8 +1029,29 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
 
-        // TODO: Implement 3 way data binding so user can change data.
         return user;
+      },
+      updateProfile: function(userID, name, bio, skillLevel, favAthlete) {
+        /* Takes a userID, and a name, bio, and athlete, and updates the corresponding user in the DB with the new values. */
+        var deferred = $q.defer();
+
+        var userRef = firebase.database().ref().child("users").child(userID);
+        var user = $firebaseObject(userRef);
+        user.$loaded()
+        .then(function(){
+          user.name = name;
+          user.bio = bio;
+          user.skillLevel = skillLevel;
+          user.favAthlete = favAthlete;
+          user.$save()
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject();
+          });
+        });
+      return deferred.promise;
       }
     };
   }]);
