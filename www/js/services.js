@@ -354,14 +354,14 @@
   });
 
 
-  servMod.factory('GamesService', function($firebaseArray, $firebaseObject, DateService) {
+  servMod.factory('GamesService', function($firebaseArray, $firebaseObject, DateService, $q) {
     /* Contains methods used to access and modify games data. */
 
 
     var formatGame = function(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
       Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
-      var game = {};
+      var game = {}; // Create new game object so data is no longer not binded to html elements.
       game.creatorID = userID; // Add userID to gameOptions so we can keep track of who created this game.
       game.dateString = DateService.dateToDateString(gameOptions.date);
       game.time = DateService.dateToSeconds(gameOptions.time);
@@ -370,6 +370,18 @@
       game.place = gameOptions.place;
       return game;
     };
+
+    var getNumGamesCreated = function(games, userID) {
+      /* Takes an array of games and a userID and returns an int for the number of games with the creatorID being the input userID */
+      numGames = 0;
+      for (i = 0; i < games.length; i++) {
+          if (games[i].creatorID === userID) {
+            numGames++;
+          }
+      }
+      return numGames;
+    };
+
 
     return {
       getGamesByDate: function(dateString) {
@@ -395,27 +407,51 @@
           return false;
         }
         var MS_PER_DAY = 1000 * 60 * 60 * 24;
-        var DAYS_IN_YEAR = 365;
+        var DAYS_IN_FUTURE_VALID = 14;
         var daysDifference = Math.floor((dateNoTimeUTC - currentDateNoTimeUTC) / MS_PER_DAY);
-        return (daysDifference < 14);
+        return (daysDifference < DAYS_IN_FUTURE_VALID);
+      },
+      isUserAllowedToCreateGame: function(date, userID) {
+        /* Takes a date and a userID and determines if the user is allowed to create a new game on the given date
+        based on how many dates they have already created on that date. Returns a promise. */
+
+        var deferred = $q.defer();
+
+        var dateString = DateService.dateToDateString(date);
+        var gamesRef = firebase.database().ref().child("games").child(dateString);
+        var games = $firebaseArray(gamesRef);
+
+        games.$loaded()
+        .then(function() { // Must make sure games array is loaded before checking number of games created by user.
+          // Check that this user hasn't created 3 games on this date.
+          var numGamesCreated = getNumGamesCreated(games, userID);
+          var MAX_NUM_GAMES_ALLOWED = 3;
+
+          if (numGamesCreated >= MAX_NUM_GAMES_ALLOWED) {
+            deferred.reject("You may not create more than 3 games on the same date.");
+          } else {
+            deferred.resolve();
+          }
+        });
+        return deferred.promise;
       },
       addGame: function(gameOptions, userID) {
-        /* Takes a gameOptions object and adds it to the firebase DB into the games Object. */
-        // TODO: Check that this user hasn't created too many games.
+        /* Takes a gameOptions object and adds it to the firebase DB into the games object. */
 
         var game = formatGame(gameOptions, userID);
-
         var gamesRef = firebase.database().ref().child("games").child(game.dateString);
         var games = $firebaseArray(gamesRef);
 
+        var deferred = $q.defer(); // deferred promise.
+
         games.$add(game)
         .then(function(ref) {
-          var id = ref.key;
-          console.log("added record with id " + id);
-          games.$indexFor(id); // returns location in the array
-          // TODO: handle successful data entry
+          deferred.resolve();
+        })
+        .catch(function(error) {
+          deferred.reject("Please try again");
         });
-        // TODO: handle error returned from DB. 
+        return deferred.promise;
       }
     };
   });

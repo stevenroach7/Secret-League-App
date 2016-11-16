@@ -301,34 +301,43 @@
 
     resetGameOptions();
 
-    var showAlert = function(message) {
+    var showAlert = function(titleMessage, templateMessage) {
       var alertPopup = $ionicPopup.alert({
-        title: 'Invalid Input',
-        template: message,
-        cssClass: 'invalid-input-popup',
+        title: titleMessage,
+        template: templateMessage,
         okType: 'button-royal'
       });
     };
 
 
-    var validateGameCreated = function(gameOptions) {
+    var validateGameCreated = function(gameOptions, userID) {
       /* Takes a gameOptions object and returns a boolean for if the game is valid. Displays the necessary alert messages if invalid. */
       if (!$scope.gameOptions.date || !$scope.gameOptions.time || !$scope.gameOptions.sport || !$scope.gameOptions.place || !$scope.gameOptions.skillLevel) {
-        showAlert("Please fill out all fields.");
+        showAlert("Invalid Input", "Please fill out all fields.");
         return false;
       } else if (!GamesService.isDateValid($scope.gameOptions.date)) { // Check to make sure date entered is valid.
-        showAlert("Please choose a valid date.");
+        showAlert("Invalid Input", "Please choose a valid date.");
         return false;
       }
       return true;
     };
 
     $scope.createGame = function() {
-      /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page.*/
-      if (validateGameCreated($scope.gameOptions)) {
-        var userID = AuthenticationService.getCurrentUserID();
-        GamesService.addGame($scope.gameOptions, userID); // TODO: Probably make this a promise
-        $state.go('tab.find-game');
+      /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page. */
+
+      var userID = AuthenticationService.getCurrentUserID(); // Get userID so we can pass it to addGame and creator ID can be stored.
+      if (validateGameCreated($scope.gameOptions, userID)) {
+
+        // Check that user has not created too many games already on this date.
+        GamesService.isUserAllowedToCreateGame($scope.gameOptions.date, userID)
+        .then(function() {
+          return GamesService.addGame($scope.gameOptions, userID);
+        }).then(function() {
+          $state.go('tab.find-game');
+        })
+        .catch(function(errorMessage) {
+          showAlert("Error", errorMessage);
+        });
       }
     };
 
