@@ -878,21 +878,36 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   }]);
 
 
-  servMod.factory('GamesService', ['$firebaseArray', '$firebaseObject', 'DateService', '$q', function($firebaseArray, $firebaseObject, DateService, $q) {
+  servMod.factory('GamesService', ['$firebaseArray', '$firebaseObject', 'DateService', 'ProfileService', '$q', function($firebaseArray, $firebaseObject, DateService, ProfileService, $q) {
     /* Contains methods used to access and modify games data. */
 
 
     var formatGame = function(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
       Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
+
       var game = {}; // Create new game object so data is no longer not binded to html elements.
-      game.creatorID = userID; // Add userID to gameOptions so we can keep track of who created this game.
-      game.dateString = DateService.dateToDateString(gameOptions.date);
-      game.time = DateService.dateToSeconds(gameOptions.time);
-      game.skillLevel = gameOptions.skillLevel;
-      game.sport = gameOptions.sport;
-      game.place = gameOptions.place;
-      return game;
+      var deferred = $q.defer();
+
+      // First get name of user so we can add that to the new game object.
+      var user = ProfileService.getUser(userID);
+      user.$loaded()
+      .then(function() {
+        return user.name;
+      }).then(function(userName) { // Success, add name to game object.
+        game.creatorName = userName;
+      }).catch(function() { // Error, set creatorName as null.
+        game.creatorName = null;
+      }).finally(function() { // Regardless of outcome, create rest of game object and return it in promise.
+        game.creatorID = userID; // Add userID to gameOptions so we can keep track of who created this game.
+        game.dateString = DateService.dateToDateString(gameOptions.date);
+        game.time = DateService.dateToSeconds(gameOptions.time);
+        game.skillLevel = gameOptions.skillLevel;
+        game.sport = gameOptions.sport;
+        game.place = gameOptions.place;
+        deferred.resolve(game);
+      });
+      return deferred.promise;
     };
 
     var getNumGamesCreated = function(games, userID) {
@@ -923,7 +938,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       },
       isDateValid: function(date) {
         /* Takes a date and returns a boolean for if the date is valid. A date is valid if is it on or after the current date
-        (Does not use time to compare) but not more than 14 days after. */
+        (Does not use time to compare) but not more than 7 days after. */
         var currentDate = new Date();
         var currentDateNoTimeUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         var dateNoTimeUTC = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
@@ -931,9 +946,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
           return false;
         }
         var MS_PER_DAY = 1000 * 60 * 60 * 24;
-        var DAYS_IN_FUTURE_VALID = 14;
+        var DAYS_IN_FUTURE_VALID = 7;
         var daysDifference = Math.floor((dateNoTimeUTC - currentDateNoTimeUTC) / MS_PER_DAY);
-        return (daysDifference < DAYS_IN_FUTURE_VALID);
+        return (daysDifference <= DAYS_IN_FUTURE_VALID);
       },
       isUserAllowedToCreateGame: function(date, userID) {
         /* Takes a date and a userID and determines if the user is allowed to create a new game on the given date
@@ -962,21 +977,25 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       addGame: function(gameOptions, userID) {
         /* Takes a gameOptions object and adds it to the firebase DB into the games object. */
 
-        var game = formatGame(gameOptions, userID);
-        var gamesRef = firebase.database().ref().child("games").child(game.dateString);
-        var games = $firebaseArray(gamesRef);
-
         var deferred = $q.defer(); // deferred promise.
 
-        games.$add(game)
-        .then(function(ref) {
-          deferred.resolve();
-        })
-        .catch(function(error) {
-          deferred.reject("Please try again");
+        formatGame(gameOptions, userID) // format game is asynchrous because it needs to query the users object to get the user name.
+        .then(function(game) {
+          var gamesRef = firebase.database().ref().child("games").child(game.dateString);
+          var games = $firebaseArray(gamesRef);
+
+          games.$add(game)
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject("Please try again");
+          });
+
         });
         return deferred.promise;
       }
+
     };
   }]);
 

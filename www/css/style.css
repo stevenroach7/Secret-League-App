@@ -227,7 +227,7 @@
   color: #fff;
 }
 
-.time-container, .sport-container, .location-display, .skill-display {
+.time-container, .sport-container, .location-display, .skill-display, .creator-display {
   overflow: hidden;
   white-space: nowrap;
 }
