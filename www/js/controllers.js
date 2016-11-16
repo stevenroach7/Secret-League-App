@@ -278,13 +278,14 @@
 
 
 
-  .controller('CreateGameCtrl', function($scope, GamesService, DateService, AuthenticationService, $ionicPopup, $state) {
+  .controller('CreateGameCtrl', function($scope, GamesService, DateService, AuthenticationService, ProfileService, $ionicPopup, $state) {
 
     var roundToNextHour = function(seconds) {
       /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
       var hours = Math.floor(seconds / 3600);
       return (hours + 1) * 3600;
     };
+
 
     var resetGameOptions = function() {
       /* Resets create game options to defaults. */
@@ -299,7 +300,22 @@
       };
     };
 
+    var autoSetSkillLevel = function() {
+      /* Sets the skill level option to automatically be the skill level in the user's profile.
+       Getting this data is asynchronous so this will not be updated in the view immediately. */
+       var userID = AuthenticationService.getCurrentUserID(); // Get userID so we can pass it to addGame and creator ID can be stored.
+       var user = ProfileService.getUser(userID);
+       user.$loaded().then(function() {
+         return user.skillLevel;
+       }).then(function(skillLevel) {
+         $scope.gameOptions.skillLevel = skillLevel;
+       }).catch(function() {
+         $scope.gameOptions.skillLevel = null;
+       });
+    };
+
     resetGameOptions();
+    autoSetSkillLevel(); // Set the skill level to the user's skill level asynchronously.
 
     var showAlert = function(titleMessage, templateMessage) {
       var alertPopup = $ionicPopup.alert({
