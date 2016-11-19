@@ -9821,7 +9821,7 @@ a.button {
 
 .item-unselectable.activated { /* The item-unselectable class is for items that are unselectable. */
   background: #fff; /* Set color when selected to be white. It already is white so it ends up having no effect. */
-  border-color: #fff;
+  border-color: #D3D3D3;
 }
 
 .horiz-line {
@@ -9836,9 +9836,14 @@ a.button {
 
 /* Date Navigation Styling (appears in schedule and find-game states). */
 .date-display {
-  background-color: #ffffff;
+  background: #fff;
+  border-color: #fff;
   overflow: hidden;
   white-space: nowrap;
+}
+.date-display.activated {
+  background: #fff; /* Set color when selected to be white. It already is white so it ends up having no effect. */
+  border-color: #fff;
 }
 
 .date-title {
@@ -9846,6 +9851,8 @@ a.button {
   font-weight: bold;
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
+
+
 
 
 /* Login Styling */
