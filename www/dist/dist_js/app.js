@@ -623,6 +623,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         })
         .catch(function(error) {
           // TODO: handle failure to add to users db object error specifically, need to delete user from authentication table.
+          console.log(error.code); // TODO: Create error code to resposnse mapping. 
           deferred.reject(error.message); // TODO: Filter error message
         });
         return deferred.promise;
