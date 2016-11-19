@@ -26,16 +26,6 @@
       return "";
     };
 
-    var validateUserInfo = function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
-      /* Takes user inputted data and performs client side validation to determine if it is valid.
-      Returns a boolean for if data inputted is valid. */
-      // TODO: validate user info.
-      // /^[A-Za-z\s]+$/.test(x);
-      return true;
-    };
-
-
-
     return {
 
       getCurrentUserID: function() {
@@ -48,90 +38,48 @@
           return null;
         }
       },
+      validateUserInfo: function(regData) {
+        /* Takes user inputted data and performs client side validation to determine if it is valid.
+        Returns a boolean for if data inputted is valid. */
 
-      registerNewUser: function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
+        if (regData.password1 === regData.password2 && regData.name.length > 0) {
+          return true;
+        }
+        // /^[A-Za-z\s]+$/.test(x);
+        return false;
+      },
+      registerNewUser: function(regData) {
 
         var deferred = $q.defer(); // Create deferred promise.
 
-        // Validate user info before sending to database.
-        if (!validateUserInfo()) {
-          var errorMessage = "Invalid Data. Please Try again"; // TODO: Write more specific error messages.
-          deferred.reject(errorMessage);
-          return deferred.promise;
-        }
-
         // Add user to firebase authentication provider.
-        firebase.auth().createUserWithEmailAndPassword(email, password1)
+        firebase.auth().createUserWithEmailAndPassword(regData.email, regData.password1)
         .then(function(user) {
-
+          return user.uid;
+        })
+        .then(function(newUserID) {
           // Add user to firebase DB.
           var newUserInfo = {
-            name: name,
-            email: email,
-            gradYear: gradYear,
-            bio: bio,
-            skillLevel: skillLevel,
-            favAthlete: favAthlete
+            name: regData.name,
+            email: regData.email,
+            gradYear: regData.gradYear,
+            bio: regData.bio,
+            skillLevel: regData.skillLevel,
+            favAthlete: regData.favAthlete
           };
-          // Get firebase userID.
-          var newUserID = user.uid;
 
           // Get reference to firebase users table so we can add a new user.
           var usersRef = firebase.database().ref().child("users");
 
           // Add new user to users object with key being the userID specified by the firebase authentication provider.
-          usersRef.child(newUserID).set(newUserInfo); // TODO: handle this error specifically, delete user from authentication table.
+          return usersRef.child(newUserID).set(newUserInfo);
         })
         .then(function(ref) {
           deferred.resolve(); // success, resolve promise.
-        }, function(error) {
+        })
+        .catch(function(error) {
+          // TODO: handle failure to add to users db object error specifically, need to delete user from authentication table.
           deferred.reject(error.message); // TODO: Filter error message
-        });
-        return deferred.promise;
-      },
-
-      registerNewUser1: function(name, password1, password2, email, gradYear, bio, skillLevel, favAthlete) {
-        // TODO: Validate user info before sending to database.
-
-        var deferred = $q.defer(); // deferred promise.
-        if (!validateUserInfo()) {
-          var errorMessage = "Invalid Data. Please Try again"; // TODO: Write more specific error messages.
-          deferred.reject(errorMessage);
-          return deferred.promise;
-        }
-
-        firebase.auth().createUserWithEmailAndPassword(email, password1).then(function(user) {
-
-          // Add user to firebase DB.
-          var newUserInfo = {
-            name: name,
-            email: email,
-            gradYear: gradYear,
-            bio: bio,
-            skillLevel: skillLevel,
-            favAthlete: favAthlete
-          };
-          // Get firebase userID.
-          var newUserID = user.uid;
-
-          // Get reference to firebase users table so we can add a new user.
-          var usersRef = firebase.database().ref().child("users");
-
-          // Add new user to users object with key being the userID specified by the firebase authentication provider.
-          usersRef.child(newUserID).set(newUserInfo).then(function(ref) {
-            deferred.resolve(); // success, resolve promise.
-          }, function(error) {
-            var errorMessage = "Server Error. Please Try Again.";
-            console.log("error setting info");
-            deferred.reject(errorMessage);
-            // TODO: delete user from authentication provider.
-          });
-        }, function(error) {
-          // TODO: Handle Errors here.
-          console.log("Error HERE!");
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          deferred.reject(errorMessage);
         });
         return deferred.promise;
       },
@@ -512,7 +460,7 @@
         });
       return deferred.promise;
       }
-      
+
     };
   }]);
 

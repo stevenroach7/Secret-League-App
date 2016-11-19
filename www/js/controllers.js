@@ -52,13 +52,16 @@
 
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
-      // TODO: Pass regData object instead of having so many parameters.
-      AuthenticationService.registerNewUser($scope.regData.name, $scope.regData.password1, $scope.regData.password2, $scope.regData.email, $scope.regData.gradYear, $scope.regData.bio, $scope.regData.skillLevel, $scope.regData.favAthlete)
-      .then(function() {
-         $scope.closeRegistrationModal();
-       }).catch(function(errorMessage) {
-         showErrorAlert(errorMessage);
-       });
+      if (!AuthenticationService.validateUserInfo($scope.regData)) {
+        showErrorAlert("Invalid Input. Please make sure passwords match and name is not empty.");
+      } else {
+        AuthenticationService.registerNewUser($scope.regData)
+        .then(function() {
+           $scope.closeRegistrationModal();
+         }).catch(function(errorMessage) {
+           showErrorAlert(errorMessage);
+         });
+       }
     };
 
     $scope.loginData = {};
