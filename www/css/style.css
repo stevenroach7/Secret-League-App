@@ -17,6 +17,12 @@
     display: none;
 }
 
+.required-label:after {
+  content: "*";
+  color: #ff0000;
+}
+
+
 /* Date Navigation Styling (appears in schedule and find-game states). */
 .date-display {
   background: #fff;

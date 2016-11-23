@@ -494,7 +494,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       $scope.data.favAthlete = $scope.user.favAthlete;
 
       var editProfilePopup = $ionicPopup.show({
-        template: 'Name: <input type="text" ng-model="data.name" maxlength="30"> Bio: <input type="text" ng-model="data.bio" maxlength="30"> Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select></ion-item> <br />Favorite Athlete: <input type="text" ng-model="data.favAthlete" maxlength="30">',
+        template: '<span class="required-label">Name:</span><input type="text" ng-model="data.name" maxlength="30"> Bio: <input type="text" ng-model="data.bio" maxlength="30"> Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select></ion-item> <br />Favorite Athlete: <input type="text" ng-model="data.favAthlete" maxlength="30">',
         title: 'Edit Profile',
         subTitle: '',
         scope: $scope,
