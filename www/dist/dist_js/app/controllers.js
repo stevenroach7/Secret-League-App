@@ -40,38 +40,67 @@
 
     var showErrorAlert = function(message) {
       /* Takes a message and shows the message in an error alert popup. */
-     var alertPopup = $ionicPopup.alert({
-       title: "Error",
-       template: message,
-       okType: 'button-royal'
-     });
-     alertPopup.then(function(res) {
+      var alertPopup = $ionicPopup.alert({
+        title: "Error",
+        template: message,
+        okType: 'button-royal'
+      });
+      alertPopup.then(function(res) {
        // Popup goes away automatically when OK button is clicked.
-     });
-   };
+      });
+    };
+
+    var validateUserInfo = function(regData) {
+      /* Takes user inputted data and performs client side validation to determine if it is valid.
+      Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
+      var currentYear = new Date().getFullYear();
+
+      if (regData.password1 !== regData.password2) {
+        showErrorAlert("Please make sure passwords match.");
+        return false;
+      } else if (regData.email.length <= 0 || regData.password1.length <= 0 || regData.name.length <= 0 || regData.gradYear.length <= 0) {
+        showErrorAlert("Please fill out all required fields.");
+        return false;
+      } else if (!(regData.gradYear > currentYear - 4 && regData.gradYear < currentYear + 8)) { // Give 4 years of leeway on each side of gradYears of current students..
+        showErrorAlert("Please enter a valid graduation date.");
+        return false;
+      }
+      return true;
+    };
+
+    var validateLoginInfo = function(loginData) {
+      /* Takes user inputted login data and performs client side validation to determine if it is valid.
+      Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
+
+      if (!(loginData.loginEmail && loginData.loginPassword)) { // If either are not defined.
+        showErrorAlert("Please Fill Out Required Fields.");
+        return false;
+      }
+      return true;
+    };
 
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
-      if (!AuthenticationService.validateUserInfo($scope.regData)) {
-        showErrorAlert("Invalid Input. Please make sure passwords match and name is not empty.");
-      } else {
+      if (validateUserInfo($scope.regData)) {
         AuthenticationService.registerNewUser($scope.regData)
         .then(function() {
            $scope.closeRegistrationModal();
          }).catch(function(errorMessage) {
            showErrorAlert(errorMessage);
          });
-       }
+      }
     };
 
     $scope.loginData = {};
 
     $scope.login = function() {
       /* Calls AuthenticationService method to sign user in. Sends error alert if neccessary. */
-      AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword)
-      .catch(function(errorMessage) {
-        showErrorAlert(errorMessage);
-      });
+      if (validateLoginInfo($scope.loginData)) {
+        AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword)
+        .catch(function(errorMessage) {
+          showErrorAlert(errorMessage);
+        });
+      }
     };
 
     $scope.logout = function() {

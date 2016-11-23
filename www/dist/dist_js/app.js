@@ -141,38 +141,67 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
     var showErrorAlert = function(message) {
       /* Takes a message and shows the message in an error alert popup. */
-     var alertPopup = $ionicPopup.alert({
-       title: "Error",
-       template: message,
-       okType: 'button-royal'
-     });
-     alertPopup.then(function(res) {
+      var alertPopup = $ionicPopup.alert({
+        title: "Error",
+        template: message,
+        okType: 'button-royal'
+      });
+      alertPopup.then(function(res) {
        // Popup goes away automatically when OK button is clicked.
-     });
-   };
+      });
+    };
+
+    var validateUserInfo = function(regData) {
+      /* Takes user inputted data and performs client side validation to determine if it is valid.
+      Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
+      var currentYear = new Date().getFullYear();
+
+      if (regData.password1 !== regData.password2) {
+        showErrorAlert("Please make sure passwords match.");
+        return false;
+      } else if (regData.email.length <= 0 || regData.password1.length <= 0 || regData.name.length <= 0 || regData.gradYear.length <= 0) {
+        showErrorAlert("Please fill out all required fields.");
+        return false;
+      } else if (!(regData.gradYear > currentYear - 4 && regData.gradYear < currentYear + 8)) { // Give 4 years of leeway on each side of gradYears of current students..
+        showErrorAlert("Please enter a valid graduation date.");
+        return false;
+      }
+      return true;
+    };
+
+    var validateLoginInfo = function(loginData) {
+      /* Takes user inputted login data and performs client side validation to determine if it is valid.
+      Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
+
+      if (!(loginData.loginEmail && loginData.loginPassword)) { // If either are not defined.
+        showErrorAlert("Please Fill Out Required Fields.");
+        return false;
+      }
+      return true;
+    };
 
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
-      if (!AuthenticationService.validateUserInfo($scope.regData)) {
-        showErrorAlert("Invalid Input. Please make sure passwords match and name is not empty.");
-      } else {
+      if (validateUserInfo($scope.regData)) {
         AuthenticationService.registerNewUser($scope.regData)
         .then(function() {
            $scope.closeRegistrationModal();
          }).catch(function(errorMessage) {
            showErrorAlert(errorMessage);
          });
-       }
+      }
     };
 
     $scope.loginData = {};
 
     $scope.login = function() {
       /* Calls AuthenticationService method to sign user in. Sends error alert if neccessary. */
-      AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword)
-      .catch(function(errorMessage) {
-        showErrorAlert(errorMessage);
-      });
+      if (validateLoginInfo($scope.loginData)) {
+        AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword)
+        .catch(function(errorMessage) {
+          showErrorAlert(errorMessage);
+        });
+      }
     };
 
     $scope.logout = function() {
@@ -551,23 +580,41 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
 
     var getSignInErrorMessage = function(errorCode) {
-      /* Takes an signIn errorCode and returns a message to later be displayed to the user.
-      For security reasons, users are not told very much about why their login attempt failed. */
+      /* Takes an signIn errorCode and returns a message to later be displayed to the user. */
       if (errorCode) {
         switch(errorCode) {
           case "auth/invalid-email":
-            return "Please enter a valid email address.";
+            return "Invalid Email Password Combination";
           case "auth/user-disabled":
-            return "Invalid Login Information.";
+            return "Sorry. Your account has been disabled.";
           case "auth/user-not-found":
-            return "Invalid Login Information.";
+            return "Invalid Email Password Combination";
           case "auth/wrong-password":
-            return "Invalid Login Information.";
+            return "Invalid Email Password Combination";
           default:
             return "Invalid Login Information.";
         }
       }
-      return "";
+      return "Invalid Login Information";
+    };
+
+    var getRegistrationErrorMessage = function(errorCode) {
+      /* Takes a registration errorCode and returns a message to later be displayed to the user. */
+      if (errorCode) {
+        switch(errorCode) {
+          case "auth/email-already-in-use":
+            return "This email address is taken.";
+          case "auth/invalid-email":
+            return "Please enter a valid email address.";
+          case "auth/operation-not-allowed":
+            return "Server Error. Please Try Again.";
+          case "auth/weak-password":
+            return "You password must contain at least 6 characters.";
+          default:
+            return "Server Error. Please Try Again.";
+        }
+      }
+      return "Server Error. Please Try Again.";
     };
 
     return {
@@ -582,26 +629,14 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
           return null;
         }
       },
-      validateUserInfo: function(regData) {
-        /* Takes user inputted data and performs client side validation to determine if it is valid.
-        Returns a boolean for if data inputted is valid. */
-
-        if (regData.password1 === regData.password2 && regData.name.length > 0) {
-          return true;
-        }
-        // /^[A-Za-z\s]+$/.test(x);
-        return false;
-      },
       registerNewUser: function(regData) {
 
         var deferred = $q.defer(); // Create deferred promise.
 
         // Add user to firebase authentication provider.
-        firebase.auth().createUserWithEmailAndPassword(regData.email, regData.password1)
+        firebase.auth().createUserWithEmailAndPassword(regData.email, regData.password1) // This can fail so chain promise to catch error at the end.
         .then(function(user) {
-          return user.uid;
-        })
-        .then(function(newUserID) {
+
           // Add user to firebase DB.
           var newUserInfo = {
             name: regData.name,
@@ -611,6 +646,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
             skillLevel: regData.skillLevel,
             favAthlete: regData.favAthlete
           };
+
+          // Get firebase unique authentication id of user so we can use as key in our users Object.
+          var newUserID = user.uid;
 
           // Get reference to firebase users table so we can add a new user.
           var usersRef = firebase.database().ref().child("users");
@@ -622,9 +660,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
           deferred.resolve(); // success, resolve promise.
         })
         .catch(function(error) {
-          // TODO: handle failure to add to users db object error specifically, need to delete user from authentication table.
-          console.log(error.code); // TODO: Create error code to resposnse mapping. 
-          deferred.reject(error.message); // TODO: Filter error message
+          // TODO: Consider if it is a problem that the user could be not added to db object but be in authentication users.
+          var errorMessage = getRegistrationErrorMessage(error.code);
+          deferred.reject(errorMessage);
         });
         return deferred.promise;
       },
@@ -632,10 +670,13 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       signIn: function(email, password) {
         /* Takes an email and a password and attempts to authenticate this user and sign them in. */
         var deferred = $q.defer(); // deferred promise.
-        firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+        firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(function() {
           // SignIn successful. Send resolved promise.
+          console.log("Success");
           deferred.resolve();
-        }, function(error) {
+        }).catch(function(error) {
+          console.log("Error");
           var errorCode = error.code;
           var errorMessage = getSignInErrorMessage(errorCode);
           deferred.reject(errorMessage);
