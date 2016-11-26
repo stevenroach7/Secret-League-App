@@ -50,8 +50,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   })
 
   // Each tab has its own nav history stack:
-
-
   .state('tab.schedule', {
     url: '/schedule',
     views: {
@@ -70,18 +68,31 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         templateUrl: 'find-game.html',
         controller: 'FindGameCtrl'
       }
+    },
+    resolve: {
+      games: function(DateService, GamesService) {
+        var date = new Date(); // initialize date variable based on date in this moment.
+        var dateString = DateService.dateToDateString(date);
+        return GamesService.getGamesByDate(dateString); // Get games on the date specfied by the dateString.
+      }
     }
   })
 
   .state('tab.create-game', {
-  url: '/create-game',
-  views: {
-    'create-game': {
-      templateUrl: 'templates/create-game.html',
-      controller: 'CreateGameCtrl'
+    url: '/create-game',
+    views: {
+      'create-game': {
+        templateUrl: 'templates/create-game.html',
+        controller: 'CreateGameCtrl'
+      }
+    },
+    resolve: {
+      user: function(AuthenticationService, ProfileService) {
+        var userID = AuthenticationService.getCurrentUserID();
+        return ProfileService.getUser(userID);
+      }
     }
-  }
-})
+  })
 
   .state('tab.profile', {
     url: '/profile',
@@ -89,6 +100,12 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       'profile': {
         templateUrl: 'templates/profile.html',
         controller: 'ProfileCtrl'
+      }
+    },
+    resolve: { // Don't show page until user data has loaded.
+      user: function(AuthenticationService, ProfileService) {
+        var userID = AuthenticationService.getCurrentUserID();
+        return ProfileService.getUser(userID);
       }
     }
   });

@@ -235,11 +235,12 @@
   })
 
 
-  .controller('FindGameCtrl', function($scope, GamesService, DateService, $state) {
+  .controller('FindGameCtrl', function($scope, games, GamesService, DateService, $state) {
 
     $scope.date = new Date(); // initialize date variable based on date in this moment.
     $scope.dateString = DateService.dateToDateString($scope.date);
-    $scope.games = GamesService.getGamesByDate($scope.dateString); // Get games on the date specfied by the dateString.
+
+    $scope.games = games; // Get games from resolve in router.
 
     $scope.showDateArrow = function(dateString) {
       /* Determines whether arrow for date navigation should be shown. */
@@ -310,14 +311,13 @@
 
 
 
-  .controller('CreateGameCtrl', function($scope, GamesService, DateService, AuthenticationService, ProfileService, $ionicPopup, $state) {
+  .controller('CreateGameCtrl', function($scope, user, GamesService, AuthenticationService, DateService, $ionicPopup, $state) {
 
     var roundToNextHour = function(seconds) {
       /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
       var hours = Math.floor(seconds / 3600);
       return (hours + 1) * 3600;
     };
-
 
     var resetGameOptions = function() {
       /* Resets create game options to defaults. */
@@ -335,9 +335,8 @@
     var autoSetSkillLevel = function() {
       /* Sets the skill level option to automatically be the skill level in the user's profile.
        Getting this data is asynchronous so this will not be updated in the view immediately. */
-       var userID = AuthenticationService.getCurrentUserID(); // Get userID so we can pass it to addGame and creator ID can be stored.
-       var user = ProfileService.getUser(userID);
-       user.$loaded().then(function() {
+
+       user.$loaded().then(function() { // User retrieved from resolve in router.
          return user.skillLevel;
        }).then(function(skillLevel) {
          $scope.gameOptions.skillLevel = skillLevel;
@@ -391,10 +390,9 @@
 
   })
 
-  .controller('ProfileCtrl', function($scope, ProfileService, AuthenticationService, $ionicPopup) {
+  .controller('ProfileCtrl', function($scope, user, ProfileService, $ionicPopup) {
 
-    var userID = AuthenticationService.getCurrentUserID();
-    $scope.user = ProfileService.getUser(userID);
+    $scope.user = user; // Get user object created in app.js resolve
 
     var showAlert = function(titleMessage, templateMessage) {
       var alertPopup = $ionicPopup.alert({
