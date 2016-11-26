@@ -673,12 +673,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(function() {
           // SignIn successful. Send resolved promise.
-          console.log("Success");
           deferred.resolve();
         }).catch(function(error) {
-          console.log("Error");
-          var errorCode = error.code;
-          var errorMessage = getSignInErrorMessage(errorCode);
+          var errorMessage = getSignInErrorMessage(error.code);
           deferred.reject(errorMessage);
         });
         return deferred.promise;
@@ -690,7 +687,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         firebase.auth().signOut().then(function() {
           // SignOut successful. Send resolved promise.
           deferred.resolve();
-        }, function(error) {
+        }).catch(function(error) {
           // signOut Failed. Send rejected promise.
           deferred.reject("Please Try Again.");
         });
