@@ -9,7 +9,7 @@
     <button class="button button-royal button-clear" ng-click="moveToDateToday()">Today</button>
   </ion-nav-buttons>
 
-  <ion-content class="schedule-view" overflow-scroll="true" on-swipe-left="moveToNextDate(dateString)" on-swipe-right="moveToLastDate(dateString)">
+  <ion-content class="schedule-view" overflow-scroll="true" scrollbar-y="false" on-swipe-left="moveToNextDate(dateString)" on-swipe-right="moveToLastDate(dateString)">
 
     <div class="button-bar date-nav-schedule">
       <button class="button button-royal button-block icon ion-android-arrow-back" ng-show="showDateArrow(getLastDateString())" ng-click="moveToLastDate(dateString)"></button>
