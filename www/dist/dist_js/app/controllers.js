@@ -45,9 +45,7 @@
         template: message,
         okType: 'button-royal'
       });
-      alertPopup.then(function(res) {
        // Popup goes away automatically when OK button is clicked.
-      });
     };
 
     var validateUserInfo = function(regData) {
@@ -235,12 +233,12 @@
   }])
 
 
-  .controller('FindGameCtrl', ['$scope', 'games', 'GamesService', 'DateService', '$state', function($scope, games, GamesService, DateService, $state) {
+  .controller('FindGameCtrl', ['$scope', 'gamesResolve', 'GamesService', 'DateService', '$state', function($scope, gamesResolve, GamesService, DateService, $state) {
 
     $scope.date = new Date(); // initialize date variable based on date in this moment.
     $scope.dateString = DateService.dateToDateString($scope.date);
 
-    $scope.games = games; // Get games from resolve in router.
+    $scope.games = gamesResolve; // Get games from resolve in router.
 
     $scope.showDateArrow = function(dateString) {
       /* Determines whether arrow for date navigation should be shown. */
@@ -311,7 +309,7 @@
 
 
 
-  .controller('CreateGameCtrl', ['$scope', 'user', 'GamesService', 'AuthenticationService', 'DateService', '$ionicPopup', '$state', function($scope, user, GamesService, AuthenticationService, DateService, $ionicPopup, $state) {
+  .controller('CreateGameCtrl', ['$scope', 'userResolve', 'GamesService', 'AuthenticationService', 'DateService', '$ionicPopup', '$state', function($scope, userResolve, GamesService, AuthenticationService, DateService, $ionicPopup, $state) {
 
     var roundToNextHour = function(seconds) {
       /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
@@ -336,8 +334,8 @@
       /* Sets the skill level option to automatically be the skill level in the user's profile.
        Getting this data is asynchronous so this will not be updated in the view immediately. */
 
-       user.$loaded().then(function() { // User retrieved from resolve in router.
-         return user.skillLevel;
+       userResolve.$loaded().then(function() { // User retrieved from resolve in router.
+         return userResolve.skillLevel;
        }).then(function(skillLevel) {
          $scope.gameOptions.skillLevel = skillLevel;
        }).catch(function() {
@@ -390,9 +388,10 @@
 
   }])
 
-  .controller('ProfileCtrl', ['$scope', 'user', 'ProfileService', '$ionicPopup', function($scope, user, ProfileService, $ionicPopup) {
+  .controller('ProfileCtrl', ['$scope', 'userResolve', 'userIDResolve', 'ProfileService', '$ionicPopup', function($scope, userResolve, userIDResolve, ProfileService, $ionicPopup) {
 
-    $scope.user = user; // Get user object created in app.js resolve
+    $scope.user = userResolve; // Get user object created in app.js resolve
+    var userID = userIDResolve;
 
     var showAlert = function(titleMessage, templateMessage) {
       var alertPopup = $ionicPopup.alert({

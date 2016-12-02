@@ -70,7 +70,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       }
     },
     resolve: {
-      games: function(DateService, GamesService) {
+      gamesResolve: function(DateService, GamesService) {
         var date = new Date(); // initialize date variable based on date in this moment.
         var dateString = DateService.dateToDateString(date);
         return GamesService.getGamesByDate(dateString); // Get games on the date specfied by the dateString.
@@ -87,7 +87,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       }
     },
     resolve: {
-      user: function(AuthenticationService, ProfileService) {
+      userResolve: function(AuthenticationService, ProfileService) {
         var userID = AuthenticationService.getCurrentUserID();
         return ProfileService.getUser(userID);
       }
@@ -103,9 +103,12 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       }
     },
     resolve: { // Don't show page until user data has loaded.
-      user: function(AuthenticationService, ProfileService) {
+      userResolve: function(AuthenticationService, ProfileService) {
         var userID = AuthenticationService.getCurrentUserID();
         return ProfileService.getUser(userID);
+      },
+      userIDResolve: function(AuthenticationService) {
+        return AuthenticationService.getCurrentUserID();
       }
     }
   });

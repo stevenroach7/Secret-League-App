@@ -50,8 +50,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   })
 
   // Each tab has its own nav history stack:
-
-
   .state('tab.schedule', {
     url: '/schedule',
     views: {
@@ -72,7 +70,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       }
     },
     resolve: {
-      games: ['DateService', 'GamesService', function(DateService, GamesService) {
+      gamesResolve: ['DateService', 'GamesService', function(DateService, GamesService) {
         var date = new Date(); // initialize date variable based on date in this moment.
         var dateString = DateService.dateToDateString(date);
         return GamesService.getGamesByDate(dateString); // Get games on the date specfied by the dateString.
@@ -89,7 +87,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       }
     },
     resolve: {
-      user: ['AuthenticationService', 'ProfileService', function(AuthenticationService, ProfileService) {
+      userResolve: ['AuthenticationService', 'ProfileService', function(AuthenticationService, ProfileService) {
         var userID = AuthenticationService.getCurrentUserID();
         return ProfileService.getUser(userID);
       }]
@@ -105,9 +103,12 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       }
     },
     resolve: { // Don't show page until user data has loaded.
-      user: ['AuthenticationService', 'ProfileService', function(AuthenticationService, ProfileService) {
+      userResolve: ['AuthenticationService', 'ProfileService', function(AuthenticationService, ProfileService) {
         var userID = AuthenticationService.getCurrentUserID();
         return ProfileService.getUser(userID);
+      }],
+      userIDResolve: ['AuthenticationService', function(AuthenticationService) {
+        return AuthenticationService.getCurrentUserID();
       }]
     }
   });
