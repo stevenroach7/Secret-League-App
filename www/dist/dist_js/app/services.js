@@ -5,7 +5,6 @@
   servMod.factory('AuthenticationService', ['firebase', '$q', function(firebase, $q) {
     /* Contains methods to handle user authentication. */
 
-
     var getSignInErrorMessage = function(errorCode) {
       /* Takes an signIn errorCode and returns a message to later be displayed to the user. */
       if (errorCode) {
@@ -47,6 +46,7 @@
     return {
 
       getCurrentUserID: function() {
+        /* Returns the userID of the current user, null if no user is signed in. */
         var user = firebase.auth().currentUser;
         if (user) {
           // User is signed in.
@@ -56,7 +56,10 @@
           return null;
         }
       },
+
       registerNewUser: function(regData) {
+        /* Takes an object of registration data and registers a new user in the firebase authentication service
+        and in the users object in the firebase database. */
 
         var deferred = $q.defer(); // Create deferred promise.
 
@@ -96,6 +99,7 @@
 
       signIn: function(email, password) {
         /* Takes an email and a password and attempts to authenticate this user and sign them in. */
+
         var deferred = $q.defer(); // deferred promise.
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(function() {
@@ -110,6 +114,7 @@
 
       signOut: function() {
         /* Uses the firebase authentication method to sign the user out. */
+
         var deferred = $q.defer(); // deferred promise.
         firebase.auth().signOut().then(function() {
           // SignOut successful. Send resolved promise.
@@ -180,6 +185,7 @@
 
 
     return {
+
       dateStringToDate: function(dateString) {
         /* Takes a String in the format MMDDYYYY and returns a corresponding date object. */
         var month = dateString.substring(0,2);
@@ -188,26 +194,32 @@
         var date = new Date(month+"/"+day+"/"+year);
         return date;
       },
+
       dateToDateString: function(date) {
         /* Takes a Date and returns a dateString in the format MMDDYYYY */
         return convertDateToDateString(date);
       },
+
       getNextDate: function(date) {
         /* Takes a Date and returns a dateString for the next day in the format MMDDYYYY */
         return calcNextDate(date);
       },
+
       getLastDate: function(date) {
         /* Takes a Date and returns a dateString for the day before in the format MMDDYYYY */
         return calcLastDate(date);
       },
+
       getDateInFuture: function(date, numDays) {
         /* Returns the date as a Date Object numDays after the date inputted. */
         return calcFutureDate(date, numDays);
       },
+
       getDateInPast: function(date, numDays) {
         /* Returns the date as a Date Object numDays before the date inputted. */
         return calcPastDate(date, numDays);
       },
+
       isDateValid: function(dateInQuestion) {
         /* Takes a date and returns a boolean for if the date is valid for the navigation
         in the schedule page and the schedule page to travel to. */
@@ -224,14 +236,17 @@
         // return true only if dateString in question does not equal either of the disallowed dateStrings.
         return ((dateStringInQuestion !== futureDateStringDisallowed) && (dateStringInQuestion !== pastDateStringDisallowed));
       },
+
       hoursToSeconds: function(hours) {
         /* Takes a value in hours and returns that value in seconds. */
         return Math.round(hours * 3600); // Round to integer value
       },
+
       dateToSeconds: function(date) {
         /* Takes a JS date object and returns the amount of seconds passed in that day. */
         return (date.getHours() * 3600) + (date.getMinutes() * 60) + date.getSeconds();
       },
+
       secondsToDate: function(seconds) {
         /* Takes an int seconds and returns a JS date object for the current date with the
         specified amount of seconds passed in that day.*/
@@ -246,6 +261,7 @@
         d.setMilliseconds(0);
         return d;
       }
+
     };
   });
 
@@ -274,10 +290,12 @@
         }
         return null;
       },
+
       getPlaces: function() {
         /* Returns the places object. */
         return places;
       },
+
       getDisplayedTimes: function(startHour, endHour, increment) {
       /* Takes a starting time and ending time in hours and an increment and
       creates an array of times in seconds that will be displayed as time labels. */
@@ -288,6 +306,7 @@
         }
         return displayedTimes;
       },
+
       getStartingTimes: function(startHour, endHour, increment) {
         /* Takes a starting time and ending time in hours and an increment and creates an array of times in seconds
         that we will use to check if events start at each time. */
@@ -298,6 +317,7 @@
         }
         return startingTimes;
       },
+
       getEventsByDateAndPlace: function(dateString, placeString) {
         /* Takes a dateString and a placeString and queries the firebase DB to obtain and return the events object
         specified by the dateString and in the place specified by the placeString. */
@@ -308,13 +328,13 @@
 
         return events;
       }
+
     };
   }]);
 
 
   servMod.factory('GamesService', ['$firebaseArray', '$firebaseObject', 'DateService', 'ProfileService', '$q', function($firebaseArray, $firebaseObject, DateService, ProfileService, $q) {
     /* Contains methods used to access and modify games data. */
-
 
     var formatGame = function(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
@@ -357,6 +377,7 @@
 
 
     return {
+
       getGamesByDate: function(dateString) {
         /* Takes a dateString and queries the firebase db to obtain a synchronized array of game objects on the date
         specified by the dateString. Then this functions sorts these games by their time variable and returns the array. */
@@ -370,6 +391,7 @@
         sortedGames = $firebaseArray(sortByTimeQuery);
         return sortedGames;
       },
+
       isDateValid: function(date) {
         /* Takes a date and returns a boolean for if the date is valid. A date is valid if is it on or after the current date
         (Does not use time to compare) but not more than 7 days after. */
@@ -384,6 +406,7 @@
         var daysDifference = Math.floor((dateNoTimeUTC - currentDateNoTimeUTC) / MS_PER_DAY);
         return (daysDifference <= DAYS_IN_FUTURE_VALID);
       },
+
       isUserAllowedToCreateGame: function(date, userID) {
         /* Takes a date and a userID and determines if the user is allowed to create a new game on the given date
         based on how many dates they have already created on that date. Returns a promise. */
@@ -408,6 +431,7 @@
         });
         return deferred.promise;
       },
+
       addGame: function(gameOptions, userID) {
         /* Takes a gameOptions object and adds it to the firebase DB into the games object. */
 
@@ -439,6 +463,7 @@
     /* Contains methods used to access and update profile data. */
 
     return {
+
       getUser: function(userID) {
         /* Takes a userID and returns the user object in the firebase DB for that id. */
 
@@ -448,6 +473,7 @@
 
         return user;
       },
+
       updateProfile: function(userID, name, bio, skillLevel, favAthlete) {
         /* Takes a userID, and a name, bio, and athlete, and updates the corresponding user in the DB with the new values. */
         var deferred = $q.defer();

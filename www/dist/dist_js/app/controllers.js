@@ -13,8 +13,8 @@
       $scope.registrationModal = registrationModal;
     });
 
-
     var initializeRegistrationData = function() {
+      /* Initializes an object of registration data called regData with empty strings as the values for all attributes.. */
       var regData = {
         email: "",
         password1: "",
@@ -28,15 +28,16 @@
       return regData;
     };
 
-    $scope.showRegistrationModal = function(athlete) {
+    $scope.showRegistrationModal = function() {
+      /* Opens the modal to register a user. */
       $scope.regData = initializeRegistrationData();
       $scope.registrationModal.show(); // Open modal
     };
 
     $scope.closeRegistrationModal = function() {
+      /* Closes the modal to register a user. */
       $scope.registrationModal.hide(); // Close modal
     };
-
 
     var showErrorAlert = function(message) {
       /* Takes a message and shows the message in an error alert popup. */
@@ -89,7 +90,7 @@
       }
     };
 
-    $scope.loginData = {};
+    $scope.loginData = {}; // Initialize object for login data to be stored in.
 
     $scope.login = function() {
       /* Calls AuthenticationService method to sign user in. Sends error alert if neccessary. */
@@ -109,7 +110,6 @@
       });
     };
 
-    // TODO: Consider injecting in app.js. http://stackoverflow.com/questions/33983526/angularfire-cannot-read-property-facebook-how-do-i-keep-using-authdata-through
     firebase.auth().onAuthStateChanged(function(user) {
       /*  Tracks user authentication status using observer and reroutes user if neccessary. */
       if (user) {
@@ -347,6 +347,7 @@
     autoSetSkillLevel(); // Set the skill level to the user's skill level asynchronously.
 
     var showAlert = function(titleMessage, templateMessage) {
+      /* Takes a title message and a template message and displays an error alert with the inputted messages. */
       var alertPopup = $ionicPopup.alert({
         title: titleMessage,
         template: templateMessage,
@@ -394,6 +395,7 @@
     var userID = userIDResolve;
 
     var showAlert = function(titleMessage, templateMessage) {
+      /* Takes a title message and a template message and displays an error alert with the inputted messages. */
       var alertPopup = $ionicPopup.alert({
         title: titleMessage,
         template: templateMessage,
@@ -411,6 +413,7 @@
     };
 
     $scope.showProfilePopup = function(user) {
+      /* Takes a user and displays the edit profile popup for that user. */
 
       $scope.data = {}; // object to be used in popup.
       $scope.data.name = $scope.user.name;
