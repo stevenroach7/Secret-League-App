@@ -465,7 +465,8 @@
     return {
 
       getUser: function(userID) {
-        /* Takes a userID and returns the user object in the firebase DB for that id. */
+        /* Takes a userID and returns the user object in the firebase DB for that id.
+        This could be modified to return a promise if this function is used in complex ways. */ 
 
         // Get user object as specified by userID.
         var userRef = firebase.database().ref().child("users").child(userID);

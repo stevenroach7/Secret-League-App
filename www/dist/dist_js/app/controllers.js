@@ -233,7 +233,7 @@
   }])
 
 
-  .controller('FindGameCtrl', ['$scope', 'gamesResolve', 'GamesService', 'DateService', '$state', function($scope, gamesResolve, GamesService, DateService, $state) {
+  .controller('FindGameCtrl', ['$scope', 'gamesResolve', 'GamesService', 'DateService', 'ProfileService', '$ionicModal', '$state', function($scope, gamesResolve, GamesService, DateService, ProfileService, $ionicModal, $state) {
 
     $scope.date = new Date(); // initialize date variable based on date in this moment.
     $scope.dateString = DateService.dateToDateString($scope.date);
@@ -305,8 +305,26 @@
       return games.length === 0;
     };
 
-  }])
+    // Create the viewProfile modal
+    $ionicModal.fromTemplateUrl('templates/profile-modal.html', {
+      scope: $scope
+    }).then(function(profileModal) {
+      $scope.profileModal = profileModal;
+    });
 
+    $scope.showProfileModal = function(athleteID) {
+      /* Takes a userID and opens the modal to view that user's profile. */
+      var athlete = ProfileService.getUser(athleteID);
+      $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
+      $scope.profileModal.show(); // Open modal
+    };
+
+    $scope.closeProfile = function() {
+      /* Closes the profile modal. */
+      $scope.profileModal.hide(); // Close modal
+    };
+
+  }])
 
 
   .controller('CreateGameCtrl', ['$scope', 'userResolve', 'GamesService', 'AuthenticationService', 'DateService', '$ionicPopup', '$state', function($scope, userResolve, GamesService, AuthenticationService, DateService, $ionicPopup, $state) {

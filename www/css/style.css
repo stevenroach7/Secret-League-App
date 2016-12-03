@@ -1,4 +1,4 @@
-/* Empty. Add your own CSS if you like */
+
 
 /* General CSS */
 
@@ -20,6 +20,20 @@
 .required-label:after {
   content: "*";
   color: #ff0000;
+}
+
+/* Modal styling */
+.close-footer {
+  background-color: #886aea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 8.5%;
+}
+
+.close-icon {
+  padding-top: 3%;
+  color: #ffffff;
 }
 
 
@@ -243,6 +257,12 @@
 .time-container, .sport-container, .location-display, .skill-display, .creator-display {
   overflow: hidden;
   white-space: nowrap;
+}
+
+.creator-name {
+  color: #424242;
+  text-decoration: underline;
+  font-size: 14px;
 }
 
 .sport-icon {

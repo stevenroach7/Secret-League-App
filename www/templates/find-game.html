@@ -36,19 +36,22 @@
       </div>
 
       <div class="game-content">
-        <ion-list>
-          <ion-item class="item item-unselectable location-display">
+        <list>
+          <item class="item item-unselectable location-display">
             <label class="location-title"><b>Place: </b>{{game.place}}</label>
-          </ion-item>
-          <ion-item class="item item-unselectable skill-display">
+          </item>
+          <item class="item item-unselectable skill-display">
             <label class="skill-title"><b>Skill Level: </b>{{game.skillLevel}}</label>
-          </ion-item>
-          <ion-item class="item item-unselectable creator-display">
-            <label class="skill-title"><b>Creator: </b>{{game.creatorName}}</label>
-          </ion-item>
+          </item>
+          <item class="item item-unselectable creator-display">
+            <label class="skill-title">
+              <b>Creator: </b>
+            </label>
+              <a class="creator-name" ng-click="showProfileModal(game.creatorID)">{{game.creatorName}}</a>
+          </item>
           <ion-item class="game-lower">
           </ion-item>
-        </ion-list>
+        </list>
       </div>
 
     </div>
