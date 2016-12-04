@@ -9,9 +9,10 @@
     <div class="button-bar date-nav-find-game">
       <button class="button button-royal button-block icon ion-android-arrow-back" ng-show="showDateArrow(getLastDateString())" ng-click="moveToLastDate(dateString)"></button>
       <a class="date-display button button-block item-unselectable">
-        <label class="date-title">
+        <p class="date-title">
+          {{date | date:'EEEE'}} <br />
           {{date | date:'MMMM dd'}}
-        </label>
+        </p>
       </a>
       <button class="button button-royal button-block icon ion-android-arrow-forward" ng-show="showDateArrow(getNextDateString())" ng-click="moveToNextDate(dateString)"></button>
     </div>
