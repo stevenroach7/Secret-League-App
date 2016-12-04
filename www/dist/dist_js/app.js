@@ -134,7 +134,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       $scope.registrationModal = registrationModal;
     });
 
-    var initializeRegistrationData = function() {
+    function initializeRegistrationData() {
       /* Initializes an object of registration data called regData with empty strings as the values for all attributes.. */
       var regData = {
         email: "",
@@ -147,7 +147,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         favAthlete: ""
       };
       return regData;
-    };
+    }
 
     $scope.showRegistrationModal = function() {
       /* Opens the modal to register a user. */
@@ -160,7 +160,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       $scope.registrationModal.hide(); // Close modal
     };
 
-    var showErrorAlert = function(message) {
+    function showErrorAlert(message) {
       /* Takes a message and shows the message in an error alert popup. */
       var alertPopup = $ionicPopup.alert({
         title: "Error",
@@ -168,9 +168,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         okType: 'button-royal'
       });
        // Popup goes away automatically when OK button is clicked.
-    };
+    }
 
-    var validateUserInfo = function(regData) {
+    function validateUserInfo(regData) {
       /* Takes user inputted data and performs client side validation to determine if it is valid.
       Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
       var currentYear = new Date().getFullYear();
@@ -186,9 +186,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         return false;
       }
       return true;
-    };
+    }
 
-    var validateLoginInfo = function(loginData) {
+    function validateLoginInfo(loginData) {
       /* Takes user inputted login data and performs client side validation to determine if it is valid.
       Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
 
@@ -197,7 +197,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         return false;
       }
       return true;
-    };
+    }
 
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
@@ -256,7 +256,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    var changeDate = function(date) {
+    function changeDate(date) {
       /* Takes a date and if valid, updates date and dateString variables with the new date
       and updates the events variable to reflect this date change. */
       if (DateService.isDateValid(date)) {
@@ -264,7 +264,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         $scope.dateString = DateService.dateToDateString(date);
         $scope.events = ScheduleService.getEventsByDateAndPlace($scope.dateString, $scope.currentPlaceString); // Update events to reflect date change.
       }
-    };
+    }
 
     $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
@@ -367,7 +367,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    var changeDate = function(date) {
+    function changeDate(date) {
       /* Takes a date and if valid, updates date and dateString variables with the new date
       and updates the events variable to reflect this date change. */
       if (DateService.isDateValid(date)) {
@@ -375,7 +375,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         $scope.dateString = DateService.dateToDateString(date);
         $scope.games = GamesService.getGamesByDate($scope.dateString); // Update games to reflect date change.
       }
-    };
+    }
 
     $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
@@ -450,13 +450,13 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
   .controller('CreateGameCtrl', ['$scope', 'userResolve', 'GamesService', 'AuthenticationService', 'DateService', '$ionicPopup', '$state', function($scope, userResolve, GamesService, AuthenticationService, DateService, $ionicPopup, $state) {
 
-    var roundToNextHour = function(seconds) {
+    function roundToNextHour(seconds) {
       /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
       var hours = Math.floor(seconds / 3600);
       return (hours + 1) * 3600;
-    };
+    }
 
-    var resetGameOptions = function() {
+    function resetGameOptions() {
       /* Resets create game options to defaults. */
       var currentDate = new Date();
       $scope.gameOptions = {
@@ -467,9 +467,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         skillLevel: null,
         creatorID: null
       };
-    };
+    }
 
-    var autoSetSkillLevel = function() {
+    function autoSetSkillLevel() {
       /* Sets the skill level option to automatically be the skill level in the user's profile.
        Getting this data is asynchronous so this will not be updated in the view immediately. */
 
@@ -480,22 +480,22 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
        }).catch(function() {
          $scope.gameOptions.skillLevel = null;
        });
-    };
+    }
 
     resetGameOptions();
     autoSetSkillLevel(); // Set the skill level to the user's skill level asynchronously.
 
-    var showAlert = function(titleMessage, templateMessage) {
+    function showAlert(titleMessage, templateMessage) {
       /* Takes a title message and a template message and displays an error alert with the inputted messages. */
       var alertPopup = $ionicPopup.alert({
         title: titleMessage,
         template: templateMessage,
         okType: 'button-royal'
       });
-    };
+    }
 
 
-    var validateGameCreated = function(gameOptions, userID) {
+    function validateGameCreated(gameOptions, userID) {
       /* Takes a gameOptions object and returns a boolean for if the game is valid. Displays the necessary alert messages if invalid. */
       if (!$scope.gameOptions.date || !$scope.gameOptions.time || !$scope.gameOptions.sport || !$scope.gameOptions.place || !$scope.gameOptions.skillLevel) {
         showAlert("Invalid Input", "Please fill out all fields.");
@@ -505,7 +505,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         return false;
       }
       return true;
-    };
+    }
 
     $scope.createGame = function() {
       /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page. */
@@ -533,23 +533,23 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     $scope.user = userResolve; // Get user object created in app.js resolve
     var userID = userIDResolve;
 
-    var showAlert = function(titleMessage, templateMessage) {
+    function showAlert(titleMessage, templateMessage) {
       /* Takes a title message and a template message and displays an error alert with the inputted messages. */
       var alertPopup = $ionicPopup.alert({
         title: titleMessage,
         template: templateMessage,
         okType: 'button-royal'
       });
-    };
+    }
 
-    validateProfileEdit = function(name) {
+    function validateProfileEdit(name) {
       /* Takes name and sends an alert if invalid. Returns a boolean for if valid. */
       if (name.length > 0) {
         return true;
       } else {
         return showAlert("Invalid Input", "You must enter a value for name.");
       }
-    };
+    }
 
     $scope.showProfilePopup = function(user) {
       /* Takes a user and displays the edit profile popup for that user. */
@@ -744,7 +744,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     /* Contains methods relating to date and time. */
 
     // Declare functions here so they can be accessed in the service methods. These functions are where most work is being done.
-    var convertDateToDateString = function(date) {
+    function convertDateToDateString(date) {
       /* Takes a Date and returns a dateString in the format MMDDYYYY */
       var month = String(date.getMonth() + 1); // Month is from 0 - 11 so we add one so it is from 1 - 12
       var day = String(date.getDate());
@@ -760,40 +760,39 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       day = leftPad(day);
       var dateString = month + day + year;
       return dateString;
-    };
+    }
 
-    var calcNextDate = function(date) {
+    function calcNextDate(date) {
       /* Takes a Date and returns a dateString for the next day in the format MMDDYYYY */
       var nextDate = new Date(date);
       nextDate.setDate(nextDate.getDate() + 1);
       return nextDate;
-    };
+    }
 
-    var calcLastDate = function(date) {
+    function calcLastDate(date) {
       /* Takes a Date and returns a dateString for the day before in the format MMDDYYYY */
       var lastDate = new Date(date);
       lastDate.setDate(lastDate.getDate() - 1);
       return lastDate;
-    };
+    }
 
-    var calcFutureDate = function(date, numDays) {
+    function calcFutureDate(date, numDays) {
       /* Returns the date as a Date Object numDays after the date inputted. */
       var nextDate = date;
       for (i = 0; i < numDays; i++) {
         nextDate = calcNextDate(nextDate);
       }
       return nextDate;
-    };
+    }
 
-    var calcPastDate = function(date, numDays) {
+    function calcPastDate(date, numDays) {
       /* Returns the date as a Date Object numDays before the date inputted. */
       var lastDate = date;
       for (i = 0; i < numDays; i++) {
         lastDate = calcLastDate(lastDate);
       }
       return lastDate;
-    };
-
+    }
 
     return {
 
@@ -947,7 +946,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   servMod.factory('GamesService', ['$firebaseArray', '$firebaseObject', 'DateService', 'ProfileService', '$q', function($firebaseArray, $firebaseObject, DateService, ProfileService, $q) {
     /* Contains methods used to access and modify games data. */
 
-    var formatGame = function(gameOptions, userID) {
+    function formatGame(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
       Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
 
@@ -973,9 +972,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         deferred.resolve(game);
       });
       return deferred.promise;
-    };
+    }
 
-    var getNumGamesCreated = function(games, userID) {
+    function getNumGamesCreated(games, userID) {
       /* Takes an array of games and a userID and returns an int for the number of games with the creatorID being the input userID */
       numGames = 0;
       for (i = 0; i < games.length; i++) {
@@ -984,8 +983,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
           }
       }
       return numGames;
-    };
-
+    }
 
     return {
 
@@ -1077,7 +1075,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
       getUser: function(userID) {
         /* Takes a userID and returns the user object in the firebase DB for that id.
-        This could be modified to return a promise if this function is used in complex ways. */ 
+        This could be modified to return a promise if this function is used in complex ways. */
 
         // Get user object as specified by userID.
         var userRef = firebase.database().ref().child("users").child(userID);

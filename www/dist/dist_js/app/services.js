@@ -133,7 +133,7 @@
     /* Contains methods relating to date and time. */
 
     // Declare functions here so they can be accessed in the service methods. These functions are where most work is being done.
-    var convertDateToDateString = function(date) {
+    function convertDateToDateString(date) {
       /* Takes a Date and returns a dateString in the format MMDDYYYY */
       var month = String(date.getMonth() + 1); // Month is from 0 - 11 so we add one so it is from 1 - 12
       var day = String(date.getDate());
@@ -149,40 +149,39 @@
       day = leftPad(day);
       var dateString = month + day + year;
       return dateString;
-    };
+    }
 
-    var calcNextDate = function(date) {
+    function calcNextDate(date) {
       /* Takes a Date and returns a dateString for the next day in the format MMDDYYYY */
       var nextDate = new Date(date);
       nextDate.setDate(nextDate.getDate() + 1);
       return nextDate;
-    };
+    }
 
-    var calcLastDate = function(date) {
+    function calcLastDate(date) {
       /* Takes a Date and returns a dateString for the day before in the format MMDDYYYY */
       var lastDate = new Date(date);
       lastDate.setDate(lastDate.getDate() - 1);
       return lastDate;
-    };
+    }
 
-    var calcFutureDate = function(date, numDays) {
+    function calcFutureDate(date, numDays) {
       /* Returns the date as a Date Object numDays after the date inputted. */
       var nextDate = date;
       for (i = 0; i < numDays; i++) {
         nextDate = calcNextDate(nextDate);
       }
       return nextDate;
-    };
+    }
 
-    var calcPastDate = function(date, numDays) {
+    function calcPastDate(date, numDays) {
       /* Returns the date as a Date Object numDays before the date inputted. */
       var lastDate = date;
       for (i = 0; i < numDays; i++) {
         lastDate = calcLastDate(lastDate);
       }
       return lastDate;
-    };
-
+    }
 
     return {
 
@@ -336,7 +335,7 @@
   servMod.factory('GamesService', ['$firebaseArray', '$firebaseObject', 'DateService', 'ProfileService', '$q', function($firebaseArray, $firebaseObject, DateService, ProfileService, $q) {
     /* Contains methods used to access and modify games data. */
 
-    var formatGame = function(gameOptions, userID) {
+    function formatGame(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
       Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
 
@@ -362,9 +361,9 @@
         deferred.resolve(game);
       });
       return deferred.promise;
-    };
+    }
 
-    var getNumGamesCreated = function(games, userID) {
+    function getNumGamesCreated(games, userID) {
       /* Takes an array of games and a userID and returns an int for the number of games with the creatorID being the input userID */
       numGames = 0;
       for (i = 0; i < games.length; i++) {
@@ -373,8 +372,7 @@
           }
       }
       return numGames;
-    };
-
+    }
 
     return {
 
@@ -466,7 +464,7 @@
 
       getUser: function(userID) {
         /* Takes a userID and returns the user object in the firebase DB for that id.
-        This could be modified to return a promise if this function is used in complex ways. */ 
+        This could be modified to return a promise if this function is used in complex ways. */
 
         // Get user object as specified by userID.
         var userRef = firebase.database().ref().child("users").child(userID);

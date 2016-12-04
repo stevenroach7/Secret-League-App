@@ -13,7 +13,7 @@
       $scope.registrationModal = registrationModal;
     });
 
-    var initializeRegistrationData = function() {
+    function initializeRegistrationData() {
       /* Initializes an object of registration data called regData with empty strings as the values for all attributes.. */
       var regData = {
         email: "",
@@ -26,7 +26,7 @@
         favAthlete: ""
       };
       return regData;
-    };
+    }
 
     $scope.showRegistrationModal = function() {
       /* Opens the modal to register a user. */
@@ -39,7 +39,7 @@
       $scope.registrationModal.hide(); // Close modal
     };
 
-    var showErrorAlert = function(message) {
+    function showErrorAlert(message) {
       /* Takes a message and shows the message in an error alert popup. */
       var alertPopup = $ionicPopup.alert({
         title: "Error",
@@ -47,9 +47,9 @@
         okType: 'button-royal'
       });
        // Popup goes away automatically when OK button is clicked.
-    };
+    }
 
-    var validateUserInfo = function(regData) {
+    function validateUserInfo(regData) {
       /* Takes user inputted data and performs client side validation to determine if it is valid.
       Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
       var currentYear = new Date().getFullYear();
@@ -65,9 +65,9 @@
         return false;
       }
       return true;
-    };
+    }
 
-    var validateLoginInfo = function(loginData) {
+    function validateLoginInfo(loginData) {
       /* Takes user inputted login data and performs client side validation to determine if it is valid.
       Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
 
@@ -76,7 +76,7 @@
         return false;
       }
       return true;
-    };
+    }
 
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
@@ -135,7 +135,7 @@
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    var changeDate = function(date) {
+    function changeDate(date) {
       /* Takes a date and if valid, updates date and dateString variables with the new date
       and updates the events variable to reflect this date change. */
       if (DateService.isDateValid(date)) {
@@ -143,7 +143,7 @@
         $scope.dateString = DateService.dateToDateString(date);
         $scope.events = ScheduleService.getEventsByDateAndPlace($scope.dateString, $scope.currentPlaceString); // Update events to reflect date change.
       }
-    };
+    }
 
     $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
@@ -246,7 +246,7 @@
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    var changeDate = function(date) {
+    function changeDate(date) {
       /* Takes a date and if valid, updates date and dateString variables with the new date
       and updates the events variable to reflect this date change. */
       if (DateService.isDateValid(date)) {
@@ -254,7 +254,7 @@
         $scope.dateString = DateService.dateToDateString(date);
         $scope.games = GamesService.getGamesByDate($scope.dateString); // Update games to reflect date change.
       }
-    };
+    }
 
     $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
@@ -329,13 +329,13 @@
 
   .controller('CreateGameCtrl', ['$scope', 'userResolve', 'GamesService', 'AuthenticationService', 'DateService', '$ionicPopup', '$state', function($scope, userResolve, GamesService, AuthenticationService, DateService, $ionicPopup, $state) {
 
-    var roundToNextHour = function(seconds) {
+    function roundToNextHour(seconds) {
       /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
       var hours = Math.floor(seconds / 3600);
       return (hours + 1) * 3600;
-    };
+    }
 
-    var resetGameOptions = function() {
+    function resetGameOptions() {
       /* Resets create game options to defaults. */
       var currentDate = new Date();
       $scope.gameOptions = {
@@ -346,9 +346,9 @@
         skillLevel: null,
         creatorID: null
       };
-    };
+    }
 
-    var autoSetSkillLevel = function() {
+    function autoSetSkillLevel() {
       /* Sets the skill level option to automatically be the skill level in the user's profile.
        Getting this data is asynchronous so this will not be updated in the view immediately. */
 
@@ -359,22 +359,22 @@
        }).catch(function() {
          $scope.gameOptions.skillLevel = null;
        });
-    };
+    }
 
     resetGameOptions();
     autoSetSkillLevel(); // Set the skill level to the user's skill level asynchronously.
 
-    var showAlert = function(titleMessage, templateMessage) {
+    function showAlert(titleMessage, templateMessage) {
       /* Takes a title message and a template message and displays an error alert with the inputted messages. */
       var alertPopup = $ionicPopup.alert({
         title: titleMessage,
         template: templateMessage,
         okType: 'button-royal'
       });
-    };
+    }
 
 
-    var validateGameCreated = function(gameOptions, userID) {
+    function validateGameCreated(gameOptions, userID) {
       /* Takes a gameOptions object and returns a boolean for if the game is valid. Displays the necessary alert messages if invalid. */
       if (!$scope.gameOptions.date || !$scope.gameOptions.time || !$scope.gameOptions.sport || !$scope.gameOptions.place || !$scope.gameOptions.skillLevel) {
         showAlert("Invalid Input", "Please fill out all fields.");
@@ -384,7 +384,7 @@
         return false;
       }
       return true;
-    };
+    }
 
     $scope.createGame = function() {
       /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page. */
@@ -412,23 +412,23 @@
     $scope.user = userResolve; // Get user object created in app.js resolve
     var userID = userIDResolve;
 
-    var showAlert = function(titleMessage, templateMessage) {
+    function showAlert(titleMessage, templateMessage) {
       /* Takes a title message and a template message and displays an error alert with the inputted messages. */
       var alertPopup = $ionicPopup.alert({
         title: titleMessage,
         template: templateMessage,
         okType: 'button-royal'
       });
-    };
+    }
 
-    validateProfileEdit = function(name) {
+    function validateProfileEdit(name) {
       /* Takes name and sends an alert if invalid. Returns a boolean for if valid. */
       if (name.length > 0) {
         return true;
       } else {
         return showAlert("Invalid Input", "You must enter a value for name.");
       }
-    };
+    }
 
     $scope.showProfilePopup = function(user) {
       /* Takes a user and displays the edit profile popup for that user. */
