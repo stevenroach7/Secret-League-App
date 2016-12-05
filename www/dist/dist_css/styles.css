@@ -10046,7 +10046,7 @@ a.button {
 
 .date-nav-find-game {
   margin-top: -0.8%;
-  margin-bottom: -2.8%;
+  margin-bottom: -0.8%;
 }
 
 .no-games {
@@ -10054,7 +10054,7 @@ a.button {
 }
 
 .game-display {
-  padding-top: 2%;
+  padding-bottom: 2%;
 }
 
 .game-banner {
