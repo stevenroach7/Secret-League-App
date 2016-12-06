@@ -13,27 +13,27 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label required-label">Email:</span>
-          <input type="text" ng-model="regData.email">
+          <input type="text" ng-model="regData.email" maxlength="40">
         </label>
         <label class="item item-input">
           <span class="input-label required-label">Password: </span>
-          <input type="password" ng-model="regData.password1">
+          <input type="password" ng-model="regData.password1" maxlength="40">
         </label>
         <label class="item item-input">
           <span class="input-label required-label">Retype Password: </span>
-          <input type="password" ng-model="regData.password2">
+          <input type="password" ng-model="regData.password2" maxlength="40">
         </label>
         <label class="item item-input">
           <span class="input-label required-label">Name: </span>
-          <input type="text" ng-model="regData.name">
+          <input type="text" ng-model="regData.name" maxlength="40">
         </label>
         <label class="item item-input">
           <span class="input-label required-label">Graduation Year: </span>
-          <input type="tel" ng-model="regData.gradYear">
+          <input type="tel" ng-model="regData.gradYear" maxlength="4">
         </label>
         <label class="item item-input">
-          <span class="input-label">Bio (140 characters or less): </span>
-          <input type="text" ng-model="regData.bio">
+          <span class="input-label">Bio: </span>
+          <input type="text" ng-model="regData.bio" maxlength="40">
         </label>
         <label class="item item-select">
           <span class="input-label">Skill Level: </span>
@@ -41,7 +41,7 @@
         </label>
         <label class="item item-input">
           <span class="input-label">Favorite Athlete: </span>
-          <input type="text" ng-model="regData.favAthlete">
+          <input type="text" ng-model="regData.favAthlete" maxlength="40">
         </label>
         <label class="item">
           <button class="button button-block button-royal" type="submit">Register</button>
