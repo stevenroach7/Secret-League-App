@@ -4,7 +4,7 @@
   angular.module('slApp.controllers', ['firebase'])
 
 
-  .controller('TabsCtrl', ['$scope', 'AuthenticationService', 'firebase', '$state', '$ionicModal', '$ionicPopup', function($scope, AuthenticationService, firebase, $state, $ionicModal, $ionicPopup) {
+  .controller('TabsCtrl', ['$scope', 'AuthenticationService', 'firebase', '$state', '$ionicModal', '$ionicPopup', '$ionicHistory', function($scope, AuthenticationService, firebase, $state, $ionicModal, $ionicPopup, $ionicHistory) {
 
     // Create registration modal.
     $ionicModal.fromTemplateUrl('registration-modal.html', {
@@ -78,9 +78,17 @@
       return true;
     }
 
+    function clearHistoryAndCache() {
+      /* Clears the view cache and history.
+      Called when user logs in and logs out so data from a past user is never shown to new users. */
+      $ionicHistory.clearCache();
+      $ionicHistory.clearHistory();
+    }
+
     $scope.register = function() {
       /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
       if (validateUserInfo($scope.regData)) {
+        clearHistoryAndCache();
         AuthenticationService.registerNewUser($scope.regData)
         .then(function() {
            $scope.closeRegistrationModal();
@@ -95,6 +103,7 @@
     $scope.login = function() {
       /* Calls AuthenticationService method to sign user in. Sends error alert if neccessary. */
       if (validateLoginInfo($scope.loginData)) {
+        clearHistoryAndCache();
         AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword)
         .catch(function(errorMessage) {
           showErrorAlert(errorMessage);
@@ -104,6 +113,7 @@
 
     $scope.logout = function() {
       /* Calls AuthenticationService method to sign user out. Sends error alert if neccessary. */
+      clearHistoryAndCache();
       AuthenticationService.signOut()
       .catch(function(errorMessage) {
         showErrorAlert(errorMessage);
