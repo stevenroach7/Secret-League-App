@@ -10125,7 +10125,6 @@ a.button {
 .profile-top {
   background: #424242;
   padding: 5%;
-  /*height: 15%;*/
 }
 
 .profile-name {
@@ -10133,4 +10132,10 @@ a.button {
   justify-content: center;
   align-items: center;
   color: #FFF;
+}
+
+.edit-profile-btn {
+  float: right;
+  color: #886aea;
+  font-size: 11px;
 }
