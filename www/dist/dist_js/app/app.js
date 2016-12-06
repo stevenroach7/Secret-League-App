@@ -82,7 +82,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     url: '/create-game',
     views: {
       'create-game': {
-        templateUrl: 'templates/create-game.html',
+        templateUrl: 'create-game.html',
         controller: 'CreateGameCtrl'
       }
     },
@@ -98,7 +98,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     url: '/profile',
     views: {
       'profile': {
-        templateUrl: 'templates/profile.html',
+        templateUrl: 'profile.html',
         controller: 'ProfileCtrl'
       }
     },

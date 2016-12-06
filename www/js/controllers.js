@@ -7,7 +7,7 @@
   .controller('TabsCtrl', function($scope, AuthenticationService, firebase, $state, $ionicModal, $ionicPopup) {
 
     // Create registration modal.
-    $ionicModal.fromTemplateUrl('templates/registration-modal.html', {
+    $ionicModal.fromTemplateUrl('registration-modal.html', {
       scope: $scope
     }).then(function(registrationModal) {
       $scope.registrationModal = registrationModal;
@@ -306,7 +306,7 @@
     };
 
     // Create the viewProfile modal
-    $ionicModal.fromTemplateUrl('templates/profile-modal.html', {
+    $ionicModal.fromTemplateUrl('profile-modal.html', {
       scope: $scope
     }).then(function(profileModal) {
       $scope.profileModal = profileModal;

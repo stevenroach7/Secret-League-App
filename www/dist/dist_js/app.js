@@ -82,7 +82,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     url: '/create-game',
     views: {
       'create-game': {
-        templateUrl: 'templates/create-game.html',
+        templateUrl: 'create-game.html',
         controller: 'CreateGameCtrl'
       }
     },
@@ -98,7 +98,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     url: '/profile',
     views: {
       'profile': {
-        templateUrl: 'templates/profile.html',
+        templateUrl: 'profile.html',
         controller: 'ProfileCtrl'
       }
     },
@@ -128,7 +128,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   .controller('TabsCtrl', ['$scope', 'AuthenticationService', 'firebase', '$state', '$ionicModal', '$ionicPopup', function($scope, AuthenticationService, firebase, $state, $ionicModal, $ionicPopup) {
 
     // Create registration modal.
-    $ionicModal.fromTemplateUrl('templates/registration-modal.html', {
+    $ionicModal.fromTemplateUrl('registration-modal.html', {
       scope: $scope
     }).then(function(registrationModal) {
       $scope.registrationModal = registrationModal;
@@ -427,7 +427,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     };
 
     // Create the viewProfile modal
-    $ionicModal.fromTemplateUrl('templates/profile-modal.html', {
+    $ionicModal.fromTemplateUrl('profile-modal.html', {
       scope: $scope
     }).then(function(profileModal) {
       $scope.profileModal = profileModal;
