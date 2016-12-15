@@ -46,6 +46,7 @@
               <b>Creator: </b>
             </label>
               <a class="creator-name" ng-click="showProfileModal(game.creatorID)">{{game.creatorName}}</a>
+              <span class="remove-game-btn" ng-show="isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Remove Game</span>
           </item>
           <ion-item class="game-lower">
           </ion-item>

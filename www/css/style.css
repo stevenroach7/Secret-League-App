@@ -277,10 +277,15 @@
   border-color: #886aea;
 }
 
-
 .game-lower {
   background-color: #424242;
   border-color: #424242;
+}
+
+.remove-game-btn {
+  float: right;
+  color: #886aea;
+  font-size: 11px;
 }
 
 

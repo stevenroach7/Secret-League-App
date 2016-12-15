@@ -364,7 +364,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   }])
 
 
-  .controller('FindGameCtrl', ['$scope', 'gamesResolve', 'GamesService', 'DateService', 'ProfileService', '$ionicModal', '$state', function($scope, gamesResolve, GamesService, DateService, ProfileService, $ionicModal, $state) {
+  .controller('FindGameCtrl', ['$scope', 'gamesResolve', 'GamesService', 'DateService', 'ProfileService', 'AuthenticationService', '$ionicModal', '$ionicPopup', '$state', function($scope, gamesResolve, GamesService, DateService, ProfileService, AuthenticationService, $ionicModal, $ionicPopup, $state) {
 
     $scope.date = new Date(); // initialize date variable based on date in this moment.
     $scope.dateString = DateService.dateToDateString($scope.date);
@@ -453,6 +453,48 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     $scope.closeProfile = function() {
       /* Closes the profile modal. */
       $scope.profileModal.hide(); // Close modal
+    };
+
+    function showAlert(titleMessage, templateMessage) {
+      /* Takes a title message and a template message and displays an error alert with the inputted messages. */
+      var alertPopup = $ionicPopup.alert({
+        title: titleMessage,
+        template: templateMessage,
+        okType: 'button-royal'
+      });
+    }
+
+    $scope.isUserGameCreator = function(creatorID) {
+      /* Takes the userID of a game creator and returns a boolean for if that user is the current user. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      return (currentUserID === creatorID);
+    };
+
+    $scope.showConfirmRemoveGame = function(game) {
+      /* Shows a confirm popup for the user to remove a game and removes the game if the user confirms. */
+      var confirmRemoveGame = $ionicPopup.confirm({
+        title: 'Remove Game',
+        template: 'Are you sure you want to remove this game?',
+        buttons: [
+          {text: 'Cancel'},
+          {text: 'Yes',
+            type: 'button-royal',
+            onTap: function(e) {
+              return true;
+            }
+          }
+        ]
+      });
+
+      confirmRemoveGame.then(function(res) {
+        if(res) { // If user presses yes
+          GamesService.removeGame(game)
+          .catch(function(errorMessage) {
+            showAlert("Error", errorMessage);
+          });
+        }
+      });
+
     };
 
   }])
@@ -1069,6 +1111,28 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
             deferred.reject("Please try again");
           });
 
+        });
+        return deferred.promise;
+      },
+
+      removeGame: function(gameToRemove) {
+        /* Takes a game object and removes it from the firebase DB. */
+
+        var deferred = $q.defer(); // deferred promise.
+
+        var dateString = gameToRemove.dateString;
+        var gamesRef = firebase.database().ref().child("games").child(dateString);
+        var games = $firebaseArray(gamesRef);
+
+        games.$loaded().then(function(gamesArray) { // Make sure games array is loaded before we remove the game from it.
+          gameToRemoveIndex = gamesArray.$indexFor(gameToRemove.$id); // Get index of game to remove.
+          gamesArray.$remove(gameToRemoveIndex)
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject("Please try again");
+          });
         });
         return deferred.promise;
       }

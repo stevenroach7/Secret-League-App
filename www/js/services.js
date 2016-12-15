@@ -450,6 +450,28 @@
 
         });
         return deferred.promise;
+      },
+
+      removeGame: function(gameToRemove) {
+        /* Takes a game object and removes it from the firebase DB. */
+
+        var deferred = $q.defer(); // deferred promise.
+
+        var dateString = gameToRemove.dateString;
+        var gamesRef = firebase.database().ref().child("games").child(dateString);
+        var games = $firebaseArray(gamesRef);
+
+        games.$loaded().then(function(gamesArray) { // Make sure games array is loaded before we remove the game from it.
+          gameToRemoveIndex = gamesArray.$indexFor(gameToRemove.$id); // Get index of game to remove.
+          gamesArray.$remove(gameToRemoveIndex)
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject("Please try again");
+          });
+        });
+        return deferred.promise;
       }
 
     };
