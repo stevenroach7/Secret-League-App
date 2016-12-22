@@ -3,29 +3,36 @@
   <ion-content class="login-view" overflow-scroll="true" scrollbar-y="false">
     <div class="login-container">
 
-      <div><img class="homescreen-logo"ng-src="img/homescreen.png" alt="Secret League"></div>
+      <div class="logo">
+        <div class="ball-background">
+          <img class="homescreen-logo"ng-src="img/icon.png" alt="Secret League">
+        </div>
+        <h3 class="logo-subtitle">Find your game.</h3>
+      </div>
 
       <form ng-submit="login()">
         <div class="list">
-          <label class="item item-input">
+          <label class="item item-input item-login">
             <span class="input-label">Email:</span>
             <input type="text" ng-model="loginData.loginEmail">
           </label>
-          <label class="item item-input">
+          <label class="item item-input item-login">
             <span class="input-label">Password:</span>
             <input type="password" ng-model="loginData.loginPassword">
           </label>
-          <label class="item">
+          <label class="item item-login">
             <button class="button button-block button-royal" type="submit">Log in</button>
           </label>
         </div>
       </form>
 
-      <a class="button button-royal button-block start-button" ng-click="showRegistrationModal()">
-        <i class="ion-ios-basketball ball"></i>
-      </a>
-      <label class="start-label">Click the ball to Register!</label>
+      <br />
+      <label class="start-label">OR</label>
+      <br />
 
+      <label class="item register-item">
+        <button class="button button-block button-royal" ng-click="showRegistrationModal()">Register</button>
+      </label>
 
     </div>
   </ion-content>
