@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'slApp.services' is found in services.js
 // 'slApp.controllers' is found in controllers.js
-angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templates', 'firebase'])
+angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templates', 'firebase', 'ngCordova'])
 
 
 .run(['$ionicPlatform', function($ionicPlatform) {
@@ -125,7 +125,34 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   angular.module('slApp.controllers', ['firebase'])
 
 
-  .controller('TabsCtrl', ['$scope', 'AuthenticationService', 'firebase', '$state', '$ionicModal', '$ionicPopup', '$ionicHistory', function($scope, AuthenticationService, firebase, $state, $ionicModal, $ionicPopup, $ionicHistory) {
+  .controller('TabsCtrl', ['$scope', '$rootScope', '$cordovaNetwork', 'AuthenticationService', 'firebase', '$state', '$ionicModal', '$ionicPopup', '$ionicHistory', function($scope, $rootScope, $cordovaNetwork, AuthenticationService, firebase, $state, $ionicModal, $ionicPopup, $ionicHistory) {
+
+
+    document.addEventListener("deviceready", function () {
+      $scope.network = $cordovaNetwork.getNetwork();
+      $scope.isOnline = $cordovaNetwork.isOnline();
+      $scope.$apply();
+
+      // listen for Online event
+      $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+        $scope.isOnline = true;
+        $scope.network = $cordovaNetwork.getNetwork();
+        $scope.$apply();
+      });
+
+      // listen for Offline event
+      $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+        console.log("got offline");
+        $scope.isOnline = false;
+        $scope.network = $cordovaNetwork.getNetwork();
+        $scope.$apply();
+      });
+
+    }, false);
+
+
+
+
 
     // Create registration modal.
     $ionicModal.fromTemplateUrl('registration-modal.html', {

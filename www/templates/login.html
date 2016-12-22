@@ -3,6 +3,26 @@
   <ion-content class="login-view" overflow-scroll="true" scrollbar-y="false">
     <div class="login-container">
 
+
+
+      <div class="card">
+        <div class="item item-text-wrap">
+          <h1>Network: {{network}}</h1>
+        </div>
+      </div>
+
+
+      <div class="card">
+        <div class="item item-text-wrap">
+          <ion-toggle ng-model="isOnline" ng-checked="item.checked">
+            <h1 ng-show="isOnline">I'm online</h1>
+            <h1 ng-show="! isOnline">I'm offline</h1>
+          </ion-toggle>
+        </div>
+      </div>
+
+
+
       <div class="logo">
         <div class="ball-background">
           <img class="homescreen-logo"ng-src="img/icon.png" alt="Secret League">
