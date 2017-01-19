@@ -9930,6 +9930,10 @@ a.button {
   border-color: #424242;
 }
 
+.register-label {
+  text-align: left;
+}
+
 /* Schedule Styling */
 .schedule-view {
   background-color: #D3D3D3;
