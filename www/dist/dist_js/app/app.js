@@ -7,12 +7,13 @@
 // 'slApp.controllers' is found in controllers.js
 angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templates', 'firebase'])
 
+
 .run(['$ionicPlatform', function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
       cordova.plugins.Keyboard.disableScroll(true);
 
     }
@@ -49,8 +50,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
   })
 
   // Each tab has its own nav history stack:
-
-
   .state('tab.schedule', {
     url: '/schedule',
     views: {
@@ -69,6 +68,48 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         templateUrl: 'find-game.html',
         controller: 'FindGameCtrl'
       }
+    },
+    resolve: {
+      gamesResolve: ['DateService', 'GamesService', function(DateService, GamesService) {
+        var date = new Date(); // initialize date variable based on date in this moment.
+        var dateString = DateService.dateToDateString(date);
+        return GamesService.getGamesByDate(dateString); // Get games on the date specfied by the dateString.
+      }]
+    }
+  })
+
+  .state('tab.create-game', {
+    url: '/create-game',
+    views: {
+      'create-game': {
+        templateUrl: 'create-game.html',
+        controller: 'CreateGameCtrl'
+      }
+    },
+    resolve: {
+      userResolve: ['AuthenticationService', 'ProfileService', function(AuthenticationService, ProfileService) {
+        var userID = AuthenticationService.getCurrentUserID();
+        return ProfileService.getUser(userID);
+      }]
+    }
+  })
+
+  .state('tab.profile', {
+    url: '/profile',
+    views: {
+      'profile': {
+        templateUrl: 'profile.html',
+        controller: 'ProfileCtrl'
+      }
+    },
+    resolve: { // Don't show page until user data has loaded.
+      userResolve: ['AuthenticationService', 'ProfileService', function(AuthenticationService, ProfileService) {
+        var userID = AuthenticationService.getCurrentUserID();
+        return ProfileService.getUser(userID);
+      }],
+      userIDResolve: ['AuthenticationService', function(AuthenticationService) {
+        return AuthenticationService.getCurrentUserID();
+      }]
     }
   });
 

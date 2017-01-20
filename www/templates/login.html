@@ -1,15 +1,40 @@
 <ion-view view-title="Secret League">
 
-  <ion-content class="login-view" overflow-scroll="true">
+  <!-- <ion-content class="login-view" overflow-scroll="true" scrollbar-y="false"> -->
+  <ion-content class="login-view" has-bouncing="false" scroll="true">
     <div class="login-container">
 
-      <div><img class="homescreen-logo"ng-src="img/homescreen.png" alt="Secret League"></div>
-      <a ng-href="#/tab/schedule" class="button button-royal button-block start-button" nav-transition="none">
-        <i class="ion-ios-basketball ball"></i>
-      </a>
-      <label class="start-label">Click the ball to get started!</label>
+      <div class="logo">
+        <div class="ball-background">
+          <img class="homescreen-logo"ng-src="img/icon.png" alt="Secret League">
+        </div>
+        <h3 class="logo-subtitle">Find your game.</h3>
+      </div>
+
+      <form ng-submit="login()">
+        <div class="list">
+          <label class="item item-input item-login">
+            <span class="input-label">Email:</span>
+            <input type="text" ng-model="loginData.loginEmail">
+          </label>
+          <label class="item item-input item-login">
+            <span class="input-label">Password:</span>
+            <input type="password" ng-model="loginData.loginPassword">
+          </label>
+          <label class="item item-login">
+            <button class="button button-block button-royal" type="submit">Log in</button>
+          </label>
+        </div>
+      </form>
+
+      <br />
+      <label class="start-label">OR</label>
+      <br />
+
+      <label class="item register-item">
+        <button class="button button-block button-royal" ng-click="showRegistrationModal()">Register</button>
+      </label>
 
     </div>
-
   </ion-content>
 </ion-view>

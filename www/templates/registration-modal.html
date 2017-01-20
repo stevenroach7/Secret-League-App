@@ -1,0 +1,54 @@
+<ion-modal-view>
+
+  <ion-header-bar class="bar-stable">
+    <h1 class="title">Register</h1>
+    <div class="buttons">
+      <button class="button button-clear button-royal" ng-click="closeRegistrationModal()">Close</button>
+    </div>
+  </ion-header-bar>
+
+  <ion-content class="login-view" has-bouncing="false" scroll="true">
+
+    <form ng-submit="register()">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label register-label required-label">Email:</span>
+          <input type="text" ng-model="regData.email" maxlength="40">
+        </label>
+        <label class="item item-input">
+          <span class="input-label register-label required-label">Password: </span>
+          <input type="password" ng-model="regData.password1" maxlength="40">
+        </label>
+        <label class="item item-input">
+          <span class="input-label register-label required-label">Retype Password: </span>
+          <input type="password" ng-model="regData.password2" maxlength="40">
+        </label>
+        <label class="item item-input">
+          <span class="input-label register-label required-label">Name: </span>
+          <input type="text" ng-model="regData.name" maxlength="40">
+        </label>
+        <label class="item item-input">
+          <span class="input-label register-label required-label">Graduation Year: </span>
+          <input type="tel" ng-model="regData.gradYear" maxlength="4">
+        </label>
+        <label class="item item-input">
+          <span class="input-label register-label">Bio: </span>
+          <input type="text" ng-model="regData.bio" maxlength="40">
+        </label>
+        <label class="item item-select">
+          <span class="input-label register-label">Skill Level: </span>
+          <select ng-model="regData.skillLevel"><option>Casual</option><option>Competitive</option></select>
+        </label>
+        <label class="item item-input">
+          <span class="input-label register-label">Favorite Athlete: </span>
+          <input type="text" ng-model="regData.favAthlete" maxlength="40">
+        </label>
+        <label class="item">
+          <button class="button button-block button-royal" type="submit">Register</button>
+        </label>
+      </div>
+    </form>
+
+  </ion-content>
+
+</ion-modal-view>

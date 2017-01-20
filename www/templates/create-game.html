@@ -1,0 +1,46 @@
+<ion-view view-title="Create Game">
+
+  <ion-content has-bouncing="false" scroll="false">
+
+    <form class="create-game-form" class="list">
+
+      <label class="item item-select item-input date-item">
+        <span class="input-label">Date</span>
+        <input type="date" class="date-input" ng-model="gameOptions.date">
+      </label>
+
+      <label class="item item-select item-input time-item">
+        <span class="input-label">Time</span>
+        <input type="time" class="time-input" ng-model="gameOptions.time">
+      </label>
+
+      <label class="item item-select sport-item">
+          <span class="input-label">Sport</span>
+          <select ng-model="gameOptions.sport">
+              <option>Basketball</option>
+          </select>
+      </label>
+
+      <label class="item item-select place-item">
+          <span class="input-label">Place</span>
+          <select ng-model="gameOptions.place">
+              <option>Leonard Center Field House</option>
+              <option>Leonard Center Alumni Gym</option>
+          </select>
+      </label>
+      <label class="item item-select skill-item">
+          <span class="input-label">Skill Level</span>
+          <select ng-model="gameOptions.skillLevel">
+              <option>Casual</option>
+              <option>Competitive</option>
+          </select>
+      </label>
+
+      <label class="item create-game-item">
+        <button id="create-game-button" class="button button-royal button-block" ng-click="createGame()">Create Game</button>
+      </label>
+
+    </form>
+
+  </ion-content>
+</ion-view>

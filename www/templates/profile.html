@@ -1,0 +1,35 @@
+<ion-view view-title="Profile">
+
+  <ion-nav-buttons side="right">
+    <button class="button button-royal button-clear" ng-click="logout()">Logout</button>
+  </ion-nav-buttons>
+
+  <ion-content class="profile-view" overflow-scroll="true" scrollbar-y="false">
+
+    <div class="profile-top"> <!-- Top half of page -->
+      <h2 class="profile-name">{{user.name}}</h2>
+    </div>
+
+    <!-- Bottom half of page -->
+    <div class="item item-divider profile-divider">
+      <span class="info-label">Info</span>
+      <span class="edit-profile-btn" ng-click="showProfilePopup(athlete)">Edit</span>
+    </div>
+    <a class="item item-unselectable">
+      <h2><b>Email: </b>{{user.email}}</h2>
+    </a>
+    <a class="item item-unselectable">
+      <h2><b>Year: </b>{{user.gradYear}}</h2>
+    </a>
+    <a class="item item-unselectable">
+      <h2><b>Bio:</b> {{user.bio}}</h2>
+    </a>
+    <a class="item item-unselectable">
+      <h2><b>Skill Level:</b> {{user.skillLevel}}</h2>
+    </a>
+    <a class="item item-unselectable">
+      <h2><b>Favorite Athlete:</b> {{user.favAthlete}}</h2>
+    </a>
+
+  </ion-content>
+</ion-view>

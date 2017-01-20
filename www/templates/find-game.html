@@ -9,12 +9,15 @@
     <div class="button-bar date-nav-find-game">
       <button class="button button-royal button-block icon ion-android-arrow-back" ng-show="showDateArrow(getLastDateString())" ng-click="moveToLastDate(dateString)"></button>
       <a class="date-display button button-block item-unselectable">
-        <label class="date-title">
+        <p class="date-title">
+          {{date | date:'EEEE'}} <br />
           {{date | date:'MMMM dd'}}
-        </label>
+        </p>
       </a>
       <button class="button button-royal button-block icon ion-android-arrow-forward" ng-show="showDateArrow(getNextDateString())" ng-click="moveToNextDate(dateString)"></button>
     </div>
+
+    <hr class="horiz-line">
 
     <div class="game-display" ng-repeat="game in games">
 
@@ -31,16 +34,23 @@
       </div>
 
       <div class="game-content">
-        <ion-list>
-          <ion-item class="item item-unselectable location-display">
+        <list>
+          <item class="item item-unselectable location-display">
             <label class="location-title"><b>Place: </b>{{game.place}}</label>
-          </ion-item>
-          <ion-item class="item item-unselectable skill-display">
+          </item>
+          <item class="item item-unselectable skill-display">
             <label class="skill-title"><b>Skill Level: </b>{{game.skillLevel}}</label>
-          </ion-item>
+          </item>
+          <item class="item item-unselectable creator-display">
+            <label class="skill-title">
+              <b>Creator: </b>
+            </label>
+              <a class="creator-name" ng-click="showProfileModal(game.creatorID)">{{game.creatorName}}</a>
+              <span class="remove-game-btn" ng-show="isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Remove Game</span>
+          </item>
           <ion-item class="game-lower">
           </ion-item>
-        </ion-list>
+        </list>
       </div>
 
     </div>

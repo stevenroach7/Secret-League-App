@@ -4,7 +4,132 @@
   angular.module('slApp.controllers', ['firebase'])
 
 
-  .controller('TabsCtrl', function($scope, DateService, ScheduleService) {
+  .controller('TabsCtrl', function($scope, AuthenticationService, firebase, $state, $ionicModal, $ionicPopup, $ionicHistory) {
+
+    // Create registration modal.
+    $ionicModal.fromTemplateUrl('registration-modal.html', {
+      scope: $scope
+    }).then(function(registrationModal) {
+      $scope.registrationModal = registrationModal;
+    });
+
+    function initializeRegistrationData() {
+      /* Initializes an object of registration data called regData with empty strings as the values for all attributes.. */
+      var regData = {
+        email: "",
+        password1: "",
+        password2: "",
+        name: "",
+        gradYear: "",
+        bio: "",
+        skillLevel: "",
+        favAthlete: ""
+      };
+      return regData;
+    }
+
+    $scope.showRegistrationModal = function() {
+      /* Opens the modal to register a user. */
+      $scope.regData = initializeRegistrationData();
+      $scope.registrationModal.show(); // Open modal
+    };
+
+    $scope.closeRegistrationModal = function() {
+      /* Closes the modal to register a user. */
+      $scope.registrationModal.hide(); // Close modal
+    };
+
+    function showErrorAlert(message) {
+      /* Takes a message and shows the message in an error alert popup. */
+      var alertPopup = $ionicPopup.alert({
+        title: "Error",
+        template: message,
+        okType: 'button-royal'
+      });
+       // Popup goes away automatically when OK button is clicked.
+    }
+
+    function validateUserInfo(regData) {
+      /* Takes user inputted data and performs client side validation to determine if it is valid.
+      Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
+      var currentYear = new Date().getFullYear();
+
+      if (regData.password1 !== regData.password2) {
+        showErrorAlert("Please make sure passwords match.");
+        return false;
+      } else if (regData.email.length <= 0 || regData.password1.length <= 0 || regData.name.length <= 0 || regData.gradYear.length <= 0) {
+        showErrorAlert("Please fill out all required fields.");
+        return false;
+      } else if (!(regData.gradYear > currentYear - 4 && regData.gradYear < currentYear + 8)) { // Give 4 years of leeway on each side of gradYears of current students..
+        showErrorAlert("Please enter a valid graduation date.");
+        return false;
+      }
+      return true;
+    }
+
+    function validateLoginInfo(loginData) {
+      /* Takes user inputted login data and performs client side validation to determine if it is valid.
+      Displays an error alert if neccesary. Returns a boolean for if data inputted is valid. */
+
+      if (!(loginData.loginEmail && loginData.loginPassword)) { // If either are not defined.
+        showErrorAlert("Please Fill Out Required Fields.");
+        return false;
+      }
+      return true;
+    }
+
+    function clearHistoryAndCache() {
+      /* Clears the view cache and history.
+      Called when user logs in and logs out so data from a past user is never shown to new users. */
+      $ionicHistory.clearCache();
+      $ionicHistory.clearHistory();
+    }
+
+    $scope.register = function() {
+      /* Calls AuthenticationService method to register new user. Sends error alert if neccessary. */
+      if (validateUserInfo($scope.regData)) {
+        clearHistoryAndCache();
+        AuthenticationService.registerNewUser($scope.regData)
+        .then(function() {
+           $scope.closeRegistrationModal();
+         }).catch(function(errorMessage) {
+           showErrorAlert(errorMessage);
+         });
+      }
+    };
+
+    $scope.loginData = {}; // Initialize object for login data to be stored in.
+
+    $scope.login = function() {
+      /* Calls AuthenticationService method to sign user in. Sends error alert if neccessary. */
+      if (validateLoginInfo($scope.loginData)) {
+        clearHistoryAndCache();
+        AuthenticationService.signIn($scope.loginData.loginEmail, $scope.loginData.loginPassword)
+        .catch(function(errorMessage) {
+          showErrorAlert(errorMessage);
+        });
+      }
+    };
+
+    $scope.logout = function() {
+      /* Calls AuthenticationService method to sign user out. Sends error alert if neccessary. */
+      clearHistoryAndCache();
+      AuthenticationService.signOut()
+      .catch(function(errorMessage) {
+        showErrorAlert(errorMessage);
+      });
+    };
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      /*  Tracks user authentication status using observer and reroutes user if neccessary. */
+      if (user) {
+        // User is signed in.
+        $state.go('tab.schedule');
+      } else {
+        // No user is signed in.
+        $state.go('login');
+      }
+    });
 
   })
 
@@ -20,7 +145,7 @@
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    var changeDate = function(date) {
+    function changeDate(date) {
       /* Takes a date and if valid, updates date and dateString variables with the new date
       and updates the events variable to reflect this date change. */
       if (DateService.isDateValid(date)) {
@@ -28,7 +153,7 @@
         $scope.dateString = DateService.dateToDateString(date);
         $scope.events = ScheduleService.getEventsByDateAndPlace($scope.dateString, $scope.currentPlaceString); // Update events to reflect date change.
       }
-    };
+    }
 
     $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
@@ -118,11 +243,12 @@
   })
 
 
-  .controller('FindGameCtrl', function($scope, GamesService, DateService, $stateParams, $state) {
+  .controller('FindGameCtrl', function($scope, gamesResolve, GamesService, DateService, ProfileService, AuthenticationService, $ionicModal, $ionicPopup, $state) {
 
     $scope.date = new Date(); // initialize date variable based on date in this moment.
     $scope.dateString = DateService.dateToDateString($scope.date);
-    $scope.games = GamesService.getGamesByDate($scope.dateString); // Get games on the date specfied by the dateString.
+
+    $scope.games = gamesResolve; // Get games from resolve in router.
 
     $scope.showDateArrow = function(dateString) {
       /* Determines whether arrow for date navigation should be shown. */
@@ -130,7 +256,7 @@
       return (DateService.isDateValid(dateInQuestion)); // Compare based off of dateString because Date Object includes time.
     };
 
-    var changeDate = function(date) {
+    function changeDate(date) {
       /* Takes a date and if valid, updates date and dateString variables with the new date
       and updates the events variable to reflect this date change. */
       if (DateService.isDateValid(date)) {
@@ -138,7 +264,7 @@
         $scope.dateString = DateService.dateToDateString(date);
         $scope.games = GamesService.getGamesByDate($scope.dateString); // Update games to reflect date change.
       }
-    };
+    }
 
     $scope.moveToNextDate = function(dateString) {
       /* Takes a dateString and a placeString and if valid, navigates the user to the schedule page for the
@@ -189,7 +315,213 @@
       return games.length === 0;
     };
 
+    // Create the viewProfile modal
+    $ionicModal.fromTemplateUrl('profile-modal.html', {
+      scope: $scope
+    }).then(function(profileModal) {
+      $scope.profileModal = profileModal;
+    });
+
+    $scope.showProfileModal = function(athleteID) {
+      /* Takes a userID and opens the modal to view that user's profile. */
+      var athlete = ProfileService.getUser(athleteID);
+      $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
+      $scope.profileModal.show(); // Open modal
+    };
+
+    $scope.closeProfile = function() {
+      /* Closes the profile modal. */
+      $scope.profileModal.hide(); // Close modal
+    };
+
+    function showAlert(titleMessage, templateMessage) {
+      /* Takes a title message and a template message and displays an error alert with the inputted messages. */
+      var alertPopup = $ionicPopup.alert({
+        title: titleMessage,
+        template: templateMessage,
+        okType: 'button-royal'
+      });
+    }
+
+    $scope.isUserGameCreator = function(creatorID) {
+      /* Takes the userID of a game creator and returns a boolean for if that user is the current user. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      return (currentUserID === creatorID);
+    };
+
+    $scope.showConfirmRemoveGame = function(game) {
+      /* Shows a confirm popup for the user to remove a game and removes the game if the user confirms. */
+      var confirmRemoveGame = $ionicPopup.confirm({
+        title: 'Remove Game',
+        template: 'Are you sure you want to remove this game?',
+        buttons: [
+          {text: 'Cancel'},
+          {text: 'Yes',
+            type: 'button-royal',
+            onTap: function(e) {
+              return true;
+            }
+          }
+        ]
+      });
+
+      confirmRemoveGame.then(function(res) {
+        if(res) { // If user presses yes
+          GamesService.removeGame(game)
+          .catch(function(errorMessage) {
+            showAlert("Error", errorMessage);
+          });
+        }
+      });
+
+    };
+
   })
+
+
+  .controller('CreateGameCtrl', function($scope, userResolve, GamesService, AuthenticationService, DateService, $ionicPopup, $state) {
+
+    function roundToNextHour(seconds) {
+      /* Helper function that takes a time in seconds and returns the time of the upcoming whole hour in seconds. */
+      var hours = Math.floor(seconds / 3600);
+      return (hours + 1) * 3600;
+    }
+
+    function resetGameOptions() {
+      /* Resets create game options to defaults. */
+      var currentDate = new Date();
+      $scope.gameOptions = {
+        date: currentDate,
+        time: DateService.secondsToDate(roundToNextHour((currentDate.getHours() * 3600) + (currentDate.getMinutes() * 60) + currentDate.getSeconds())),
+        sport: "Basketball",
+        place: null,
+        skillLevel: null,
+        creatorID: null
+      };
+    }
+
+    function autoSetSkillLevel() {
+      /* Sets the skill level option to automatically be the skill level in the user's profile.
+       Getting this data is asynchronous so this will not be updated in the view immediately. */
+
+       userResolve.$loaded().then(function() { // User retrieved from resolve in router.
+         return userResolve.skillLevel;
+       }).then(function(skillLevel) {
+         $scope.gameOptions.skillLevel = skillLevel;
+       }).catch(function() {
+         $scope.gameOptions.skillLevel = null;
+       });
+    }
+
+    resetGameOptions();
+    autoSetSkillLevel(); // Set the skill level to the user's skill level asynchronously.
+
+    function showAlert(titleMessage, templateMessage) {
+      /* Takes a title message and a template message and displays an error alert with the inputted messages. */
+      var alertPopup = $ionicPopup.alert({
+        title: titleMessage,
+        template: templateMessage,
+        okType: 'button-royal'
+      });
+    }
+
+
+    function validateGameCreated(gameOptions, userID) {
+      /* Takes a gameOptions object and returns a boolean for if the game is valid. Displays the necessary alert messages if invalid. */
+      if (!$scope.gameOptions.date || !$scope.gameOptions.time || !$scope.gameOptions.sport || !$scope.gameOptions.place || !$scope.gameOptions.skillLevel) {
+        showAlert("Invalid Input", "Please fill out all fields.");
+        return false;
+      } else if (!GamesService.isDateValid($scope.gameOptions.date)) { // Check to make sure date entered is valid.
+        showAlert("Invalid Input", "Please choose a valid date.");
+        return false;
+      }
+      return true;
+    }
+
+    $scope.createGame = function() {
+      /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page. */
+
+      var userID = AuthenticationService.getCurrentUserID(); // Get userID so we can pass it to addGame and creator ID can be stored.
+      if (validateGameCreated($scope.gameOptions, userID)) {
+
+        // Check that user has not created too many games already on this date.
+        GamesService.isUserAllowedToCreateGame($scope.gameOptions.date, userID)
+        .then(function() {
+          return GamesService.addGame($scope.gameOptions, userID);
+        }).then(function() {
+          $state.go('tab.find-game');
+        })
+        .catch(function(errorMessage) {
+          showAlert("Error", errorMessage);
+        });
+      }
+    };
+
+  })
+
+  .controller('ProfileCtrl', function($scope, userResolve, userIDResolve, ProfileService, $ionicPopup) {
+
+    $scope.user = userResolve; // Get user object created in app.js resolve
+    var userID = userIDResolve;
+
+    function showAlert(titleMessage, templateMessage) {
+      /* Takes a title message and a template message and displays an error alert with the inputted messages. */
+      var alertPopup = $ionicPopup.alert({
+        title: titleMessage,
+        template: templateMessage,
+        okType: 'button-royal'
+      });
+    }
+
+    function validateProfileEdit(name) {
+      /* Takes name and sends an alert if invalid. Returns a boolean for if valid. */
+      if (name.length > 0) {
+        return true;
+      } else {
+        return showAlert("Invalid Input", "You must enter a value for name.");
+      }
+    }
+
+    $scope.showProfilePopup = function(user) {
+      /* Takes a user and displays the edit profile popup for that user. */
+
+      $scope.data = {}; // object to be used in popup.
+      $scope.data.name = $scope.user.name;
+      $scope.data.bio = $scope.user.bio;
+      $scope.data.skillLevel = $scope.user.skillLevel;
+      $scope.data.favAthlete = $scope.user.favAthlete;
+
+      // Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select></ion-item>
+
+      var editProfilePopup = $ionicPopup.show({
+        template: '<span class="required-label">Name:</span><input type="text" ng-model="data.name" maxlength="40"> Bio: <input type="text" ng-model="data.bio" maxlength="40"> Favorite Athlete: <input type="text" ng-model="data.favAthlete" maxlength="40"> <br />Skill Level: <select class="float-right" ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select>',
+        title: 'Edit Profile',
+        subTitle: '',
+        scope: $scope,
+        buttons: [{
+          text: 'Cancel'
+        }, {
+          text: 'Submit',
+          type: 'button-royal',
+          onTap: function(e) {
+            return $scope.data;
+          }
+        }]
+      });
+
+      editProfilePopup.then(function(res) {
+        if (res) {
+          if (validateProfileEdit(res.name)) {
+            ProfileService.updateProfile(userID, res.name, res.bio, res.skillLevel, res.favAthlete)
+            .catch(function() {
+              showAlert("Server Error", "Please Try Again");
+            });
+          }
+        }
+      });
+    };
+
+})
 
 
   .filter('secondsToTime', function($filter) {
