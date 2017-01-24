@@ -376,6 +376,28 @@
 
     };
 
+    // Create the viewPlayers modal
+    $ionicModal.fromTemplateUrl('players-modal.html', {
+      scope: $scope
+    }).then(function(playersModal) {
+      $scope.playersModal = playersModal;
+    });
+
+    $scope.showPlayersModal = function(playerIDs) {
+      /* Takes an array of player IDs and opens the modal to view the names of those players. */
+      // TODO: Manage scope.
+      // var athlete = ProfileService.getUser(athleteID);
+      // $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
+      $scope.playersModal.show(); // Open modal
+    };
+
+    // Create scope function to map userID's to names to be called inside of the players modal.
+
+    $scope.closePlayersModal = function() {
+      /* Closes the players modal. */
+      $scope.playersModal.hide(); // Close modal
+    };
+
   })
 
 
