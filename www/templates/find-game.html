@@ -42,11 +42,21 @@
             <label class="skill-title"><b>Skill Level: </b>{{game.skillLevel}}</label>
           </item>
           <item class="item item-unselectable creator-display">
-            <label class="skill-title">
+            <label>
               <b>Creator: </b>
             </label>
               <a class="creator-name" ng-click="showProfileModal(game.creatorID)">{{game.creatorName}}</a>
               <span class="remove-game-btn" ng-show="isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Remove Game</span>
+          </item>
+          <item class="item item-unselectable creator-display">
+            <label>
+              <b>Members: </b>
+            </label>
+              <a class="game-members" ng-click="showProfileModal(game.creatorID)">10</a> <!-- TODO: Change function to showGameMembersModal-->
+              <!-- TODO: Change ng-show to isUserInGame, TODO: Change ng-click to joinGame, # TODO: Add button for user not in game.-->
+              <span class="join-game-btn" ng-show="isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Join Game</span>
+              <span class="remove-game-btn" ng-show="!isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Leave Game</span>
+
           </item>
           <ion-item class="game-lower">
           </ion-item>

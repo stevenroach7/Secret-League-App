@@ -275,6 +275,12 @@
   font-size: 14px;
 }
 
+.game-members {
+  color: #424242;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
 .sport-icon {
   font-size: 38px;
 }
@@ -296,6 +302,17 @@
   font-size: 11px;
 }
 
+.join-game-btn {
+  float: right;
+  color: #886aea;
+  font-size: 11px;
+}
+
+.leave-game-btn {
+  float: right;
+  color: #886aea;
+  font-size: 11px;
+}
 
 /* Create Game Styling */
 .date-item, .time-item {
