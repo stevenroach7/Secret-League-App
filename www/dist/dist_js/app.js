@@ -497,6 +497,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
     };
 
+    // TODO: Add functions to join and leave game.
+    // TODO: Add funtion to tell if current user is in game.
+
     // Create the viewPlayers modal
     $ionicModal.fromTemplateUrl('players-modal.html', {
       scope: $scope
@@ -512,7 +515,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       $scope.playersModal.show(); // Open modal
     };
 
-    // Create scope function to map userID's to names to be called inside of the players modal.
+    // TODO: Create scope function to map userID's to names to be called inside of the players modal.
 
     $scope.closePlayersModal = function() {
       /* Closes the players modal. */
@@ -529,6 +532,9 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       var hours = Math.floor(seconds / 3600);
       return (hours + 1) * 3600;
     }
+
+    // TODO: Add empty array of gameMemberID's
+
 
     function resetGameOptions() {
       /* Resets create game options to defaults. */
@@ -580,6 +586,8 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       }
       return true;
     }
+
+    // TODO: Add creatorID to array of gameMemberIDs.
 
     $scope.createGame = function() {
       /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page. */
