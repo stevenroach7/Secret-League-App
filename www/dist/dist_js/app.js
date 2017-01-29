@@ -494,11 +494,32 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
           });
         }
       });
-
     };
 
-    // TODO: Add functions to join and leave game.
-    // TODO: Add funtion to tell if current user is in game.
+    $scope.isUserInGame = function(gameMemberIDs) {
+      /* Takes an object of gameMemberIDs and returns a boolean for if the current user is a member of the game
+      specified by the gameMemberIDs object. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      return gameMemberIDs[currentUserID] == 1; // If user is in game, the value when their id is the key is 1.
+    };
+
+    $scope.joinGame = function(game) {
+      /* Takes a game and adds the current user to the object of gameMemberIDs for that game. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      GamesService.addUserToGame(game, currentUserID)
+      .catch(function(errorMessage) {
+        showAlert("Error", errorMessage);
+      });
+    };
+
+    $scope.leaveGame = function(game) {
+      /* Takes a game and removes the current user from the object of gameMemberIDs for that game. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      GamesService.removeUserFromGame(game, currentUserID)
+      .catch(function(errorMessage) {
+        showAlert("Error", errorMessage);
+      });
+    };
 
     // Create the viewPlayers modal
     $ionicModal.fromTemplateUrl('players-modal.html', {
@@ -1026,7 +1047,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     function formatGame(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
       Converts Date variable to a string, time to seconds, adds a value for creatorID,
-      and adds the creatorID the dictionary game members. */
+      and adds the creatorID to the gameMemberIDs object. */
 
       var game = {}; // Create new game object so data is no longer not binded to html elements.
       var deferred = $q.defer();
@@ -1159,11 +1180,54 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
             deferred.resolve();
           })
           .catch(function(error) {
-            deferred.reject("Please try again");
+            deferred.reject("Please try again.");
+          });
+        });
+        return deferred.promise;
+      },
+
+      addUserToGame: function(gameObject, userID) {
+        /* Takes a game object and a userID and updates the gameMemberIDs object for that game in the Firebase DB
+        to include the inputted userID. */
+        var deferred = $q.defer();
+
+        var gameRef = firebase.database().ref().child("games").child(gameObject.dateString).child(gameObject.$id);
+        var game = $firebaseObject(gameRef);
+        game.$loaded()
+        .then(function(){
+          game.gameMemberIDs[userID] = 1;
+          game.$save()
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject("Please try again.");
+          });
+        });
+        return deferred.promise;
+      },
+
+      removeUserFromGame: function(gameObject, userID) {
+        /* Takes a game object and a userID and updates the gameMemberIDs object for that game in the Firebase DB
+        to not include the inputted userID. */
+        var deferred = $q.defer();
+
+        var gameRef = firebase.database().ref().child("games").child(gameObject.dateString).child(gameObject.$id);
+        var game = $firebaseObject(gameRef);
+        game.$loaded()
+        .then(function(){
+          game.gameMemberIDs[userID] = 0;
+          game.$save()
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject("Please try again.");
           });
         });
         return deferred.promise;
       }
+
 
     };
   }]);

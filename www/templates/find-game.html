@@ -55,8 +55,8 @@
               <a class="game-members" ng-click="showPlayersModal(game.creatorID)">10</a> <!-- TODO: Change input to game.members array -->
               <!-- TODO: Change ng-show to isUserInGame, TODO: Change ng-click to joinGame, and leave game.-->
               <!-- TODO: Edit styling to reflect user as in game.-->
-              <span class="join-game-btn" ng-show="isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Join Game</span>
-              <span class="remove-game-btn" ng-show="!isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Leave Game</span>
+              <span class="join-game-btn" ng-show="!isUserInGame(game.gameMemberIDs)" ng-click="joinGame(game)">Join Game</span>
+              <span class="remove-game-btn" ng-show="isUserInGame(game.gameMemberIDs)" ng-click="leaveGame(game)">Leave Game</span>
 
           </item>
           <ion-item class="game-lower">

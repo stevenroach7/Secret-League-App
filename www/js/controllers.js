@@ -373,11 +373,32 @@
           });
         }
       });
-
     };
 
-    // TODO: Add functions to join and leave game.
-    // TODO: Add funtion to tell if current user is in game.
+    $scope.isUserInGame = function(gameMemberIDs) {
+      /* Takes an object of gameMemberIDs and returns a boolean for if the current user is a member of the game
+      specified by the gameMemberIDs object. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      return gameMemberIDs[currentUserID] == 1; // If user is in game, the value when their id is the key is 1.
+    };
+
+    $scope.joinGame = function(game) {
+      /* Takes a game and adds the current user to the object of gameMemberIDs for that game. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      GamesService.addUserToGame(game, currentUserID)
+      .catch(function(errorMessage) {
+        showAlert("Error", errorMessage);
+      });
+    };
+
+    $scope.leaveGame = function(game) {
+      /* Takes a game and removes the current user from the object of gameMemberIDs for that game. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      GamesService.removeUserFromGame(game, currentUserID)
+      .catch(function(errorMessage) {
+        showAlert("Error", errorMessage);
+      });
+    };
 
     // Create the viewPlayers modal
     $ionicModal.fromTemplateUrl('players-modal.html', {
