@@ -496,6 +496,19 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       });
     };
 
+    $scope.getNumPlayersInGame = function(gameMemberIDs) {
+      /* Takes a gameMemberIDs object and returns the number of players in the game. */
+      var numPlayersInGame = 0;
+      for (var gameMemberID in gameMemberIDs) {
+        if (gameMemberIDs.hasOwnProperty(gameMemberID)) {
+          if (gameMemberIDs[gameMemberID] == 1) { // Check that value is 1 as users who leave game have their value changed to 0.
+            numPlayersInGame++;
+          }
+        }
+      }
+      return numPlayersInGame;
+    };
+
     $scope.isUserInGame = function(gameMemberIDs) {
       /* Takes an object of gameMemberIDs and returns a boolean for if the current user is a member of the game
       specified by the gameMemberIDs object. */

@@ -52,7 +52,9 @@
             <label>
               <b>Members: </b>
             </label>
-              <a class="game-members" ng-click="showPlayersModal(game.creatorID)">10</a> <!-- TODO: Change input to game.members array -->
+              <a class="game-members" ng-click="showPlayersModal(game.gameMemberIDs)">
+                {{getNumPlayersInGame(game.gameMemberIDs)}}
+              </a>
               <!-- TODO: Edit styling to reflect user as in game.-->
               <span ng-show="!isUserGameCreator(game.creatorID)"> <!--Only give option to join and leave game if user is not the game creator. -->
                 <span class="join-game-btn" ng-show="!isUserInGame(game.gameMemberIDs)" ng-click="joinGame(game)">Join Game</span>
