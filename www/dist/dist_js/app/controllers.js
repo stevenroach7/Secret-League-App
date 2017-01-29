@@ -324,14 +324,18 @@
 
     $scope.showProfileModal = function(athleteID) {
       /* Takes a userID and opens the modal to view that user's profile. */
-      var athlete = ProfileService.getUser(athleteID);
-      $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
-      $scope.profileModal.show(); // Open modal
+      ProfileService.getUser(athleteID)
+      .then(function(user) {
+        var athlete = user;
+        $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
+        $scope.profileModal.show(); // Open modal
+      });
     };
 
     $scope.closeProfile = function() {
       /* Closes the profile modal. */
       $scope.profileModal.hide(); // Close modal
+
     };
 
     function showAlert(titleMessage, templateMessage) {
@@ -420,15 +424,12 @@
       $scope.playersModal = playersModal;
     });
 
-    $scope.showPlayersModal = function(playerIDs) {
-      /* Takes an array of player IDs and opens the modal to view the names of those players. */
-      // TODO: Manage scope.
-      // var athlete = ProfileService.getUser(athleteID);
-      // $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
+    $scope.showPlayersModal = function(gameMemberIDs) {
+      /* Takes a gameMemberIDs object and opens the modal to view the names of those players. */
+      var gameMembers = gameMemberIDs;
+      $scope.playerIDs = gameMembers;
       $scope.playersModal.show(); // Open modal
     };
-
-    // TODO: Create scope function to map userID's to names to be called inside of the players modal.
 
     $scope.closePlayersModal = function() {
       /* Closes the players modal. */
@@ -548,8 +549,6 @@
       $scope.data.skillLevel = $scope.user.skillLevel;
       $scope.data.favAthlete = $scope.user.favAthlete;
 
-      // Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select></ion-item>
-
       var editProfilePopup = $ionicPopup.show({
         template: '<span class="required-label">Name:</span><input type="text" ng-model="data.name" maxlength="40"> Bio: <input type="text" ng-model="data.bio" maxlength="40"> Favorite Athlete: <input type="text" ng-model="data.favAthlete" maxlength="40"> <br />Skill Level: <select class="float-right" ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select>',
         title: 'Edit Profile',
@@ -578,8 +577,7 @@
       });
     };
 
-}])
-
+  }])
 
   .filter('secondsToTime', ['$filter', function($filter) {
     /* Takes a time in seconds and converts it to a string represetation of the time. */
@@ -595,6 +593,28 @@
       var strTime = hours + ':' + minutes + ' ' + ampm;
       return strTime;
     };
+  }])
+
+  .filter('userIDToName', ['$filter', 'ProfileService', function($filter, ProfileService) {
+    /* Takes a userID and returns the name of the user with that userID.
+    Adapted from https://glebbahmutov.com/blog/async-angular-filter/ */
+    // We need to cache results to ensure that we don't get a digest cycle error as the call to get a user's name is asynchronous.
+    var cached = {};
+    function userIdToNameFilter(userID) {
+      if (userID) {
+        if (userID in cached) {
+          // avoid returning a promise!
+          return typeof cached[userID] === 'string' ? cached[userID] : undefined;
+        } else {
+        ProfileService.getUser(userID)
+        .then(function(user) {
+          cached[userID] = user.name;
+        });
+        }
+      }
+    }
+    userIdToNameFilter.$stateful = true;
+    return userIdToNameFilter;
   }]);
 
 }());

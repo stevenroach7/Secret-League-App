@@ -445,14 +445,18 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
     $scope.showProfileModal = function(athleteID) {
       /* Takes a userID and opens the modal to view that user's profile. */
-      var athlete = ProfileService.getUser(athleteID);
-      $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
-      $scope.profileModal.show(); // Open modal
+      ProfileService.getUser(athleteID)
+      .then(function(user) {
+        var athlete = user;
+        $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
+        $scope.profileModal.show(); // Open modal
+      });
     };
 
     $scope.closeProfile = function() {
       /* Closes the profile modal. */
       $scope.profileModal.hide(); // Close modal
+
     };
 
     function showAlert(titleMessage, templateMessage) {
@@ -541,15 +545,12 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       $scope.playersModal = playersModal;
     });
 
-    $scope.showPlayersModal = function(playerIDs) {
-      /* Takes an array of player IDs and opens the modal to view the names of those players. */
-      // TODO: Manage scope.
-      // var athlete = ProfileService.getUser(athleteID);
-      // $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
+    $scope.showPlayersModal = function(gameMemberIDs) {
+      /* Takes a gameMemberIDs object and opens the modal to view the names of those players. */
+      var gameMembers = gameMemberIDs;
+      $scope.playerIDs = gameMembers;
       $scope.playersModal.show(); // Open modal
     };
-
-    // TODO: Create scope function to map userID's to names to be called inside of the players modal.
 
     $scope.closePlayersModal = function() {
       /* Closes the players modal. */
@@ -669,8 +670,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       $scope.data.skillLevel = $scope.user.skillLevel;
       $scope.data.favAthlete = $scope.user.favAthlete;
 
-      // Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select></ion-item>
-
       var editProfilePopup = $ionicPopup.show({
         template: '<span class="required-label">Name:</span><input type="text" ng-model="data.name" maxlength="40"> Bio: <input type="text" ng-model="data.bio" maxlength="40"> Favorite Athlete: <input type="text" ng-model="data.favAthlete" maxlength="40"> <br />Skill Level: <select class="float-right" ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select>',
         title: 'Edit Profile',
@@ -699,8 +698,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       });
     };
 
-}])
-
+  }])
 
   .filter('secondsToTime', ['$filter', function($filter) {
     /* Takes a time in seconds and converts it to a string represetation of the time. */
@@ -716,6 +714,28 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       var strTime = hours + ':' + minutes + ' ' + ampm;
       return strTime;
     };
+  }])
+
+  .filter('userIDToName', ['$filter', 'ProfileService', function($filter, ProfileService) {
+    /* Takes a userID and returns the name of the user with that userID.
+    Adapted from https://glebbahmutov.com/blog/async-angular-filter/ */
+    // We need to cache results to ensure that we don't get a digest cycle error as the call to get a user's name is asynchronous.
+    var cached = {};
+    function userIdToNameFilter(userID) {
+      if (userID) {
+        if (userID in cached) {
+          // avoid returning a promise!
+          return typeof cached[userID] === 'string' ? cached[userID] : undefined;
+        } else {
+        ProfileService.getUser(userID)
+        .then(function(user) {
+          cached[userID] = user.name;
+        });
+        }
+      }
+    }
+    userIdToNameFilter.$stateful = true;
+    return userIdToNameFilter;
   }]);
 
 }());
@@ -1065,10 +1085,8 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       var game = {}; // Create new game object so data is no longer not binded to html elements.
       var deferred = $q.defer();
 
-      // First get name of user so we can add that to the new game object.
-      var user = ProfileService.getUser(userID);
-      user.$loaded()
-      .then(function() {
+      ProfileService.getUser(userID)
+      .then(function(user) {
         return user.name;
       }).then(function(userName) { // Success, add name to game object.
         game.creatorName = userName;
@@ -1170,7 +1188,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
             deferred.resolve();
           })
           .catch(function(error) {
-            deferred.reject("Please try again");
+            deferred.reject("Please try again.");
           });
 
         });
@@ -1241,7 +1259,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         return deferred.promise;
       }
 
-
     };
   }]);
 
@@ -1253,14 +1270,19 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     return {
 
       getUser: function(userID) {
-        /* Takes a userID and returns the user object in the firebase DB for that id.
-        This could be modified to return a promise if this function is used in complex ways. */
+        /* Takes a userID and returns the user object in the firebase DB for that id. */
+        var deferred = $q.defer();
 
-        // Get user object as specified by userID.
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
-
-        return user;
+        user.$loaded()
+        .then(function() {
+          deferred.resolve(user);
+        })
+        .catch(function(error) {
+          deferred.reject();
+        });
+      return deferred.promise;
       },
 
       updateProfile: function(userID, name, bio, skillLevel, favAthlete) {
@@ -1270,7 +1292,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
         user.$loaded()
-        .then(function(){
+        .then(function() {
           user.name = name;
           user.bio = bio;
           user.skillLevel = skillLevel;
