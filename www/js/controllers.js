@@ -412,9 +412,6 @@
       return (hours + 1) * 3600;
     }
 
-    // TODO: Add empty array of gameMemberID's
-
-
     function resetGameOptions() {
       /* Resets create game options to defaults. */
       var currentDate = new Date();
@@ -423,8 +420,7 @@
         time: DateService.secondsToDate(roundToNextHour((currentDate.getHours() * 3600) + (currentDate.getMinutes() * 60) + currentDate.getSeconds())),
         sport: "Basketball",
         place: null,
-        skillLevel: null,
-        creatorID: null
+        skillLevel: null
       };
     }
 
@@ -453,7 +449,6 @@
       });
     }
 
-
     function validateGameCreated(gameOptions, userID) {
       /* Takes a gameOptions object and returns a boolean for if the game is valid. Displays the necessary alert messages if invalid. */
       if (!$scope.gameOptions.date || !$scope.gameOptions.time || !$scope.gameOptions.sport || !$scope.gameOptions.place || !$scope.gameOptions.skillLevel) {
@@ -465,8 +460,6 @@
       }
       return true;
     }
-
-    // TODO: Add creatorID to array of gameMemberIDs.
 
     $scope.createGame = function() {
       /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page. */

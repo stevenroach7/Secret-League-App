@@ -533,9 +533,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       return (hours + 1) * 3600;
     }
 
-    // TODO: Add empty array of gameMemberID's
-
-
     function resetGameOptions() {
       /* Resets create game options to defaults. */
       var currentDate = new Date();
@@ -544,8 +541,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         time: DateService.secondsToDate(roundToNextHour((currentDate.getHours() * 3600) + (currentDate.getMinutes() * 60) + currentDate.getSeconds())),
         sport: "Basketball",
         place: null,
-        skillLevel: null,
-        creatorID: null
+        skillLevel: null
       };
     }
 
@@ -574,7 +570,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       });
     }
 
-
     function validateGameCreated(gameOptions, userID) {
       /* Takes a gameOptions object and returns a boolean for if the game is valid. Displays the necessary alert messages if invalid. */
       if (!$scope.gameOptions.date || !$scope.gameOptions.time || !$scope.gameOptions.sport || !$scope.gameOptions.place || !$scope.gameOptions.skillLevel) {
@@ -586,8 +581,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       }
       return true;
     }
-
-    // TODO: Add creatorID to array of gameMemberIDs.
 
     $scope.createGame = function() {
       /* Checks to make sure the game created is valid, adds to the database, and redirects the user to the find-game page. */
@@ -1032,7 +1025,8 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
     function formatGame(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
-      Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
+      Converts Date variable to a string, time to seconds, adds a value for creatorID,
+      and adds the creatorID the dictionary game members. */
 
       var game = {}; // Create new game object so data is no longer not binded to html elements.
       var deferred = $q.defer();
@@ -1053,6 +1047,8 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         game.skillLevel = gameOptions.skillLevel;
         game.sport = gameOptions.sport;
         game.place = gameOptions.place;
+        game.gameMemberIDs = {}; // Dictionary with key being userID and value being 1 if in game and 0 if not.
+        game.gameMemberIDs[userID] = 1; // Add game creator to gameMemberIDs dictionary.
         deferred.resolve(game);
       });
       return deferred.promise;

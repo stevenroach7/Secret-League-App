@@ -337,7 +337,8 @@
 
     function formatGame(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
-      Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
+      Converts Date variable to a string, time to seconds, adds a value for creatorID,
+      and adds the creatorID the dictionary game members. */
 
       var game = {}; // Create new game object so data is no longer not binded to html elements.
       var deferred = $q.defer();
@@ -358,6 +359,8 @@
         game.skillLevel = gameOptions.skillLevel;
         game.sport = gameOptions.sport;
         game.place = gameOptions.place;
+        game.gameMemberIDs = {}; // Dictionary with key being userID and value being 1 if in game and 0 if not.
+        game.gameMemberIDs[userID] = 1; // Add game creator to gameMemberIDs dictionary.
         deferred.resolve(game);
       });
       return deferred.promise;
