@@ -264,6 +264,10 @@
   color: #fff;
 }
 
+.orange-icon {
+  color: #ffa500;
+}
+
 .time-container, .sport-container, .location-display, .skill-display, .creator-display {
   overflow: hidden;
   white-space: nowrap;
@@ -302,7 +306,7 @@
   font-size: 11px;
 }
 
-.join-game-btn {
+/*.join-game-btn {
   float: right;
   color: #886aea;
   font-size: 11px;
@@ -312,14 +316,7 @@
   float: right;
   color: #886aea;
   font-size: 11px;
-}
-
-
-/* Players Modal Styling */
-/* TODO: Add styling.*/ 
-
-
-
+}*/
 
 
 /* Create Game Styling */

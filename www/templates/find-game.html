@@ -26,7 +26,7 @@
           <h3 class="time-title">{{game.time | secondsToTime}}</h3>
         </div>
         <div class="col col-10 sport-label">
-            <i class="ion-ios-basketball sport-icon"></i>
+            <i class="ion-ios-basketball sport-icon" ng-class="{true: 'orange-icon'}[isUserInGame(game.gameMemberIDs)]"></i>
         </div>
         <div class="col col-30 sport-container">
           <h4 class="sport-title">{{game.sport}}</h4>
@@ -49,17 +49,17 @@
               <span class="remove-game-btn" ng-show="isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Remove Game</span>
           </item>
           <item class="item item-unselectable creator-display">
-            <label>
-              <b>Members: </b>
-            </label>
-              <a class="game-members" ng-click="showPlayersModal(game.gameMemberIDs)">
-                {{getNumPlayersInGame(game.gameMemberIDs)}}
-              </a>
-              <!-- TODO: Edit styling to reflect user as in game.-->
+
+            <div class="button-bar">
+              <button class="button button-royal button-small" ng-click="showPlayersModal(game.gameMemberIDs)">
+                {{getNumPlayersInGame(game.gameMemberIDs)}} Current Players
+              </button>
               <span ng-show="!isUserGameCreator(game.creatorID)"> <!--Only give option to join and leave game if user is not the game creator. -->
-                <span class="join-game-btn" ng-show="!isUserInGame(game.gameMemberIDs)" ng-click="joinGame(game)">Join Game</span>
-                <span class="remove-game-btn" ng-show="isUserInGame(game.gameMemberIDs)" ng-click="leaveGame(game)">Leave Game</span>
+                <button class="join-game-btn button" ng-show="!isUserInGame(game.gameMemberIDs)" ng-click="joinGame(game)">Join Game</button>
+                <button class="leave-game-btn button" ng-show="isUserInGame(game.gameMemberIDs)" ng-click="leaveGame(game)">Leave Game</button>
               </span>
+            </div>
+
           </item>
           <ion-item class="game-lower">
           </ion-item>
