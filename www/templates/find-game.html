@@ -42,11 +42,24 @@
             <label class="skill-title"><b>Skill Level: </b>{{game.skillLevel}}</label>
           </item>
           <item class="item item-unselectable creator-display">
-            <label class="skill-title">
+            <label>
               <b>Creator: </b>
             </label>
               <a class="creator-name" ng-click="showProfileModal(game.creatorID)">{{game.creatorName}}</a>
               <span class="remove-game-btn" ng-show="isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Remove Game</span>
+          </item>
+          <item class="item item-unselectable creator-display">
+            <label>
+              <b>Members: </b>
+            </label>
+              <a class="game-members" ng-click="showPlayersModal(game.gameMemberIDs)">
+                {{getNumPlayersInGame(game.gameMemberIDs)}}
+              </a>
+              <!-- TODO: Edit styling to reflect user as in game.-->
+              <span ng-show="!isUserGameCreator(game.creatorID)"> <!--Only give option to join and leave game if user is not the game creator. -->
+                <span class="join-game-btn" ng-show="!isUserInGame(game.gameMemberIDs)" ng-click="joinGame(game)">Join Game</span>
+                <span class="remove-game-btn" ng-show="isUserInGame(game.gameMemberIDs)" ng-click="leaveGame(game)">Leave Game</span>
+              </span>
           </item>
           <ion-item class="game-lower">
           </ion-item>
