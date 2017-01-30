@@ -4,7 +4,7 @@
   </ion-header-bar>
 
 
-  <ion-content class="players-view" overflow-scroll="true" scrollbar-y="false"on-swipe-down="closePlayersModal()">
+  <ion-content class="players-view" overflow-scroll="true" scrollbar-y="true"on-swipe-down="closePlayersModal()">
 
     <ion-list>
       <ion-item ng-repeat="(gameMemberID, status) in playerIDs" ng-show="status==1" ng-click="showProfileModal(gameMemberID)">
