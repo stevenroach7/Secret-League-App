@@ -49,19 +49,17 @@
               <span class="remove-game-btn" ng-show="isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Remove Game</span>
           </item>
           <item class="item item-unselectable creator-display">
-
-            <div class="button-bar">
-              <button class="button button-royal button-small" ng-click="showPlayersModal(game.gameMemberIDs)">
-                {{getNumPlayersInGame(game.gameMemberIDs)}} Current Players
-              </button>
-              <span ng-show="!isUserGameCreator(game.creatorID)"> <!--Only give option to join and leave game if user is not the game creator. -->
-                <button class="join-game-btn button" ng-show="!isUserInGame(game.gameMemberIDs)" ng-click="joinGame(game)">Join Game</button>
-                <button class="leave-game-btn button" ng-show="isUserInGame(game.gameMemberIDs)" ng-click="leaveGame(game)">Leave Game</button>
-              </span>
-            </div>
+            <label>
+              <b>Members: </b>
+            </label>
+            <a class="game-members" ng-click="showPlayersModal(game.gameMemberIDs)">{{getNumPlayersInGame(game.gameMemberIDs)}}</a>
 
           </item>
           <ion-item class="game-lower">
+            <span ng-show="!isUserGameCreator(game.creatorID)"> <!--Only give option to join and leave game if user is not the game creator. -->
+              <button class="join-game-btn button button-block button-royal" ng-show="!isUserInGame(game.gameMemberIDs)" ng-click="joinGame(game)">Join Game</button>
+              <button class="leave-game-btn button button-block button-royal" ng-show="isUserInGame(game.gameMemberIDs)" ng-click="leaveGame(game)">Leave Game</button>
+            </span>
           </ion-item>
         </list>
       </div>
