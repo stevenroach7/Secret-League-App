@@ -10135,6 +10135,13 @@ a.button {
   font-size: 11px;
 }*/
 
+.players-modal {
+  z-index: 10;
+}
+
+.profile-modal {
+  z-index:  20; /* This is to make sure that the profile-modal is always shown above the players-modal. */
+}
 
 /* Create Game Styling */
 .date-item, .time-item {
@@ -10149,7 +10156,6 @@ a.button {
   text-align: end;
   padding-right: 14% !important;
 }
-
 
 
 /* Profile Styling */
