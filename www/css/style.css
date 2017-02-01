@@ -306,18 +306,6 @@
   font-size: 11px;
 }
 
-/*.join-game-btn {
-  float: right;
-  color: #886aea;
-  font-size: 11px;
-}
-
-.leave-game-btn {
-  float: right;
-  color: #886aea;
-  font-size: 11px;
-}*/
-
 .players-modal {
   z-index: 10;
 }
