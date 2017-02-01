@@ -445,14 +445,18 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
     $scope.showProfileModal = function(athleteID) {
       /* Takes a userID and opens the modal to view that user's profile. */
-      var athlete = ProfileService.getUser(athleteID);
-      $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
-      $scope.profileModal.show(); // Open modal
+      ProfileService.getUser(athleteID)
+      .then(function(user) {
+        var athlete = user;
+        $scope.athleteProfile = athlete; // Set $scope.athlete (in parent scope)
+        $scope.profileModal.show(); // Open modal
+      });
     };
 
     $scope.closeProfile = function() {
       /* Closes the profile modal. */
       $scope.profileModal.hide(); // Close modal
+
     };
 
     function showAlert(titleMessage, templateMessage) {
@@ -494,7 +498,63 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
           });
         }
       });
+    };
 
+    $scope.getNumPlayersInGame = function(gameMemberIDs) {
+      /* Takes a gameMemberIDs object and returns the number of players in the game. */
+      var numPlayersInGame = 0;
+      for (var gameMemberID in gameMemberIDs) {
+        if (gameMemberIDs.hasOwnProperty(gameMemberID)) {
+          if (gameMemberIDs[gameMemberID] == 1) { // Check that value is 1 as users who leave game have their value changed to 0.
+            numPlayersInGame++;
+          }
+        }
+      }
+      return numPlayersInGame;
+    };
+
+    $scope.isUserInGame = function(gameMemberIDs) {
+      /* Takes an object of gameMemberIDs and returns a boolean for if the current user is a member of the game
+      specified by the gameMemberIDs object. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      return gameMemberIDs[currentUserID] == 1; // If user is in game, the value when their id is the key is 1.
+    };
+
+    $scope.joinGame = function(game) {
+      /* Takes a game and adds the current user to the object of gameMemberIDs for that game. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      GamesService.addUserToGame(game, currentUserID)
+      .catch(function(errorMessage) {
+        showAlert("Error", errorMessage);
+      });
+    };
+
+    $scope.leaveGame = function(game) {
+      /* Takes a game and removes the current user from the object of gameMemberIDs for that game. */
+      var currentUserID = AuthenticationService.getCurrentUserID();
+      GamesService.removeUserFromGame(game, currentUserID)
+      .catch(function(errorMessage) {
+        showAlert("Error", errorMessage);
+      });
+    };
+
+    // Create the viewPlayers modal
+    $ionicModal.fromTemplateUrl('players-modal.html', {
+      scope: $scope
+    }).then(function(playersModal) {
+      $scope.playersModal = playersModal;
+    });
+
+    $scope.showPlayersModal = function(gameMemberIDs) {
+      /* Takes a gameMemberIDs object and opens the modal to view the names of those players. */
+      var gameMembers = gameMemberIDs;
+      $scope.playerIDs = gameMembers;
+      $scope.playersModal.show(); // Open modal
+    };
+
+    $scope.closePlayersModal = function() {
+      /* Closes the players modal. */
+      $scope.playersModal.hide(); // Close modal
     };
 
   }])
@@ -516,8 +576,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         time: DateService.secondsToDate(roundToNextHour((currentDate.getHours() * 3600) + (currentDate.getMinutes() * 60) + currentDate.getSeconds())),
         sport: "Basketball",
         place: null,
-        skillLevel: null,
-        creatorID: null
+        skillLevel: null
       };
     }
 
@@ -545,7 +604,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         okType: 'button-royal'
       });
     }
-
 
     function validateGameCreated(gameOptions, userID) {
       /* Takes a gameOptions object and returns a boolean for if the game is valid. Displays the necessary alert messages if invalid. */
@@ -612,8 +670,6 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       $scope.data.skillLevel = $scope.user.skillLevel;
       $scope.data.favAthlete = $scope.user.favAthlete;
 
-      // Skill Level: <br /><ion-item class="item item-select"><select ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select></ion-item>
-
       var editProfilePopup = $ionicPopup.show({
         template: '<span class="required-label">Name:</span><input type="text" ng-model="data.name" maxlength="40"> Bio: <input type="text" ng-model="data.bio" maxlength="40"> Favorite Athlete: <input type="text" ng-model="data.favAthlete" maxlength="40"> <br />Skill Level: <select class="float-right" ng-model="data.skillLevel"><option>Casual</option><option>Competitive</option></select>',
         title: 'Edit Profile',
@@ -642,8 +698,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       });
     };
 
-}])
-
+  }])
 
   .filter('secondsToTime', ['$filter', function($filter) {
     /* Takes a time in seconds and converts it to a string represetation of the time. */
@@ -659,6 +714,28 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
       var strTime = hours + ':' + minutes + ' ' + ampm;
       return strTime;
     };
+  }])
+
+  .filter('userIDToName', ['$filter', 'ProfileService', function($filter, ProfileService) {
+    /* Takes a userID and returns the name of the user with that userID.
+    Adapted from https://glebbahmutov.com/blog/async-angular-filter/ */
+    // We need to cache results to ensure that we don't get a digest cycle error as the call to get a user's name is asynchronous.
+    var cached = {};
+    function userIdToNameFilter(userID) {
+      if (userID) {
+        if (userID in cached) {
+          // avoid returning a promise!
+          return typeof cached[userID] === 'string' ? cached[userID] : undefined;
+        } else {
+        ProfileService.getUser(userID)
+        .then(function(user) {
+          cached[userID] = user.name;
+        });
+        }
+      }
+    }
+    userIdToNameFilter.$stateful = true;
+    return userIdToNameFilter;
   }]);
 
 }());
@@ -1002,15 +1079,14 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
 
     function formatGame(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
-      Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
+      Converts Date variable to a string, time to seconds, adds a value for creatorID,
+      and adds the creatorID to the gameMemberIDs object. */
 
       var game = {}; // Create new game object so data is no longer not binded to html elements.
       var deferred = $q.defer();
 
-      // First get name of user so we can add that to the new game object.
-      var user = ProfileService.getUser(userID);
-      user.$loaded()
-      .then(function() {
+      ProfileService.getUser(userID)
+      .then(function(user) {
         return user.name;
       }).then(function(userName) { // Success, add name to game object.
         game.creatorName = userName;
@@ -1023,6 +1099,8 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         game.skillLevel = gameOptions.skillLevel;
         game.sport = gameOptions.sport;
         game.place = gameOptions.place;
+        game.gameMemberIDs = {}; // Dictionary with key being userID and value being 1 if in game and 0 if not.
+        game.gameMemberIDs[userID] = 1; // Add game creator to gameMemberIDs dictionary.
         deferred.resolve(game);
       });
       return deferred.promise;
@@ -1110,7 +1188,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
             deferred.resolve();
           })
           .catch(function(error) {
-            deferred.reject("Please try again");
+            deferred.reject("Please try again.");
           });
 
         });
@@ -1133,7 +1211,49 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
             deferred.resolve();
           })
           .catch(function(error) {
-            deferred.reject("Please try again");
+            deferred.reject("Please try again.");
+          });
+        });
+        return deferred.promise;
+      },
+
+      addUserToGame: function(gameObject, userID) {
+        /* Takes a game object and a userID and updates the gameMemberIDs object for that game in the Firebase DB
+        to include the inputted userID. */
+        var deferred = $q.defer();
+
+        var gameRef = firebase.database().ref().child("games").child(gameObject.dateString).child(gameObject.$id);
+        var game = $firebaseObject(gameRef);
+        game.$loaded()
+        .then(function(){
+          game.gameMemberIDs[userID] = 1;
+          game.$save()
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject("Please try again.");
+          });
+        });
+        return deferred.promise;
+      },
+
+      removeUserFromGame: function(gameObject, userID) {
+        /* Takes a game object and a userID and updates the gameMemberIDs object for that game in the Firebase DB
+        to not include the inputted userID. */
+        var deferred = $q.defer();
+
+        var gameRef = firebase.database().ref().child("games").child(gameObject.dateString).child(gameObject.$id);
+        var game = $firebaseObject(gameRef);
+        game.$loaded()
+        .then(function(){
+          game.gameMemberIDs[userID] = 0;
+          game.$save()
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject("Please try again.");
           });
         });
         return deferred.promise;
@@ -1150,14 +1270,19 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
     return {
 
       getUser: function(userID) {
-        /* Takes a userID and returns the user object in the firebase DB for that id.
-        This could be modified to return a promise if this function is used in complex ways. */
+        /* Takes a userID and returns the user object in the firebase DB for that id. */
+        var deferred = $q.defer();
 
-        // Get user object as specified by userID.
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
-
-        return user;
+        user.$loaded()
+        .then(function() {
+          deferred.resolve(user);
+        })
+        .catch(function(error) {
+          deferred.reject();
+        });
+      return deferred.promise;
       },
 
       updateProfile: function(userID, name, bio, skillLevel, favAthlete) {
@@ -1167,7 +1292,7 @@ angular.module('slApp', ['ionic', 'slApp.controllers', 'slApp.services', 'templa
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
         user.$loaded()
-        .then(function(){
+        .then(function() {
           user.name = name;
           user.bio = bio;
           user.skillLevel = skillLevel;

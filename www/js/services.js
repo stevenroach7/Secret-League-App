@@ -337,15 +337,14 @@
 
     function formatGame(gameOptions, userID) {
       /* Takes a gameOptions object and returns an object with a format suitable to be added to the firebase DB.
-      Converts Date variable to a string, time to seconds, and adds a value for creatorID. */
+      Converts Date variable to a string, time to seconds, adds a value for creatorID,
+      and adds the creatorID to the gameMemberIDs object. */
 
       var game = {}; // Create new game object so data is no longer not binded to html elements.
       var deferred = $q.defer();
 
-      // First get name of user so we can add that to the new game object.
-      var user = ProfileService.getUser(userID);
-      user.$loaded()
-      .then(function() {
+      ProfileService.getUser(userID)
+      .then(function(user) {
         return user.name;
       }).then(function(userName) { // Success, add name to game object.
         game.creatorName = userName;
@@ -358,6 +357,8 @@
         game.skillLevel = gameOptions.skillLevel;
         game.sport = gameOptions.sport;
         game.place = gameOptions.place;
+        game.gameMemberIDs = {}; // Dictionary with key being userID and value being 1 if in game and 0 if not.
+        game.gameMemberIDs[userID] = 1; // Add game creator to gameMemberIDs dictionary.
         deferred.resolve(game);
       });
       return deferred.promise;
@@ -445,7 +446,7 @@
             deferred.resolve();
           })
           .catch(function(error) {
-            deferred.reject("Please try again");
+            deferred.reject("Please try again.");
           });
 
         });
@@ -468,7 +469,49 @@
             deferred.resolve();
           })
           .catch(function(error) {
-            deferred.reject("Please try again");
+            deferred.reject("Please try again.");
+          });
+        });
+        return deferred.promise;
+      },
+
+      addUserToGame: function(gameObject, userID) {
+        /* Takes a game object and a userID and updates the gameMemberIDs object for that game in the Firebase DB
+        to include the inputted userID. */
+        var deferred = $q.defer();
+
+        var gameRef = firebase.database().ref().child("games").child(gameObject.dateString).child(gameObject.$id);
+        var game = $firebaseObject(gameRef);
+        game.$loaded()
+        .then(function(){
+          game.gameMemberIDs[userID] = 1;
+          game.$save()
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject("Please try again.");
+          });
+        });
+        return deferred.promise;
+      },
+
+      removeUserFromGame: function(gameObject, userID) {
+        /* Takes a game object and a userID and updates the gameMemberIDs object for that game in the Firebase DB
+        to not include the inputted userID. */
+        var deferred = $q.defer();
+
+        var gameRef = firebase.database().ref().child("games").child(gameObject.dateString).child(gameObject.$id);
+        var game = $firebaseObject(gameRef);
+        game.$loaded()
+        .then(function(){
+          game.gameMemberIDs[userID] = 0;
+          game.$save()
+          .then(function(ref) {
+            deferred.resolve();
+          })
+          .catch(function(error) {
+            deferred.reject("Please try again.");
           });
         });
         return deferred.promise;
@@ -485,14 +528,19 @@
     return {
 
       getUser: function(userID) {
-        /* Takes a userID and returns the user object in the firebase DB for that id.
-        This could be modified to return a promise if this function is used in complex ways. */
+        /* Takes a userID and returns the user object in the firebase DB for that id. */
+        var deferred = $q.defer();
 
-        // Get user object as specified by userID.
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
-
-        return user;
+        user.$loaded()
+        .then(function() {
+          deferred.resolve(user);
+        })
+        .catch(function(error) {
+          deferred.reject();
+        });
+      return deferred.promise;
       },
 
       updateProfile: function(userID, name, bio, skillLevel, favAthlete) {
@@ -502,7 +550,7 @@
         var userRef = firebase.database().ref().child("users").child(userID);
         var user = $firebaseObject(userRef);
         user.$loaded()
-        .then(function(){
+        .then(function() {
           user.name = name;
           user.bio = bio;
           user.skillLevel = skillLevel;

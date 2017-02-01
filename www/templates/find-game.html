@@ -26,7 +26,7 @@
           <h3 class="time-title">{{game.time | secondsToTime}}</h3>
         </div>
         <div class="col col-10 sport-label">
-            <i class="ion-ios-basketball sport-icon"></i>
+            <i class="ion-ios-basketball sport-icon" ng-class="{true: 'orange-icon'}[isUserInGame(game.gameMemberIDs)]"></i>
         </div>
         <div class="col col-30 sport-container">
           <h4 class="sport-title">{{game.sport}}</h4>
@@ -42,13 +42,24 @@
             <label class="skill-title"><b>Skill Level: </b>{{game.skillLevel}}</label>
           </item>
           <item class="item item-unselectable creator-display">
-            <label class="skill-title">
+            <label>
               <b>Creator: </b>
             </label>
               <a class="creator-name" ng-click="showProfileModal(game.creatorID)">{{game.creatorName}}</a>
               <span class="remove-game-btn" ng-show="isUserGameCreator(game.creatorID)" ng-click="showConfirmRemoveGame(game)">Remove Game</span>
           </item>
+          <item class="item item-unselectable creator-display">
+            <label>
+              <b>Members: </b>
+            </label>
+            <a class="game-members" ng-click="showPlayersModal(game.gameMemberIDs)">{{getNumPlayersInGame(game.gameMemberIDs)}}</a>
+
+          </item>
           <ion-item class="game-lower">
+            <span ng-show="!isUserGameCreator(game.creatorID)"> <!--Only give option to join and leave game if user is not the game creator. -->
+              <button class="join-game-btn button button-block button-royal" ng-show="!isUserInGame(game.gameMemberIDs)" ng-click="joinGame(game)">Join Game</button>
+              <button class="leave-game-btn button button-block button-royal" ng-show="isUserInGame(game.gameMemberIDs)" ng-click="leaveGame(game)">Leave Game</button>
+            </span>
           </ion-item>
         </list>
       </div>
