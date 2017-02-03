@@ -114,6 +114,10 @@
   text-align: left;
 }
 
+.skill-level-label {
+  float: left;
+}
+
 /* Schedule Styling */
 .schedule-view {
   background-color: #D3D3D3;
