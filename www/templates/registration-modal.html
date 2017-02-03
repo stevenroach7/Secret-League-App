@@ -13,7 +13,7 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label register-label required-label">Email:</span>
-          <input type="text" ng-model="regData.email" maxlength="40">
+          <input type="email" ng-model="regData.email" maxlength="40">
         </label>
         <label class="item item-input">
           <span class="input-label register-label required-label">Password: </span>
@@ -36,7 +36,7 @@
           <input type="text" ng-model="regData.bio" maxlength="40">
         </label>
         <label class="item item-select">
-          <span class="register-label">Skill Level: </span>
+          <span class="register-label skill-level-label">Skill Level: </span>
           <select ng-model="regData.skillLevel"><option>Casual</option><option>Competitive</option></select>
         </label>
         <label class="item item-input">
