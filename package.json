@@ -4,7 +4,8 @@
   "description": "Secret League: A mobile application to display Macalester College athletic scheduling data and facilitate pickup sports games on campus",
   "dependencies": {
     "angularfire": "^2.0.2",
-    "gulp": "^3.5.6",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^1.4.0",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
     "gulp-rename": "^1.2.0",
